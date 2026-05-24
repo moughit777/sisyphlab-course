@@ -25,7 +25,7 @@ export function generateToken(): string {
   const array = new Uint8Array(48)
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
     crypto.getRandomValues(array)
-    for (const byte of array) result += chars[byte % chars.length]
+    for (let i = 0; i < array.length; i++) result += chars[array[i] % chars.length]
   } else {
     for (let i = 0; i < 48; i++) result += chars[Math.floor(Math.random() * chars.length)]
   }
