@@ -15,6 +15,15 @@ interface Props {
 export default function LessonSidebar({ modules, currentLessonId, onSelectLesson, completedLessons = [] }: Props) {
   const [openModules, setOpenModules] = useState<string[]>([modules[0]?.id])
 
+  // Flatten all lessons in order to determine unlock status
+  const allLessons = modules.flatMap(m => m.lessons ?? [])
+
+  function isUnlocked(lesson: Lesson): boolean {
+    const idx = allLessons.findIndex(l => l.id === lesson.id)
+    if (idx === 0) return true
+    return completedLessons.includes(allLessons[idx - 1].id)
+  }
+
   function toggleModule(id: string) {
     setOpenModules(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id])
   }
@@ -66,13 +75,18 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                   {module.lessons?.map((lesson) => {
                     const isActive = lesson.id === currentLessonId
                     const isCompleted = completedLessons.includes(lesson.id)
+                    const unlocked = isUnlocked(lesson)
 
                     return (
                       <button
                         key={lesson.id}
-                        onClick={() => onSelectLesson(lesson)}
+                        onClick={() => unlocked && onSelectLesson(lesson)}
+                        disabled={!unlocked}
+                        title={!unlocked ? 'أكمل الدرس السابق أولاً' : undefined}
                         className={`w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-right ${
-                          isActive
+                          !unlocked
+                            ? 'opacity-40 cursor-not-allowed'
+                            : isActive
                             ? 'bg-accent-purple/15 border-r-2 border-accent-purple'
                             : 'hover:bg-dark-500/30'
                         }`}
@@ -84,7 +98,7 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                           ) : isActive ? (
                             <Play className="w-4 h-4 text-accent-purple-light fill-accent-purple-light" />
                           ) : (
-                            <Lock className="w-4 h-4 text-slate-600" />
+                            <Lock className={`w-4 h-4 ${unlocked ? 'text-slate-500' : 'text-slate-700'}`} />
                           )}
                         </div>
 
