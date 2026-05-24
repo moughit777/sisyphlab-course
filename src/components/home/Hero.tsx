@@ -1,0 +1,149 @@
+'use client'
+import { motion } from 'framer-motion'
+import { Play, ArrowLeft, Users, Clock, Star, Zap } from 'lucide-react'
+
+const stats = [
+  { icon: Users, value: '+2,400', label: 'طالب ناجح' },
+  { icon: Clock,  value: '+40',   label: 'ساعة محتوى' },
+  { icon: Star,   value: '4.9',   label: 'تقييم الطلاب' },
+  { icon: Zap,    value: '29',    label: 'درس احترافي' },
+]
+
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12 } },
+}
+const item = {
+  hidden: { opacity: 0, y: 28 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22,1,0.36,1] } },
+}
+
+export default function Hero() {
+  return (
+    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
+
+      {/* ── Background layers ── */}
+      <div className="absolute inset-0" style={{ background: '#080a08' }} />
+      {/* Strong top green glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 110% 60% at 50% -10%, rgba(93,214,44,0.22) 0%, rgba(93,214,44,0.08) 40%, transparent 70%)' }} />
+      {/* Side glows */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 60% at -5% 40%, rgba(93,214,44,0.10) 0%, transparent 60%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 60% at 105% 60%, rgba(93,214,44,0.08) 0%, transparent 60%)' }} />
+      {/* Grid overlay */}
+      <div className="absolute inset-0 grid-bg" />
+      {/* Bottom fade to body */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 55%, rgba(8,10,8,0.98) 100%)' }} />
+
+      {/* Large center glow orb */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none" style={{ background: 'rgba(93,214,44,0.06)', filter: 'blur(120px)' }} />
+
+      {/* Floating dots */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-brand-green/50"
+          style={{ top: `${15 + i * 15}%`, right: `${8 + i * 17}%` }}
+          animate={{ y: [-8, 8, -8], opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3 + i * 0.6, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+        />
+      ))}
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <motion.div variants={container} initial="hidden" animate="show">
+
+          {/* ── Badge ── */}
+          <motion.div variants={item} className="flex justify-center mb-7">
+            <div className="tag-green">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+              دورة مونتاج احترافية — المستوى الكامل
+            </div>
+          </motion.div>
+
+          {/* ── Heading ── */}
+          <motion.h1
+            variants={item}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.0] tracking-tight mb-6"
+          >
+            <span className="text-brand-white">تعلم</span>
+            <br />
+            <span className="text-green-gradient">المونتاج الاحترافي</span>
+            <br />
+            <span className="text-brand-white text-4xl sm:text-5xl md:text-6xl font-black">من الصفر حتى الاحتراف</span>
+          </motion.h1>
+
+          {/* ── Sub ── */}
+          <motion.p
+            variants={item}
+            className="text-base sm:text-lg text-brand-gray max-w-2xl mx-auto leading-relaxed mb-10"
+          >
+            إتقن{' '}
+            <span className="text-brand-white font-semibold">Adobe Premiere Pro</span>
+            {' '}و{' '}
+            <span className="text-brand-white font-semibold">After Effects</span>
+            {' '}وصناعة{' '}
+            <span className="text-brand-green font-semibold">Reels احترافية</span>
+            {' '}للسوشيال ميديا — شرح عربي 100%
+          </motion.p>
+
+          {/* ── Buttons ── */}
+          <motion.div variants={item} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <motion.a
+              href="#cta"
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className="btn-green flex items-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold"
+            >
+              اشترك في الكورس الآن
+              <ArrowLeft className="w-5 h-5" />
+            </motion.a>
+
+            <motion.a
+              href="#promo"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="btn-outline-green flex items-center gap-3 px-8 py-4 rounded-xl text-base font-semibold"
+            >
+              <div className="w-8 h-8 rounded-full bg-brand-green/15 flex items-center justify-center">
+                <Play className="w-3.5 h-3.5 text-brand-green fill-brand-green" />
+              </div>
+              شاهد الفيديو التعريفي
+            </motion.a>
+          </motion.div>
+
+          {/* ── Stats ── */}
+          <motion.div
+            variants={item}
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto"
+          >
+            {stats.map(({ icon: Icon, value, label }) => (
+              <div
+                key={label}
+                className="p-4 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-green/20 transition-all duration-300 flex flex-col items-center gap-1"
+              >
+                <Icon className="w-4 h-4 text-brand-green mb-1" />
+                <span className="text-2xl font-black text-brand-white stat-number">{value}</span>
+                <span className="text-xs text-brand-gray">{label}</span>
+              </div>
+            ))}
+          </motion.div>
+
+        </motion.div>
+      </div>
+
+      {/* Scroll hint */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+        animate={{ y: [0, 6, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <div className="w-5 h-8 rounded-full border border-brand-border flex items-start justify-center pt-1.5">
+          <motion.div
+            className="w-1 h-1.5 rounded-full bg-brand-green"
+            animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
+        </div>
+      </motion.div>
+    </section>
+  )
+}
