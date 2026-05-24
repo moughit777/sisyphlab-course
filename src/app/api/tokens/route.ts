@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServiceClient } from '@/lib/supabase'
 import { generateToken } from '@/lib/utils'
-import { verifyAdminToken } from '../admin-auth/route'
+import { verifyAdminToken } from '@/lib/adminAuth'
 
 export async function GET(req: NextRequest) {
   const authResult = verifyAdminToken(req)

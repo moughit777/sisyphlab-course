@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServiceClient } from '@/lib/supabase'
-import { verifyAdminToken } from '../../admin-auth/route'
+import { verifyAdminToken } from '@/lib/adminAuth'
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const authResult = verifyAdminToken(req)
