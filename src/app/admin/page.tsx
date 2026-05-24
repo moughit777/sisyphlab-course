@@ -10,7 +10,7 @@ import {
 import { Token, AccessLog, AdminStats } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
 
-function getAuthHeaders() {
+function getAuthHeaders(): Record<string, string> {
   const token = localStorage.getItem('admin_token')
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
