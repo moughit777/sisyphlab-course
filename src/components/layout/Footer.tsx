@@ -8,7 +8,9 @@ export default function Footer() {
 
           {/* Logo */}
           <a href="#hero" className="flex items-center">
-            <Image src="/logo.svg" alt="Sisyph Lab" width={70} height={35} className="h-8 w-auto object-contain" />
+            <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+              <Image src="/logo.png" alt="Sisyph Lab" width={32} height={32} className="w-full h-full object-cover object-left" />
+            </div>
           </a>
 
           <p className="text-xs text-brand-muted">
