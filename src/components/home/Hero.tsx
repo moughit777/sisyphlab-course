@@ -37,49 +37,65 @@ export default function Hero() {
       {/* Large center glow orb */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none" style={{ background: 'rgba(93,214,44,0.06)', filter: 'blur(120px)' }} />
 
-      {/* ── Adobe icons background ── */}
-      {[
-        { label: 'Pr', color: '#9B59FF', top: '18%', left: '2%',  size: 110, delay: 0   },
-        { label: 'Ae', color: '#4488FF', top: '22%', right: '2%', size: 100, delay: 1.5 },
-        { label: 'Pr', color: '#9B59FF', top: '62%', left: '6%',  size:  75, delay: 3   },
-        { label: 'Ae', color: '#4488FF', top: '58%', right: '5%', size:  85, delay: 2   },
-        { label: 'Pr', color: '#9B59FF', top: '40%', left: '14%', size:  55, delay: 4   },
-        { label: 'Ae', color: '#4488FF', top: '45%', right: '13%',size:  60, delay: 2.5 },
-      ].map((icon, i) => (
-        <motion.div
-          key={i}
-          className="absolute pointer-events-none select-none"
-          style={{ top: icon.top, left: (icon as any).left, right: (icon as any).right, opacity: 0.07 }}
-          animate={{ y: [-10, 10, -10], rotate: [-4, 4, -4] }}
-          transition={{ duration: 7 + i * 1.2, repeat: Infinity, ease: 'easeInOut', delay: icon.delay }}
-        >
-          <div
-            className="flex items-center justify-center"
-            style={{
-              width: icon.size, height: icon.size,
-              background: icon.color,
-              borderRadius: icon.size * 0.18,
-              boxShadow: `0 0 ${icon.size * 0.6}px ${icon.color}55`,
-            }}
-          >
-            <span className="font-black text-white select-none" style={{ fontSize: icon.size * 0.36 }}>
-              {icon.label}
-            </span>
-          </div>
-        </motion.div>
-      ))}
+      {/* ── Adobe icons ── */}
+      <motion.div
+        className="absolute pointer-events-none select-none"
+        style={{ top: '15%', left: '3%', opacity: 0.09 }}
+        animate={{ y: [-12, 12, -12], rotate: [-5, 5, -5] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <div className="flex items-center justify-center" style={{ width: 120, height: 120, background: '#9B59FF', borderRadius: 22, boxShadow: '0 0 60px #9B59FF66, 0 0 120px #9B59FF22' }}>
+          <span className="font-black text-white" style={{ fontSize: 44 }}>Pr</span>
+        </div>
+      </motion.div>
 
-      {/* ── Light sweep (CC Light Sweep style) ── */}
+      <motion.div
+        className="absolute pointer-events-none select-none"
+        style={{ top: '20%', right: '3%', opacity: 0.09 }}
+        animate={{ y: [12, -12, 12], rotate: [5, -5, 5] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+      >
+        <div className="flex items-center justify-center" style={{ width: 110, height: 110, background: '#3366FF', borderRadius: 20, boxShadow: '0 0 60px #3366FF66, 0 0 120px #3366FF22' }}>
+          <span className="font-black text-white" style={{ fontSize: 40 }}>Ae</span>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute pointer-events-none select-none"
+        style={{ top: '60%', right: '4%', opacity: 0.06 }}
+        animate={{ y: [-8, 8, -8], rotate: [-3, 3, -3] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+      >
+        <div className="flex items-center justify-center" style={{ width: 80, height: 80, background: '#9B59FF', borderRadius: 15, boxShadow: '0 0 40px #9B59FF55' }}>
+          <span className="font-black text-white" style={{ fontSize: 30 }}>Pr</span>
+        </div>
+      </motion.div>
+
+      {/* ── CC Light Sweep ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Sweep 1 */}
         <motion.div
           className="absolute"
           style={{
-            top: '-50%', width: '35%', height: '200%',
-            background: 'linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.04) 50%, transparent 75%)',
-            transform: 'skewX(-12deg)',
+            top: '-100%', width: '18%', height: '300%',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(204,255,0,0.03) 30%, rgba(255,255,255,0.07) 50%, rgba(204,255,0,0.03) 70%, transparent 100%)',
+            transform: 'skewX(-18deg)',
+            filter: 'blur(2px)',
           }}
-          animate={{ left: ['-40%', '140%'] }}
-          transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 9, ease: 'easeInOut' }}
+          animate={{ left: ['-25%', '125%'] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 7, ease: [0.4, 0, 0.2, 1] }}
+        />
+        {/* Sweep 2 - delayed, thinner */}
+        <motion.div
+          className="absolute"
+          style={{
+            top: '-100%', width: '8%', height: '300%',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+            transform: 'skewX(-18deg)',
+            filter: 'blur(1px)',
+          }}
+          animate={{ left: ['-15%', '115%'] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 7, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
         />
       </div>
 
