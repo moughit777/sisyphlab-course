@@ -41,7 +41,7 @@ export default function Navbar() {
           <a href="#hero" className="flex items-center group">
             <div className="h-10 w-auto overflow-hidden">
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="Sisyph Lab"
                 width={140}
                 height={42}
