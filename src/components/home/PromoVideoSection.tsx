@@ -157,7 +157,13 @@ export default function PromoVideoSection() {
               onClick={e => e.stopPropagation()}
             >
               {/* Seek bar */}
-              <div className="mb-3 relative">
+              <div className="mb-3 relative group/seek h-1.5">
+                <div className="w-full h-full bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-none"
+                    style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%`, background: 'rgba(204,255,0,0.65)' }}
+                  />
+                </div>
                 <input
                   type="range"
                   min={0}
@@ -165,8 +171,7 @@ export default function PromoVideoSection() {
                   step={0.1}
                   value={currentTime}
                   onChange={handleSeek}
-                  className="w-full h-1.5 rounded-full cursor-pointer appearance-none"
-                  style={{ accentColor: '#CCFF00' }}
+                  className="absolute inset-0 w-full opacity-0 cursor-pointer h-full"
                 />
               </div>
 
