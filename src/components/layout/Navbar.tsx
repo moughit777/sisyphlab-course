@@ -39,13 +39,13 @@ export default function Navbar() {
 
           {/* ── Logo ── */}
           <a href="#hero" className="flex items-center group">
-            <div className="h-10 w-auto overflow-hidden">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
               <Image
                 src="/logo.png"
                 alt="Sisyph Lab"
-                width={140}
-                height={42}
-                className="h-10 w-auto object-contain"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover object-left"
                 priority
               />
             </div>
