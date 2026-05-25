@@ -105,12 +105,10 @@ export default function PromoVideoSection() {
           initial={{ opacity: 0, scale: 0.97 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="relative rounded-2xl overflow-hidden border border-brand-border scan-effect"
+          className="relative rounded-2xl overflow-hidden border border-brand-border"
           style={{ boxShadow: '0 0 0 1px rgba(93,214,44,0.1), 0 0 80px rgba(93,214,44,0.07), 0 24px 60px rgba(0,0,0,0.8)' }}
           onMouseMove={resetHide}
         >
-          {/* Green top border */}
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-green/60 to-transparent z-10" />
 
           <div className="aspect-video relative bg-brand-black">
 
