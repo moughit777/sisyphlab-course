@@ -39,7 +39,7 @@ export default function Hero() {
 
       {/* ── Adobe icons ── */}
       <motion.div
-        className="absolute pointer-events-none select-none"
+        className="absolute pointer-events-none select-none hidden sm:block"
         style={{ top: '15%', left: '3%', opacity: 0.09 }}
         animate={{ y: [-12, 12, -12], rotate: [-5, 5, -5] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
@@ -50,7 +50,7 @@ export default function Hero() {
       </motion.div>
 
       <motion.div
-        className="absolute pointer-events-none select-none"
+        className="absolute pointer-events-none select-none hidden sm:block"
         style={{ top: '20%', right: '3%', opacity: 0.09 }}
         animate={{ y: [12, -12, 12], rotate: [5, -5, 5] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
@@ -61,7 +61,7 @@ export default function Hero() {
       </motion.div>
 
       <motion.div
-        className="absolute pointer-events-none select-none"
+        className="absolute pointer-events-none select-none hidden sm:block"
         style={{ top: '60%', right: '4%', opacity: 0.06 }}
         animate={{ y: [-8, 8, -8], rotate: [-3, 3, -3] }}
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
@@ -124,7 +124,7 @@ export default function Hero() {
           {/* ── Heading ── */}
           <motion.h1
             variants={item}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.2] tracking-tight mb-6"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[1.2] tracking-tight mb-6"
           >
             <span className="text-brand-white">كيفاش تربح</span>
             <br />

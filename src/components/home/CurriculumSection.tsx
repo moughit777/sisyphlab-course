@@ -113,7 +113,7 @@ export default function CurriculumSection() {
                           className="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-brand-black/30 transition-colors"
                         >
                           {/* Thumbnail with lock */}
-                          <div className="relative flex-shrink-0 w-24 h-14 rounded-xl overflow-hidden">
+                          <div className="relative flex-shrink-0 w-24 h-14 rounded-xl overflow-hidden hidden sm:block">
                             <div className={`w-full h-full bg-gradient-to-br ${MODULE_COLORS[mi % 3]} flex items-center justify-center`}>
                               <Play className="w-5 h-5 text-white/30" />
                             </div>
@@ -143,9 +143,9 @@ export default function CurriculumSection() {
                           </div>
 
                           {/* Lock badge */}
-                          <div className="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green text-xs">
+                          <div className="flex-shrink-0 flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green text-xs">
                             <Lock className="w-3 h-3" />
-                            مقفول
+                            <span className="hidden sm:inline">مقفول</span>
                           </div>
                         </div>
                       ))}
