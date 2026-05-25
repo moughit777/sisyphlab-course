@@ -119,8 +119,8 @@ export default function CurriculumSection() {
                             </div>
                             {/* Dark lock overlay */}
                             <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center gap-1">
-                              <div className="w-7 h-7 rounded-full bg-black/50 border border-white/20 flex items-center justify-center">
-                                <Lock className="w-3.5 h-3.5 text-white/80" />
+                              <div className="w-7 h-7 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
+                                <Lock className="w-3.5 h-3.5 text-brand-green" />
                               </div>
                             </div>
                             {/* Lesson number badge */}
@@ -143,7 +143,7 @@ export default function CurriculumSection() {
                           </div>
 
                           {/* Lock badge */}
-                          <div className="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-black/50 border border-brand-border text-brand-muted text-xs">
+                          <div className="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green text-xs">
                             <Lock className="w-3 h-3" />
                             مقفول
                           </div>
