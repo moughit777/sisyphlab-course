@@ -124,7 +124,7 @@ export default function Hero() {
           {/* ── Heading ── */}
           <motion.h1
             variants={item}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.0] tracking-tight mb-6"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.2] tracking-tight mb-6"
           >
             <span className="text-brand-white">كيفاش تربح</span>
             <br />
