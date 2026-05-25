@@ -8,7 +8,6 @@ const benefits = [
   'دعم مستمر عبر واتساب',
   'تحديثات مجانية مدى الحياة',
   'شهادة إتمام الدورة',
-  'ضمان استرداد المبلغ خلال 7 أيام',
 ]
 
 export default function CTASection() {
@@ -73,7 +72,6 @@ export default function CTASection() {
                 اشترك عبر واتساب
                 <ArrowLeft className="w-5 h-5" />
               </motion.a>
-              <p className="text-xs text-brand-muted">ضمان استرداد كامل خلال 7 أيام · بدون أسئلة</p>
             </div>
           </div>
 
