@@ -5,12 +5,12 @@
 
 :root {
   --green:      #5DD62C;
-  --green-glow: rgba(93,214,44,0.25);
-  --black:      #0a0a0a;
-  --card:       #181818;
-  --border:     #2a2a2a;
+  --green-glow: rgba(93,214,44,0.30);
+  --black:      #030b03;
+  --card:       #091409;
+  --border:     rgba(93,214,44,0.10);
   --white:      #F8F8F8;
-  --gray:       #999999;
+  --gray:       #8aaa8a;
 }
 
 * { box-sizing: border-box; }
@@ -23,12 +23,13 @@ h1, h2, h3, h4, h5, h6 {
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #080a08;
+  background-color: #030b03;
   background-image:
-    radial-gradient(ellipse 90% 55% at 50% 0%,    rgba(93,214,44,0.14) 0%, transparent 65%),
-    radial-gradient(ellipse 60% 45% at 90% 35%,   rgba(93,214,44,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 50% at 5%  70%,   rgba(93,214,44,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 40% at 50% 100%,  rgba(93,214,44,0.08) 0%, transparent 60%);
+    radial-gradient(ellipse 120% 60% at 50% -5%,  rgba(93,214,44,0.22) 0%, rgba(40,160,20,0.06) 55%, transparent 70%),
+    radial-gradient(ellipse 75% 65% at 100% 20%,  rgba(60,200,40,0.13) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at  0%  75%,  rgba(60,200,40,0.11) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 45% at 50% 110%,  rgba(93,214,44,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50%  50%,  rgba(20,80,10,0.40)  0%, transparent 80%);
   color: var(--white);
   font-family: var(--font-tajawal), 'Tajawal', sans-serif;
   direction: rtl;
@@ -46,12 +47,10 @@ body {
 /* Selection */
 ::selection { background: rgba(93,214,44,0.25); color: #fff; }
 
-/* ── Grid background ───────────────────────────── */
+/* ── Grid background (very subtle dots) ────────── */
 .grid-bg {
-  background-image:
-    linear-gradient(rgba(93,214,44,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(93,214,44,0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
+  background-image: radial-gradient(circle, rgba(93,214,44,0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* ── Section gradient backgrounds ─────────────── */
@@ -71,12 +70,13 @@ body {
   background: radial-gradient(ellipse 90% 50% at 50% 100%, rgba(93,214,44,0.10) 0%, transparent 65%);
 }
 
-/* ── Glass card ───────────────────────────────── */
+/* ── Glass card (Apple style) ─────────────────── */
 .glass {
-  background: rgba(24,24,24,0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(6, 20, 6, 0.68);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(93,214,44,0.10);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
 }
 
 /* ── Green gradient text ──────────────────────── */

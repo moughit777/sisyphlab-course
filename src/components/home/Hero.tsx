@@ -23,19 +23,19 @@ export default function Hero() {
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
 
       {/* ── Background layers ── */}
-      <div className="absolute inset-0" style={{ background: '#080a08' }} />
-      {/* Strong top green glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 110% 60% at 50% -10%, rgba(93,214,44,0.22) 0%, rgba(93,214,44,0.08) 40%, transparent 70%)' }} />
+      <div className="absolute inset-0" style={{ background: '#030b03' }} />
+      {/* Top green glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 120% 65% at 50% -10%, rgba(93,214,44,0.28) 0%, rgba(40,160,20,0.10) 45%, transparent 68%)' }} />
       {/* Side glows */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 60% at -5% 40%, rgba(93,214,44,0.10) 0%, transparent 60%)' }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 60% at 105% 60%, rgba(93,214,44,0.08) 0%, transparent 60%)' }} />
-      {/* Grid overlay */}
-      <div className="absolute inset-0 grid-bg" />
-      {/* Bottom fade to body */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 55%, rgba(8,10,8,0.98) 100%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 70% at -8% 35%, rgba(60,200,40,0.14) 0%, transparent 60%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 70% at 108% 55%, rgba(60,200,40,0.12) 0%, transparent 60%)' }} />
+      {/* Dot grid overlay */}
+      <div className="absolute inset-0 grid-bg opacity-60" />
+      {/* Bottom fade */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(3,11,3,0.98) 100%)' }} />
 
       {/* Large center glow orb */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none" style={{ background: 'rgba(93,214,44,0.06)', filter: 'blur(120px)' }} />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[450px] rounded-full pointer-events-none" style={{ background: 'rgba(93,214,44,0.09)', filter: 'blur(140px)' }} />
 
       {/* ── Adobe icons ── */}
       <motion.div

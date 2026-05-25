@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(\\(Get-Item \"C:\\\\Users\\\\tabli\\\\OneDrive\\\\Desktop\\\\ANTYY\\\\Course\\\\public\\\\logo.png\"\\).Length)"
+    ]
+  }
+}
