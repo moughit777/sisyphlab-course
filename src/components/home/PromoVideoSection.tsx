@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react'
+import { Play, Pause, Volume2, VolumeX, Maximize, ArrowLeft } from 'lucide-react'
 import Hls from 'hls.js'
 
 const PROMO_HLS_URL = 'https://video.gumlet.io/69ef95a94d5bf5db18bcea67/69ef962aa3dc19951ffedcea/main.m3u8'
@@ -236,6 +236,24 @@ export default function PromoVideoSection() {
               </span>
             ))}
           </div>
+        </motion.div>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-6 text-center"
+        >
+          <motion.a
+            href="#cta"
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            className="btn-green inline-flex items-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold"
+          >
+            اشترك وابدأ التعلم الآن
+            <ArrowLeft className="w-5 h-5" />
+          </motion.a>
         </motion.div>
       </div>
     </section>
