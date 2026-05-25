@@ -57,7 +57,7 @@ export default function Navbar() {
               <a
                 key={l.href}
                 href={l.href}
-                className="px-4 py-2 text-sm text-brand-gray hover:text-brand-white rounded-lg hover:bg-brand-card transition-all duration-200"
+                className="px-4 py-2 text-base font-medium text-brand-gray hover:text-brand-white rounded-lg hover:bg-brand-card transition-all duration-200"
               >
                 {l.label}
               </a>
