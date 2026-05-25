@@ -37,6 +37,52 @@ export default function Hero() {
       {/* Large center glow orb */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full pointer-events-none" style={{ background: 'rgba(93,214,44,0.06)', filter: 'blur(120px)' }} />
 
+      {/* ── Adobe icons background ── */}
+      {[
+        { label: 'Pr', color: '#9B59FF', top: '18%', left: '2%',  size: 110, delay: 0   },
+        { label: 'Ae', color: '#4488FF', top: '22%', right: '2%', size: 100, delay: 1.5 },
+        { label: 'Pr', color: '#9B59FF', top: '62%', left: '6%',  size:  75, delay: 3   },
+        { label: 'Ae', color: '#4488FF', top: '58%', right: '5%', size:  85, delay: 2   },
+        { label: 'Pr', color: '#9B59FF', top: '40%', left: '14%', size:  55, delay: 4   },
+        { label: 'Ae', color: '#4488FF', top: '45%', right: '13%',size:  60, delay: 2.5 },
+      ].map((icon, i) => (
+        <motion.div
+          key={i}
+          className="absolute pointer-events-none select-none"
+          style={{ top: icon.top, left: (icon as any).left, right: (icon as any).right, opacity: 0.07 }}
+          animate={{ y: [-10, 10, -10], rotate: [-4, 4, -4] }}
+          transition={{ duration: 7 + i * 1.2, repeat: Infinity, ease: 'easeInOut', delay: icon.delay }}
+        >
+          <div
+            className="flex items-center justify-center"
+            style={{
+              width: icon.size, height: icon.size,
+              background: icon.color,
+              borderRadius: icon.size * 0.18,
+              boxShadow: `0 0 ${icon.size * 0.6}px ${icon.color}55`,
+            }}
+          >
+            <span className="font-black text-white select-none" style={{ fontSize: icon.size * 0.36 }}>
+              {icon.label}
+            </span>
+          </div>
+        </motion.div>
+      ))}
+
+      {/* ── Light sweep (CC Light Sweep style) ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute"
+          style={{
+            top: '-50%', width: '35%', height: '200%',
+            background: 'linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.04) 50%, transparent 75%)',
+            transform: 'skewX(-12deg)',
+          }}
+          animate={{ left: ['-40%', '140%'] }}
+          transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 9, ease: 'easeInOut' }}
+        />
+      </div>
+
       {/* Floating dots */}
       {[...Array(5)].map((_, i) => (
         <motion.div
