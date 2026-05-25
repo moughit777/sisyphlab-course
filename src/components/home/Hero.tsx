@@ -126,11 +126,9 @@ export default function Hero() {
             variants={item}
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.0] tracking-tight mb-6"
           >
-            <span className="text-brand-white">تعلم</span>
+            <span className="text-brand-white">كيف تجني</span>
             <br />
-            <span className="text-green-gradient">المونتاج الاحترافي</span>
-            <br />
-            <span className="text-brand-white text-4xl sm:text-5xl md:text-6xl font-black">من الصفر حتى الاحتراف</span>
+            <span className="text-green-gradient">أول 1,000$ من المونتاج</span>
           </motion.h1>
 
           {/* ── Sub ── */}
