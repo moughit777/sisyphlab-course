@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(\\(Get-Item \"C:\\\\Users\\\\tabli\\\\OneDrive\\\\Desktop\\\\ANTYY\\\\Course\\\\public\\\\logo.png\"\\).Length)"
+      "PowerShell(\\(Get-Item \"C:\\\\Users\\\\tabli\\\\OneDrive\\\\Desktop\\\\ANTYY\\\\Course\\\\public\\\\logo.png\"\\).Length)",
+      "Bash(curl -s -X DELETE \"https://griszqwabfhscoslavgx.supabase.co/rest/v1/sessions?is_active=eq.true\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyaXN6cXdhYmZoc2Nvc2xhdmd4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTYyOTk3OCwiZXhwIjoyMDk1MjA1OTc4fQ.k0kt2wDG7_N1z4PmnX8MV16a9ALfUh5_4bbr79MNZr4\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyaXN6cXdhYmZoc2Nvc2xhdmd4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTYyOTk3OCwiZXhwIjoyMDk1MjA1OTc4fQ.k0kt2wDG7_N1z4PmnX8MV16a9ALfUh5_4bbr79MNZr4\")",
+      "Bash(curl -s \"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=58fb6eiANnM&format=json\")",
+      "Bash(git add *)"
     ]
   }
 }

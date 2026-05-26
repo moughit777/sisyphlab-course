@@ -229,15 +229,14 @@ export default function ProtectedVideoPlayer({
 
   if (isYouTube) {
 
-    const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?` + new URLSearchParams({
+    const embedUrl = `https://www.youtube.com/embed/${youtubeId}?` + new URLSearchParams({
       rel:            '0',
       modestbranding: '1',
-      showinfo:       '0',
       iv_load_policy: '3',
       cc_load_policy: '0',
       disablekb:      '1',
       playsinline:    '1',
-      controls:       '0',
+      controls:       '1',
       enablejsapi:    '1',
       origin:         typeof window !== 'undefined' ? window.location.origin : '',
     }).toString()
@@ -255,15 +254,9 @@ export default function ProtectedVideoPlayer({
           src={embedUrl}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          className="w-full h-full"
-          style={{ border: 'none', pointerEvents: 'none' }}
-        />
-
-        {/* Transparent overlay — blocks all iframe interactions */}
-        <div
-          className="absolute inset-0 z-10 cursor-pointer"
-          onClick={toggleYtPlay}
-          onContextMenu={(e) => e.preventDefault()}
+          allowFullScreen
+          className="absolute inset-0 w-full h-full"
+          style={{ border: 'none' }}
         />
 
         {/* Play button overlay when paused */}
