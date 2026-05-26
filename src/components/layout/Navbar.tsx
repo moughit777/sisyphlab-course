@@ -31,7 +31,7 @@ export default function Navbar() {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-400 ${
           scrolled
-            ? 'bg-brand-black/95 backdrop-blur-xl border-b border-brand-border'
+            ? 'bg-brand-black/95 sm:backdrop-blur-xl border-b border-brand-border'
             : 'bg-transparent'
         }`}
       >
@@ -94,7 +94,7 @@ export default function Navbar() {
             animate={{ opacity: 1,  y: 0 }}
             exit={{   opacity: 0,  y: -12 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 z-40 bg-brand-dark/98 backdrop-blur-xl border-b border-brand-border lg:hidden"
+            className="fixed inset-x-0 top-16 z-40 bg-brand-dark border-b border-brand-border lg:hidden"
           >
             <div className="px-4 py-4 space-y-1">
               {links.map(l => (

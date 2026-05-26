@@ -11,18 +11,42 @@ const tajawal = Tajawal({
 
 export const metadata: Metadata = {
   title: 'مونتاج برو | كورس المونتاج الاحترافي',
-  description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects — صناعة Reels، مونتاج سوشيال ميديا، مؤثرات بصرية',
-  keywords: 'مونتاج, premiere pro, after effects, reels, تعليم, كورس, مغرب',
+  description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects — صناعة Reels، مونتاج سوشيال ميديا، مؤثرات بصرية. كورس مغربي متكامل من الصفر حتى الاحتراف.',
+  keywords: 'مونتاج, premiere pro, after effects, reels, تعليم, كورس, مغرب, sisyphlab, مونتاج احترافي, فيديو',
+  metadataBase: new URL('https://sisyphlab.com'),
+  alternates: {
+    canonical: 'https://sisyphlab.com',
+  },
   openGraph: {
     title: 'مونتاج برو | كورس المونتاج الاحترافي',
-    description: 'تعلم مونتاج احترافي من الصفر حتى الاحتراف',
+    description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects — صناعة Reels، مونتاج سوشيال ميديا، مؤثرات بصرية',
     type: 'website',
     locale: 'ar_MA',
+    url: 'https://sisyphlab.com',
+    siteName: 'Sisyph Lab',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'مونتاج برو - كورس المونتاج الاحترافي',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'مونتاج برو | كورس المونتاج الاحترافي',
+    description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
     follow: true,
     noarchive: false,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 }
 

@@ -39,6 +39,7 @@ export default function ProtectedVideoPlayer({
   const videoRef    = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
+  const iframeRef   = useRef<HTMLIFrameElement>(null)
   const hideTimer   = useRef<ReturnType<typeof setTimeout> | null>(null)
   const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -131,6 +132,20 @@ export default function ProtectedVideoPlayer({
     return () => { window.removeEventListener('blur', onBlur); window.removeEventListener('focus', onFocus) }
   }, [playing, isYouTube])
 
+  // ─── YouTube player state listener ───
+  useEffect(() => {
+    function onMessage(e: MessageEvent) {
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
+        if (data?.event === 'infoDelivery' && data?.info?.playerState !== undefined) {
+          setPlaying(data.info.playerState === 1)
+        }
+      } catch {}
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
+
   // ─── Session heartbeat (every 30s) ───
   useEffect(() => {
     heartbeatRef.current = setInterval(async () => {
@@ -200,7 +215,20 @@ export default function ProtectedVideoPlayer({
   // ══════════════════════════════════════════════════════
   //  YouTube MODE
   // ══════════════════════════════════════════════════════
+  function ytCommand(func: string) {
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func, args: '' }),
+      '*'
+    )
+  }
+
+  function toggleYtPlay() {
+    if (playing) { ytCommand('pauseVideo'); setPlaying(false) }
+    else         { ytCommand('playVideo');  setPlaying(true)  }
+  }
+
   if (isYouTube) {
+
     const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?` + new URLSearchParams({
       rel:            '0',
       modestbranding: '1',
@@ -209,7 +237,9 @@ export default function ProtectedVideoPlayer({
       cc_load_policy: '0',
       disablekb:      '1',
       playsinline:    '1',
-      color:          'white',
+      controls:       '0',
+      enablejsapi:    '1',
+      origin:         typeof window !== 'undefined' ? window.location.origin : '',
     }).toString()
 
     return (
@@ -221,13 +251,34 @@ export default function ProtectedVideoPlayer({
       >
         {/* YouTube iframe */}
         <iframe
+          ref={iframeRef}
           src={embedUrl}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
           className="w-full h-full"
-          style={{ border: 'none' }}
+          style={{ border: 'none', pointerEvents: 'none' }}
         />
+
+        {/* Transparent overlay — blocks all iframe interactions */}
+        <div
+          className="absolute inset-0 z-10 cursor-pointer"
+          onClick={toggleYtPlay}
+          onContextMenu={(e) => e.preventDefault()}
+        />
+
+        {/* Play button overlay when paused */}
+        {!playing && !isBlurred && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+            <div className="w-20 h-20 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
+              <Play className="w-8 h-8 text-brand-green fill-brand-green mr-[-2px]" />
+            </div>
+          </div>
+        )}
+
+        {/* Bottom controls bar */}
+        <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/90 to-transparent pt-8 pb-3 px-4 pointer-events-none">
+          <p className="text-white/70 text-xs truncate">{title}</p>
+        </div>
 
         {/* Watermark always on top */}
         <DynamicWatermark studentName={studentName} partialIp={partialIp} />
@@ -254,11 +305,6 @@ export default function ProtectedVideoPlayer({
             {warningText}
           </div>
         )}
-
-        {/* Title bar at bottom */}
-        <div className="absolute bottom-0 inset-x-0 z-10 px-4 py-2 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
-          <p className="text-white/70 text-xs truncate">{title}</p>
-        </div>
       </div>
     )
   }

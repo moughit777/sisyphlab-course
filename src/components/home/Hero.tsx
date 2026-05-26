@@ -35,7 +35,7 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(15,15,15,0.99) 100%)' }} />
 
       {/* Large center glow orb */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none" style={{ background: 'rgba(51,116,24,0.20)', filter: 'blur(120px)' }} />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none hidden sm:block" style={{ background: 'rgba(51,116,24,0.20)', filter: 'blur(120px)' }} />
 
       {/* ── Adobe icons ── */}
       <motion.div
@@ -71,9 +71,8 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* ── CC Light Sweep ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Sweep 1 */}
+      {/* ── CC Light Sweep ── desktop only */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hidden sm:block">
         <motion.div
           className="absolute"
           style={{
@@ -85,7 +84,6 @@ export default function Hero() {
           animate={{ left: ['-25%', '125%'] }}
           transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 7, ease: [0.4, 0, 0.2, 1] }}
         />
-        {/* Sweep 2 - delayed, thinner */}
         <motion.div
           className="absolute"
           style={{
@@ -98,17 +96,6 @@ export default function Hero() {
           transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 7, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
         />
       </div>
-
-      {/* Floating dots */}
-      {[...Array(5)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full bg-brand-green/50"
-          style={{ top: `${15 + i * 15}%`, right: `${8 + i * 17}%` }}
-          animate={{ y: [-8, 8, -8], opacity: [0.3, 0.8, 0.3] }}
-          transition={{ duration: 3 + i * 0.6, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-        />
-      ))}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div variants={container} initial="hidden" animate="show">

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /course/
+
+Sitemap: https://sisyphlab.com/sitemap.xml

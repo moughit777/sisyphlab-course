@@ -1,13 +1,15 @@
+import dynamic from 'next/dynamic'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import Hero from '@/components/home/Hero'
 import PromoVideoSection from '@/components/home/PromoVideoSection'
-import StatsSection from '@/components/home/StatsSection'
-import FeaturesSection from '@/components/home/FeaturesSection'
-import CurriculumSection from '@/components/home/CurriculumSection'
-import TestimonialsSection from '@/components/home/TestimonialsSection'
-import CTASection from '@/components/home/CTASection'
-import WhatsAppButton from '@/components/WhatsAppButton'
+
+const StatsSection       = dynamic(() => import('@/components/home/StatsSection'))
+const FeaturesSection    = dynamic(() => import('@/components/home/FeaturesSection'))
+const CurriculumSection  = dynamic(() => import('@/components/home/CurriculumSection'))
+const TestimonialsSection = dynamic(() => import('@/components/home/TestimonialsSection'))
+const CTASection         = dynamic(() => import('@/components/home/CTASection'))
+const Footer             = dynamic(() => import('@/components/layout/Footer'))
+const WhatsAppButton     = dynamic(() => import('@/components/WhatsAppButton'))
 
 export default function HomePage() {
   return (
