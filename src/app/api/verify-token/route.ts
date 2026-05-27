@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ valid: false, error: 'محاولات كثيرة — حاول بعد 5 دقائق' }, { status: 429 })
     }
 
-    const { token } = await req.json()
+    const body = await req.json()
+    const { token, session_key: storedSessionKey } = body
 
     if (!token || typeof token !== 'string') {
       return NextResponse.json({ valid: false, error: 'رابط غير صالح' }, { status: 400 })
@@ -44,10 +45,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ valid: false, error: 'انتهت صلاحية هذا الرابط.' })
     }
 
+    const tokenPayload = {
+      id: tokenData.id,
+      student_name: tokenData.student_name,
+      is_active: tokenData.is_active,
+      max_sessions: tokenData.max_sessions,
+      expires_at: tokenData.expires_at,
+    }
+
+    // If returning user sends a stored session_key, try to reuse that session
+    if (storedSessionKey && typeof storedSessionKey === 'string') {
+      const { data: existingSession } = await supabase
+        .from('sessions')
+        .select('id')
+        .eq('token_id', tokenData.id)
+        .eq('session_key', storedSessionKey)
+        .eq('is_active', true)
+        .single()
+
+      if (existingSession) {
+        await supabase
+          .from('sessions')
+          .update({ last_active: new Date().toISOString(), ip_address: ip })
+          .eq('id', existingSession.id)
+
+        return NextResponse.json({ valid: true, token: tokenPayload, session_key: storedSessionKey, ip })
+      }
+    }
+
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
     const { data: activeSessions } = await supabase
       .from('sessions')
-      .select('*')
+      .select('id')
       .eq('token_id', tokenData.id)
       .eq('is_active', true)
       .gt('last_active', fiveMinutesAgo)
@@ -82,18 +111,7 @@ export async function POST(req: NextRequest) {
       user_agent: req.headers.get('user-agent'),
     })
 
-    return NextResponse.json({
-      valid: true,
-      token: {
-        id: tokenData.id,
-        student_name: tokenData.student_name,
-        is_active: tokenData.is_active,
-        max_sessions: tokenData.max_sessions,
-        expires_at: tokenData.expires_at,
-      },
-      session_key: sessionKey,
-      ip,
-    })
+    return NextResponse.json({ valid: true, token: tokenPayload, session_key: sessionKey, ip })
   } catch (err) {
     console.error('verify-token error:', err)
     return NextResponse.json({ valid: false, error: 'خطأ داخلي في الخادم' }, { status: 500 })

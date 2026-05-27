@@ -39,15 +39,21 @@ export default function CoursePage() {
   useEffect(() => {
     async function verifyAccess() {
       try {
+        const storedSessionKey = localStorage.getItem(`sk_${tokenStr}`)
         const res = await fetch('/api/verify-token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: tokenStr }),
+          body: JSON.stringify({ token: tokenStr, session_key: storedSessionKey }),
         })
         const data = await res.json()
         setAccessData(data)
-        if (data.valid && DEMO_COURSE.modules?.[0]?.lessons?.[0]) {
-          setCurrentLesson(DEMO_COURSE.modules[0].lessons[0])
+        if (data.valid) {
+          if (data.session_key) localStorage.setItem(`sk_${tokenStr}`, data.session_key)
+          const stored = localStorage.getItem(`done_${tokenStr}`)
+          if (stored) setCompletedLessons(JSON.parse(stored))
+          if (DEMO_COURSE.modules?.[0]?.lessons?.[0]) {
+            setCurrentLesson(DEMO_COURSE.modules[0].lessons[0])
+          }
         }
       } catch {
         setAccessData({ valid: false, error: 'خطأ في التحقق من الرابط' })
@@ -58,19 +64,27 @@ export default function CoursePage() {
     verifyAccess()
   }, [tokenStr])
 
+  const markCompleted = useCallback((lessonId: string) => {
+    setCompletedLessons(prev => {
+      if (prev.includes(lessonId)) return prev
+      const updated = [...prev, lessonId]
+      localStorage.setItem(`done_${tokenStr}`, JSON.stringify(updated))
+      return updated
+    })
+  }, [tokenStr])
+
   const handleSelectLesson = useCallback((lesson: Lesson) => {
+    if (currentLesson) markCompleted(currentLesson.id)
     setCurrentLesson(lesson)
     setSidebarOpen(false)
-  }, [])
+  }, [currentLesson, markCompleted])
 
   const handleProgress = useCallback((seconds: number) => {
     if (!currentLesson || !accessData?.token) return
     if (seconds > (currentLesson.duration_seconds || 999) * 0.9) {
-      setCompletedLessons(prev =>
-        prev.includes(currentLesson.id) ? prev : [...prev, currentLesson.id]
-      )
+      markCompleted(currentLesson.id)
     }
-  }, [currentLesson, accessData])
+  }, [currentLesson, accessData, markCompleted])
 
   /* ── Loading ── */
   if (loading) {
