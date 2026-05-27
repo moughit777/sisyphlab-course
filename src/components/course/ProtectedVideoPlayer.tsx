@@ -133,19 +133,24 @@ export default function ProtectedVideoPlayer({
     return () => { window.removeEventListener('blur', onBlur); window.removeEventListener('focus', onFocus) }
   }, [playing, isYouTube])
 
-  // ─── YouTube player state listener ───
+  // ─── YouTube player state + progress listener ───
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
-        if (data?.event === 'infoDelivery' && data?.info?.playerState !== undefined) {
-          setPlaying(data.info.playerState === 1)
+        if (data?.event === 'infoDelivery' && data?.info !== undefined) {
+          const { playerState, currentTime: ytTime } = data.info
+          if (playerState !== undefined) {
+            setPlaying(playerState === 1)
+            if (playerState === 0) onProgress?.(999999) // video ended → mark complete
+          }
+          if (typeof ytTime === 'number') onProgress?.(ytTime)
         }
       } catch {}
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [])
+  }, [onProgress])
 
   // ─── Session heartbeat (every 30s) ───
   useEffect(() => {
