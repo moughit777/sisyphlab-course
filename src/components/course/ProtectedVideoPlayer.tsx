@@ -13,6 +13,7 @@ interface Props {
   studentName: string
   partialIp: string
   tokenId: string
+  sessionKey: string
   lessonId: string
   onProgress?: (seconds: number) => void
 }
@@ -34,7 +35,7 @@ function getYouTubeId(url: string): string | null {
 }
 
 export default function ProtectedVideoPlayer({
-  videoUrl, title, studentName, partialIp, tokenId, lessonId, onProgress,
+  videoUrl, title, studentName, partialIp, tokenId, sessionKey, lessonId, onProgress,
 }: Props) {
   const videoRef    = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -153,12 +154,12 @@ export default function ProtectedVideoPlayer({
         await fetch('/api/sessions', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tokenId, lessonId }),
+          body: JSON.stringify({ session_key: sessionKey }),
         })
       } catch {}
     }, 30000)
     return () => { if (heartbeatRef.current) clearInterval(heartbeatRef.current) }
-  }, [tokenId, lessonId])
+  }, [sessionKey])
 
   // ─── Helpers ───
   function showThreatWarning(msg: string) {
@@ -229,7 +230,10 @@ export default function ProtectedVideoPlayer({
 
   if (isYouTube) {
 
-    const embedUrl = `https://www.youtube.com/embed/${youtubeId}?` + new URLSearchParams({
+    const origin = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
+      ? window.location.origin
+      : ''
+    const params: Record<string, string> = {
       rel:            '0',
       modestbranding: '1',
       iv_load_policy: '3',
@@ -238,8 +242,9 @@ export default function ProtectedVideoPlayer({
       playsinline:    '1',
       controls:       '1',
       enablejsapi:    '1',
-      origin:         typeof window !== 'undefined' ? window.location.origin : '',
-    }).toString()
+    }
+    if (origin) params.origin = origin
+    const embedUrl = `https://www.youtube.com/embed/${youtubeId}?` + new URLSearchParams(params).toString()
 
     return (
       <div

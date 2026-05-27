@@ -229,6 +229,7 @@ export default function CoursePage() {
                     studentName={student.student_name}
                     partialIp={partialIp}
                     tokenId={student.id}
+                    sessionKey={accessData.session_key!}
                     lessonId={currentLesson.id}
                     onProgress={handleProgress}
                   />

@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminToken } from '@/lib/adminAuth'
+import { timingSafeEqual } from 'crypto'
+import { checkRateLimit } from '@/lib/rateLimit'
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '0.0.0.0'
+
+    if (!checkRateLimit(`admin-login:${ip}`, 5, 15 * 60 * 1000)) {
+      return NextResponse.json({ error: 'محاولات كثيرة — حاول بعد 15 دقيقة' }, { status: 429 })
+    }
+
     const { password } = await req.json()
 
     const adminPassword = process.env.ADMIN_PASSWORD
@@ -10,8 +18,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'لم يتم تكوين كلمة مرور الإدارة' }, { status: 500 })
     }
 
-    // Direct comparison (for simplicity — use bcrypt in production)
-    const isValid = password === adminPassword
+    const passBuffer = Buffer.from(password ?? '')
+    const expectedBuffer = Buffer.from(adminPassword)
+    const isValid =
+      passBuffer.length === expectedBuffer.length &&
+      timingSafeEqual(passBuffer, expectedBuffer)
 
     if (!isValid) {
       return NextResponse.json({ error: 'كلمة مرور خاطئة' }, { status: 401 })

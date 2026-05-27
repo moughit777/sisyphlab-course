@@ -1,12 +1,16 @@
 import { NextRequest } from 'next/server'
+import { createHmac, timingSafeEqual } from 'crypto'
 
-const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fallback-secret-change-this'
+const JWT_SECRET = process.env.ADMIN_JWT_SECRET
+if (!JWT_SECRET) {
+  throw new Error('ADMIN_JWT_SECRET environment variable is required')
+}
 
 export function createAdminToken(): string {
   const payload = { admin: true, iat: Date.now(), exp: Date.now() + 24 * 60 * 60 * 1000 }
   const encoded = Buffer.from(JSON.stringify(payload)).toString('base64url')
-  const signature = Buffer.from(JWT_SECRET + encoded).toString('base64url').substring(0, 32)
-  return `${encoded}.${signature}`
+  const sig = createHmac('sha256', JWT_SECRET!).update(encoded).digest('base64url')
+  return `${encoded}.${sig}`
 }
 
 export function verifyAdminToken(req: NextRequest): { ok: boolean } {
@@ -16,9 +20,19 @@ export function verifyAdminToken(req: NextRequest): { ok: boolean } {
   if (!token) return { ok: false }
 
   try {
-    const [encodedPayload, sig] = token.split('.')
-    const expectedSig = Buffer.from(JWT_SECRET + encodedPayload).toString('base64url').substring(0, 32)
-    if (sig !== expectedSig) return { ok: false }
+    const dotIndex = token.lastIndexOf('.')
+    if (dotIndex === -1) return { ok: false }
+
+    const encodedPayload = token.slice(0, dotIndex)
+    const sig = token.slice(dotIndex + 1)
+
+    const expectedSig = createHmac('sha256', JWT_SECRET!).update(encodedPayload).digest('base64url')
+
+    const sigBuf = Buffer.from(sig)
+    const expectedBuf = Buffer.from(expectedSig)
+    if (sigBuf.length !== expectedBuf.length || !timingSafeEqual(sigBuf, expectedBuf)) {
+      return { ok: false }
+    }
 
     const payload = JSON.parse(Buffer.from(encodedPayload, 'base64url').toString())
     if (payload.exp < Date.now()) return { ok: false }

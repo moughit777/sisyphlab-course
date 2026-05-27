@@ -1,25 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServiceClient } from '@/lib/supabase'
+import { checkRateLimit } from '@/lib/rateLimit'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || req.headers.get('x-real-ip')
+      || '0.0.0.0'
+
+    if (!checkRateLimit(`verify-token:${ip}`, 20, 5 * 60 * 1000)) {
+      return NextResponse.json({ valid: false, error: 'محاولات كثيرة — حاول بعد 5 دقائق' }, { status: 429 })
+    }
+
     const { token } = await req.json()
 
     if (!token || typeof token !== 'string') {
       return NextResponse.json({ valid: false, error: 'رابط غير صالح' }, { status: 400 })
     }
 
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-      || req.headers.get('x-real-ip')
-      || '0.0.0.0'
-
     const supabase = getServiceClient()
 
-    // Look up the token
     const { data: tokenData, error } = await supabase
       .from('tokens')
-      .select('*')
+      .select('id, student_name, is_active, max_sessions, expires_at, token')
       .eq('token', token)
       .single()
 
@@ -40,7 +44,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ valid: false, error: 'انتهت صلاحية هذا الرابط.' })
     }
 
-    // Check active sessions
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
     const { data: activeSessions } = await supabase
       .from('sessions')
@@ -64,7 +67,6 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Create new session
     const sessionKey = uuidv4()
     await supabase.from('sessions').insert({
       token_id: tokenData.id,
@@ -73,7 +75,6 @@ export async function POST(req: NextRequest) {
       user_agent: req.headers.get('user-agent'),
     })
 
-    // Log access
     await supabase.from('access_logs').insert({
       token_id: tokenData.id,
       event_type: 'access',
@@ -83,7 +84,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       valid: true,
-      token: tokenData,
+      token: {
+        id: tokenData.id,
+        student_name: tokenData.student_name,
+        is_active: tokenData.is_active,
+        max_sessions: tokenData.max_sessions,
+        expires_at: tokenData.expires_at,
+      },
       session_key: sessionKey,
       ip,
     })

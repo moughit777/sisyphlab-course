@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServiceClient } from '@/lib/supabase'
 
-// PATCH — heartbeat to keep session alive
+// PATCH — heartbeat to keep session alive (requires session_key for ownership proof)
 export async function PATCH(req: NextRequest) {
   try {
-    const { tokenId } = await req.json()
-    if (!tokenId) return NextResponse.json({ ok: false }, { status: 400 })
+    const { session_key } = await req.json()
+    if (!session_key) return NextResponse.json({ ok: false }, { status: 400 })
 
     const supabase = getServiceClient()
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '0.0.0.0'
-
     await supabase
       .from('sessions')
       .update({ last_active: new Date().toISOString() })
-      .eq('token_id', tokenId)
+      .eq('session_key', session_key)
       .eq('is_active', true)
 
     return NextResponse.json({ ok: true })
