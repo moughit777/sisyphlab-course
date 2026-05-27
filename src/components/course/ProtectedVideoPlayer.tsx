@@ -133,24 +133,54 @@ export default function ProtectedVideoPlayer({
     return () => { window.removeEventListener('blur', onBlur); window.removeEventListener('focus', onFocus) }
   }, [playing, isYouTube])
 
-  // ─── YouTube player state + progress listener ───
+  // ─── YouTube: subscribe to events after iframe loads ───
+  useEffect(() => {
+    if (!isYouTube) return
+    const iframe = iframeRef.current
+    if (!iframe) return
+    function onLoad() {
+      iframe?.contentWindow?.postMessage(JSON.stringify({ event: 'listening' }), '*')
+    }
+    iframe.addEventListener('load', onLoad)
+    return () => iframe.removeEventListener('load', onLoad)
+  }, [isYouTube])
+
+  // ─── YouTube player state listener (handles both event formats) ───
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
+        let state: number | undefined
+
         if (data?.event === 'infoDelivery' && data?.info !== undefined) {
-          const { playerState, currentTime: ytTime } = data.info
-          if (playerState !== undefined) {
-            setPlaying(playerState === 1)
-            if (playerState === 0) onProgress?.(999999) // video ended → mark complete
-          }
+          state = data.info.playerState
+          const ytTime = data.info.currentTime
           if (typeof ytTime === 'number') onProgress?.(ytTime)
+        } else if (data?.event === 'onStateChange') {
+          state = typeof data.info === 'number' ? data.info : data.info?.playerState
+        }
+
+        if (state !== undefined) {
+          setPlaying(state === 1)
+          if (state === 0) onProgress?.(999999) // ended → mark complete
         }
       } catch {}
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [onProgress])
+
+  // ─── YouTube watch-time timer (fallback if postMessage doesn't fire) ───
+  const ytWatchedRef = useRef(0)
+  useEffect(() => { ytWatchedRef.current = 0 }, [lessonId])
+  useEffect(() => {
+    if (!isYouTube || !playing) return
+    const t = setInterval(() => {
+      ytWatchedRef.current += 1
+      onProgress?.(ytWatchedRef.current)
+    }, 1000)
+    return () => clearInterval(t)
+  }, [isYouTube, playing, lessonId, onProgress])
 
   // ─── Session heartbeat (every 30s) ───
   useEffect(() => {
@@ -269,14 +299,7 @@ export default function ProtectedVideoPlayer({
           style={{ border: 'none' }}
         />
 
-        {/* Play button overlay when paused */}
-        {!playing && !isBlurred && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-            <div className="w-20 h-20 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
-              <Play className="w-8 h-8 text-brand-green fill-brand-green mr-[-2px]" />
-            </div>
-          </div>
-        )}
+        {/* No custom play overlay for YouTube — YouTube has its own controls */}
 
         {/* Bottom controls bar */}
         <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/90 to-transparent pt-8 pb-3 px-4 pointer-events-none">
