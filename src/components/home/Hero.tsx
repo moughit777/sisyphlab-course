@@ -134,27 +134,63 @@ export default function Hero() {
 
           {/* ── Buttons ── */}
           <motion.div variants={item} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+
+            {/* CTA — float + shimmer + arrow bounce */}
             <motion.a
               href="#cta"
-              whileHover={{ scale: 1.04, y: -2 }}
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.05, y: -8 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-green flex items-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold"
+              className="btn-green flex items-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold relative overflow-hidden"
+              style={{ boxShadow: '0 8px 32px rgba(93,214,44,0.35), 0 2px 8px rgba(93,214,44,0.2)' }}
             >
+              {/* Shimmer sweep */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)',
+                  transform: 'skewX(-15deg)',
+                }}
+                animate={{ x: ['-150%', '250%'] }}
+                transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+              />
               اشترك في الكورس الآن
-              <ArrowLeft className="w-5 h-5" />
+              <motion.div
+                animate={{ x: [0, -5, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </motion.div>
             </motion.a>
 
+            {/* Video — ping rings around play icon */}
             <motion.a
               href="#promo"
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               className="btn-outline-green flex items-center gap-3 px-8 py-4 rounded-xl text-base font-semibold"
             >
-              <div className="w-8 h-8 rounded-full bg-brand-green/15 flex items-center justify-center">
-                <Play className="w-3.5 h-3.5 text-brand-green fill-brand-green" />
+              <div className="relative w-8 h-8 flex items-center justify-center">
+                {/* Ring 1 */}
+                <motion.div
+                  className="absolute inset-0 rounded-full border border-brand-green/50"
+                  animate={{ scale: [1, 2], opacity: [0.6, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                />
+                {/* Ring 2 */}
+                <motion.div
+                  className="absolute inset-0 rounded-full border border-brand-green/30"
+                  animate={{ scale: [1, 2.6], opacity: [0.4, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut', delay: 0.4 }}
+                />
+                <div className="w-8 h-8 rounded-full bg-brand-green/15 flex items-center justify-center relative z-10">
+                  <Play className="w-3.5 h-3.5 text-brand-green fill-brand-green" />
+                </div>
               </div>
               شاهد الفيديو التعريفي
             </motion.a>
+
           </motion.div>
 
           {/* ── Stats ── */}
