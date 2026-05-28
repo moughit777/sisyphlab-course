@@ -16,6 +16,7 @@ interface Props {
   sessionKey: string
   lessonId: string
   onProgress?: (seconds: number) => void
+  onEnd?: () => void
 }
 
 // ─── Extract YouTube video ID from any YouTube URL ───
@@ -38,7 +39,7 @@ function isBunnyUrl(url: string): boolean {
 }
 
 export default function ProtectedVideoPlayer({
-  videoUrl, title, studentName, partialIp, tokenId, sessionKey, lessonId, onProgress,
+  videoUrl, title, studentName, partialIp, tokenId, sessionKey, lessonId, onProgress, onEnd,
 }: Props) {
   const videoRef    = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -166,7 +167,10 @@ export default function ProtectedVideoPlayer({
 
         if (state !== undefined) {
           setPlaying(state === 1)
-          if (state === 0) onProgress?.(999999) // ended → mark complete
+          if (state === 0) {
+            onProgress?.(999999)
+            onEnd?.()
+          }
         }
       } catch {}
     }
@@ -197,6 +201,21 @@ export default function ProtectedVideoPlayer({
     }, 1000)
     return () => clearInterval(t)
   }, [isBunny, playing, lessonId, onProgress])
+
+  // ─── Bunny ended event listener ───
+  useEffect(() => {
+    if (!isBunny) return
+    function onMessage(e: MessageEvent) {
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
+        if (data?.event === 'ended' || data?.event === 'onVideoEnd') {
+          onEnd?.()
+        }
+      } catch {}
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [isBunny, onEnd])
 
   // ─── Session heartbeat (every 30s) ───
   useEffect(() => {
@@ -421,7 +440,7 @@ export default function ProtectedVideoPlayer({
         className="w-full h-full object-contain"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
-        onEnded={() => { setPlaying(false); setShowControls(true) }}
+        onEnded={() => { setPlaying(false); setShowControls(true); onEnd?.() }}
         onWaiting={() => setBuffering(true)}
         onCanPlay={() => setBuffering(false)}
         onPlay={() => setPlaying(true)}

@@ -87,6 +87,15 @@ export default function CoursePage() {
     }
   }, [currentLesson, accessData, markCompleted])
 
+  const handleVideoEnd = useCallback(() => {
+    if (!currentLesson) return
+    markCompleted(currentLesson.id)
+    const allLessons = DEMO_COURSE.modules.flatMap(m => m.lessons)
+    const idx = allLessons.findIndex(l => l.id === currentLesson.id)
+    const next = allLessons[idx + 1]
+    if (next) setTimeout(() => setCurrentLesson(next), 1500)
+  }, [currentLesson, markCompleted])
+
   /* ── Loading ── */
   if (loading) {
     return (
@@ -245,6 +254,7 @@ export default function CoursePage() {
                     sessionKey={accessData.session_key!}
                     lessonId={currentLesson.id}
                     onProgress={handleProgress}
+                    onEnd={handleVideoEnd}
                   />
                 </div>
 
