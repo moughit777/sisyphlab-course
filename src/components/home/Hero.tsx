@@ -142,7 +142,7 @@ export default function Hero() {
               transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
               whileHover={{ scale: 1.05, y: -8 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-green flex items-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold relative overflow-hidden"
+              className="btn-green flex items-center gap-2.5 px-10 py-5 rounded-2xl text-lg font-bold relative overflow-hidden"
               style={{ boxShadow: '0 8px 32px rgba(93,214,44,0.35), 0 2px 8px rgba(93,214,44,0.2)' }}
             >
               {/* Shimmer sweep */}
@@ -169,7 +169,7 @@ export default function Hero() {
               href="#promo"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-outline-green flex items-center gap-3 px-8 py-4 rounded-xl text-base font-semibold"
+              className="btn-outline-green flex items-center gap-3 px-10 py-5 rounded-2xl text-lg font-semibold"
             >
               <div className="relative w-8 h-8 flex items-center justify-center">
                 {/* Ring 1 */}
