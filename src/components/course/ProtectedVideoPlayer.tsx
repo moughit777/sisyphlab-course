@@ -29,9 +29,12 @@ function getYouTubeId(url: string): string | null {
     const m = url.match(p)
     if (m) return m[1]
   }
-  // If it looks like a plain ID (11 chars, no slashes)
   if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url
   return null
+}
+
+function isBunnyUrl(url: string): boolean {
+  return url.includes('mediadelivery.net')
 }
 
 export default function ProtectedVideoPlayer({
@@ -46,6 +49,7 @@ export default function ProtectedVideoPlayer({
 
   const youtubeId = getYouTubeId(videoUrl)
   const isYouTube = !!youtubeId
+  const isBunny   = isBunnyUrl(videoUrl)
 
   const [playing,       setPlaying]       = useState(false)
   const [muted,         setMuted]         = useState(false)
@@ -182,6 +186,18 @@ export default function ProtectedVideoPlayer({
     return () => clearInterval(t)
   }, [isYouTube, playing, lessonId, onProgress])
 
+  // ─── Bunny watch-time timer ───
+  const bunnyWatchedRef = useRef(0)
+  useEffect(() => { bunnyWatchedRef.current = 0 }, [lessonId])
+  useEffect(() => {
+    if (!isBunny || !playing) return
+    const t = setInterval(() => {
+      bunnyWatchedRef.current += 1
+      onProgress?.(bunnyWatchedRef.current)
+    }, 1000)
+    return () => clearInterval(t)
+  }, [isBunny, playing, lessonId, onProgress])
+
   // ─── Session heartbeat (every 30s) ───
   useEffect(() => {
     heartbeatRef.current = setInterval(async () => {
@@ -263,6 +279,58 @@ export default function ProtectedVideoPlayer({
     else         { ytCommand('playVideo');  setPlaying(true)  }
   }
 
+  // ══════════════════════════════════════════════════════
+  //  BUNNY MODE
+  // ══════════════════════════════════════════════════════
+  if (isBunny) {
+    return (
+      <div
+        ref={containerRef}
+        className="relative w-full bg-black rounded-2xl overflow-hidden select-none"
+        style={{ aspectRatio: '16/9' }}
+        onContextMenu={(e) => e.preventDefault()}
+      >
+        <iframe
+          ref={iframeRef}
+          src={videoUrl}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="absolute inset-0 w-full h-full"
+          style={{ border: 'none' }}
+          onLoad={() => setPlaying(true)}
+        />
+
+        <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/90 to-transparent pt-8 pb-3 px-4 pointer-events-none">
+          <p className="text-white/70 text-xs truncate">{title}</p>
+        </div>
+
+        <DynamicWatermark studentName={studentName} partialIp={partialIp} />
+
+        {isBlurred && (
+          <div
+            className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl cursor-pointer"
+            onClick={() => { setIsBlurred(false); setBlurReason('') }}
+          >
+            <EyeOff className="w-12 h-12 text-brand-green mb-4" />
+            <p className="text-white font-bold text-lg mb-2">الفيديو محمي</p>
+            <p className="text-brand-gray text-sm text-center max-w-xs">{blurReason}</p>
+            <button className="mt-4 px-4 py-2 rounded-lg bg-brand-green/20 border border-brand-green/30 text-brand-green text-sm hover:bg-brand-green/30 transition-colors">
+              استمر في المشاهدة
+            </button>
+          </div>
+        )}
+
+        {showWarning && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-900/90 border border-red-500/40 text-white text-sm backdrop-blur-sm shadow-xl">
+            <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            {warningText}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   if (isYouTube) {
 
     const origin = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
@@ -279,7 +347,7 @@ export default function ProtectedVideoPlayer({
       enablejsapi:    '1',
     }
     if (origin) params.origin = origin
-    const embedUrl = `https://www.youtube.com/embed/${youtubeId}?` + new URLSearchParams(params).toString()
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${youtubeId}?` + new URLSearchParams(params).toString()
 
     return (
       <div
