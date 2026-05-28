@@ -165,12 +165,26 @@ export default function CurriculumSection() {
           className="mt-6 p-6 rounded-2xl border border-brand-green/15 bg-brand-green/5 text-center"
         >
           <p className="text-brand-gray text-sm mb-4">🔒 جميع الدروس محمية — يمكن الوصول إليها فقط بعد الاشتراك</p>
-          <a
+          <motion.a
             href="#cta"
-            className="btn-green inline-block px-8 py-3 rounded-xl text-sm font-bold"
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+            whileHover={{ scale: 1.05, y: -8 }}
+            whileTap={{ scale: 0.97 }}
+            className="btn-green inline-flex items-center gap-2.5 px-10 py-5 rounded-2xl text-lg font-bold relative overflow-hidden"
+            style={{ boxShadow: '0 8px 32px rgba(93,214,44,0.35), 0 2px 8px rgba(93,214,44,0.2)' }}
           >
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)',
+                transform: 'skewX(-15deg)',
+              }}
+              animate={{ x: ['-150%', '250%'] }}
+              transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+            />
             اشترك وابدأ التعلم الآن
-          </a>
+          </motion.a>
         </motion.div>
       </div>
     </section>

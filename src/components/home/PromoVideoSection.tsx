@@ -224,12 +224,30 @@ export default function PromoVideoSection() {
         >
           <motion.a
             href="#cta"
-            whileHover={{ scale: 1.04, y: -2 }}
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+            whileHover={{ scale: 1.05, y: -8 }}
             whileTap={{ scale: 0.97 }}
-            className="btn-green inline-flex items-center gap-2.5 px-8 py-4 rounded-xl text-base font-bold"
+            className="btn-green inline-flex items-center gap-2.5 px-10 py-5 rounded-2xl text-lg font-bold relative overflow-hidden"
+            style={{ boxShadow: '0 8px 32px rgba(93,214,44,0.35), 0 2px 8px rgba(93,214,44,0.2)' }}
           >
+            {/* Shimmer sweep */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)',
+                transform: 'skewX(-15deg)',
+              }}
+              animate={{ x: ['-150%', '250%'] }}
+              transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+            />
             اشترك وابدأ التعلم الآن
-            <ArrowLeft className="w-5 h-5" />
+            <motion.div
+              animate={{ x: [0, -5, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </motion.div>
           </motion.a>
         </motion.div>
 
