@@ -113,14 +113,14 @@ export default function CurriculumSection() {
                           className="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-brand-black/30 transition-colors"
                         >
                           {/* Thumbnail with lock */}
-                          <div className="relative flex-shrink-0 w-24 h-14 rounded-xl overflow-hidden hidden sm:block">
+                          <div className="relative flex-shrink-0 w-44 h-[6.5rem] rounded-xl overflow-hidden hidden sm:block">
                             <div className={`w-full h-full bg-gradient-to-br ${MODULE_COLORS[mi % 3]} flex items-center justify-center`}>
-                              <Play className="w-5 h-5 text-white/30" />
+                              <Play className="w-8 h-8 text-white/30" />
                             </div>
                             {/* Dark lock overlay */}
                             <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center gap-1">
-                              <div className="w-7 h-7 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
-                                <Lock className="w-3.5 h-3.5 text-brand-green" />
+                              <div className="w-11 h-11 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
+                                <Lock className="w-5 h-5 text-brand-green" />
                               </div>
                             </div>
                             {/* Lesson number badge */}

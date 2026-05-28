@@ -43,7 +43,7 @@ export default function CTASection() {
             </h2>
 
             <p className="text-brand-gray text-base mb-10 max-w-lg mx-auto">
-              انضم لأكثر من 2,400 طالب نجحوا وبدأوا مسيرتهم المهنية
+              انضم لأكثر من 400 طالب نجحوا وبدأوا مسيرتهم المهنية
             </p>
 
             {/* Benefits */}

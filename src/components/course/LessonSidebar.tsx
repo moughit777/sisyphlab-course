@@ -33,7 +33,7 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
       <div className="p-4 border-b border-brand-green/10">
         <h3 className="font-bold text-brand-white text-sm">محتوى الكورس</h3>
         <p className="text-xs text-brand-muted mt-0.5">
-          {modules.reduce((a, m) => a + (m.lessons?.length || 0), 0)} درس
+          {modules.reduce((a, m) => a + (m.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').length || 0), 0)} درس
         </p>
       </div>
 
@@ -71,7 +71,7 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                   transition={{ duration: 0.25 }}
                   className="overflow-hidden"
                 >
-                  {module.lessons?.map((lesson) => {
+                  {module.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').map((lesson) => {
                     const isActive    = lesson.id === currentLessonId
                     const isCompleted = completedLessons.includes(lesson.id)
                     const unlocked    = isUnlocked(lesson)

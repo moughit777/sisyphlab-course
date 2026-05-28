@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Play, ArrowLeft, Users, Clock, Star, Zap } from 'lucide-react'
 
 const stats = [
-  { icon: Users, value: '+2,400', label: 'طالب ناجح' },
+  { icon: Users, value: '+400', label: 'طالب ناجح' },
   { icon: Clock,  value: '+40',   label: 'ساعة محتوى' },
   { icon: Star,   value: '4.9',   label: 'تقييم الطلاب' },
   { icon: Zap,    value: '29',    label: 'درس احترافي' },

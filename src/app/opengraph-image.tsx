@@ -81,7 +81,7 @@ export default async function Image() {
         {/* Stats */}
         <div style={{ display: 'flex', gap: '40px' }}>
           {[
-            { value: '+2,400', label: 'طالب' },
+            { value: '+400', label: 'طالب' },
             { value: '+40', label: 'ساعة' },
             { value: '4.9', label: 'تقييم' },
           ].map((stat) => (

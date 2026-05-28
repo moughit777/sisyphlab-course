@@ -26,7 +26,7 @@ function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
 }
 
 const stats = [
-  { value: 2400, suffix: '+', label: 'طالب مسجل',    sub: 'من المغرب والعالم العربي' },
+  { value: 400, suffix: '+', label: 'طالب مسجل',    sub: 'من المغرب والعالم العربي' },
   { value: 40,   suffix: '+', label: 'ساعة محتوى',   sub: 'فيديوهات عالية الجودة' },
   { value: 13,   suffix: '',  label: 'درس متخصص',    sub: 'في 4 وحدات متكاملة' },
   { value: 98,   suffix: '%', label: 'معدل الرضا',   sub: 'من تقييمات الطلاب' },

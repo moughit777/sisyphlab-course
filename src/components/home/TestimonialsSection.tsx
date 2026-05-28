@@ -61,7 +61,7 @@ export default function TestimonialsSection() {
           <div className="flex items-center justify-center gap-1.5">
             {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-brand-green text-brand-green" />)}
             <span className="text-brand-white font-bold mr-1">4.9</span>
-            <span className="text-brand-gray text-sm">/ 5.0 (+2,400 تقييم)</span>
+            <span className="text-brand-gray text-sm">/ 5.0 (+400 تقييم)</span>
           </div>
         </motion.div>
 

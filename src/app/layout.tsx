@@ -11,7 +11,7 @@ const tajawal = Tajawal({
 
 export const metadata: Metadata = {
   title: 'مونتاج برو | كورس المونتاج الاحترافي',
-  description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects — صناعة Reels، مونتاج سوشيال ميديا، مؤثرات بصرية. كورس مغربي متكامل من الصفر حتى الاحتراف.',
+  description: 'كيفاش دير أول 1000 دولار من المونتاج — كورس مغربي متكامل مع Premiere Pro و After Effects من الصفر حتى الاحتراف.',
   keywords: 'مونتاج, premiere pro, after effects, reels, تعليم, كورس, مغرب, sisyphlab, مونتاج احترافي, فيديو',
   metadataBase: new URL('https://sisyphlab.com'),
   alternates: {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'مونتاج برو | كورس المونتاج الاحترافي',
-    description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects — صناعة Reels، مونتاج سوشيال ميديا، مؤثرات بصرية',
+    description: 'كيفاش دير أول 1000 دولار من المونتاج — كورس مغربي متكامل مع Premiere Pro و After Effects من الصفر حتى الاحتراف.',
     type: 'website',
     locale: 'ar_MA',
     url: 'https://sisyphlab.com',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'مونتاج برو | كورس المونتاج الاحترافي',
-    description: 'تعلم مونتاج احترافي مع Premiere Pro و After Effects',
+    description: 'كيفاش دير أول 1000 دولار من المونتاج — كورس مغربي متكامل من الصفر حتى الاحتراف.',
     images: ['/og-image.png'],
   },
   robots: {

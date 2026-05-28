@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import ProtectedVideoPlayer from '@/components/course/ProtectedVideoPlayer'
 import LessonSidebar from '@/components/course/LessonSidebar'
 import { Lesson, Token } from '@/lib/types'
@@ -180,10 +181,8 @@ export default function CoursePage() {
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-brand-green flex items-center justify-center shadow-green">
-              <Zap className="w-3.5 h-3.5 text-black" />
-            </div>
-            <span className="font-black text-brand-white text-sm hidden sm:block tracking-wide">Editor</span>
+            <Image src="/logo.png" alt="Sisyph Lab" width={28} height={28} className="rounded-lg" />
+            <span className="font-black text-brand-white text-sm hidden sm:block tracking-wide">Sisyph Lab</span>
           </div>
         </div>
 
