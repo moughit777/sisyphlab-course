@@ -8,7 +8,7 @@ import LessonSidebar from '@/components/course/LessonSidebar'
 import { Lesson, Token } from '@/lib/types'
 import { DEMO_COURSE } from '@/lib/courseData'
 import { maskIP } from '@/lib/utils'
-import { Shield, AlertTriangle, Menu, X, Zap, BookOpen } from 'lucide-react'
+import { Shield, AlertTriangle, Menu, X, Zap, BookOpen, ChevronLeft } from 'lucide-react'
 
 interface AccessData {
   valid: boolean
@@ -152,6 +152,9 @@ export default function CoursePage() {
   const student    = accessData.token!
   const partialIp  = maskIP(accessData.ip || '0.0.0.0')
   const allModules = DEMO_COURSE.modules || []
+  const allLessons = allModules.flatMap(m => m.lessons)
+  const currentIdx = allLessons.findIndex(l => l.id === currentLesson?.id)
+  const nextLesson = allLessons[currentIdx + 1] ?? null
 
   return (
     <div className="min-h-screen select-none" dir="rtl" style={{ background: '#0F0F0F' }}>
@@ -257,6 +260,20 @@ export default function CoursePage() {
                     onEnd={handleVideoEnd}
                   />
                 </div>
+
+                {/* Next lesson button */}
+                {nextLesson && (
+                  <div className="mb-4 flex justify-end">
+                    <button
+                      onClick={handleVideoEnd}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
+                      style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.3)', color: '#5DD62C' }}
+                    >
+                      {nextLesson.title}
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
 
                 {/* Lesson info card — Apple glass */}
                 <div className="rounded-2xl border border-brand-green/15 p-5"

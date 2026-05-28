@@ -202,15 +202,34 @@ export default function ProtectedVideoPlayer({
     return () => clearInterval(t)
   }, [isBunny, playing, lessonId, onProgress])
 
+  // ─── Bunny: subscribe to events after iframe loads ───
+  useEffect(() => {
+    if (!isBunny) return
+    const iframe = iframeRef.current
+    if (!iframe) return
+    function onLoad() {
+      iframe?.contentWindow?.postMessage(JSON.stringify({ event: 'listening' }), '*')
+    }
+    iframe.addEventListener('load', onLoad)
+    return () => iframe.removeEventListener('load', onLoad)
+  }, [isBunny])
+
   // ─── Bunny ended event listener ───
   useEffect(() => {
     if (!isBunny) return
     function onMessage(e: MessageEvent) {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
-        if (data?.event === 'ended' || data?.event === 'onVideoEnd') {
+        if (
+          data?.event === 'ended' ||
+          data?.event === 'onVideoEnd' ||
+          data?.eventName === 'onVideoEnd' ||
+          data?.type === 'ended'
+        ) {
           onEnd?.()
         }
+        if (data?.event === 'play' || data?.event === 'playing') setPlaying(true)
+        if (data?.event === 'pause') setPlaying(false)
       } catch {}
     }
     window.addEventListener('message', onMessage)
