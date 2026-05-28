@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Activity, Shield, Plus, Copy, Trash2, ToggleLeft, ToggleRight,
-  LogOut, RefreshCw, Eye, X, Check, AlertCircle, Zap, Clock, Globe,
+  LogOut, RefreshCw, Eye, X, Check, AlertCircle, Clock, Globe,
   ChevronDown, ExternalLink,
 } from 'lucide-react'
 import { Token, AccessLog, AdminStats } from '@/lib/types'
@@ -149,10 +149,8 @@ export default function AdminDashboard() {
       <header className="border-b border-brand-border bg-brand-dark/80 backdrop-blur-xl sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-brand-green flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-black" />
-            </div>
-            <span className="font-bold text-brand-white text-sm">مونتاج برو</span>
+            <img src="/logo.png" alt="Logo" className="w-7 h-7 rounded-lg object-cover" />
+            <span className="font-bold text-brand-white text-sm">Editor</span>
             <span className="text-brand-gray text-xs hidden sm:block">/ لوحة التحكم</span>
           </div>
           <div className="flex items-center gap-2">
