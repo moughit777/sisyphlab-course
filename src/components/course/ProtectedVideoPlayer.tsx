@@ -226,7 +226,12 @@ export default function ProtectedVideoPlayer({
           data?.eventName === 'onVideoEnd' ||
           data?.type === 'ended'
         ) {
+          onProgress?.(999999) // mark as completed
           onEnd?.()
+        }
+        if (data?.event === 'timeupdate' && data?.seconds && data?.duration) {
+          onProgress?.(data.seconds)
+          if (data.seconds / data.duration > 0.9) onProgress?.(999999)
         }
         if (data?.event === 'play' || data?.event === 'playing') setPlaying(true)
         if (data?.event === 'pause') setPlaying(false)
@@ -234,7 +239,7 @@ export default function ProtectedVideoPlayer({
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [isBunny, onEnd])
+  }, [isBunny, onEnd, onProgress])
 
   // ─── Session heartbeat (every 30s) ───
   useEffect(() => {

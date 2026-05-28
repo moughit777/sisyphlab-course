@@ -82,7 +82,7 @@ export default function CoursePage() {
 
   const handleProgress = useCallback((seconds: number) => {
     if (!currentLesson || !accessData?.token) return
-    if (seconds > (currentLesson.duration_seconds || 999) * 0.9) {
+    if (seconds === 999999 || seconds > (currentLesson.duration_seconds || 999) * 0.9) {
       markCompleted(currentLesson.id)
     }
   }, [currentLesson, accessData, markCompleted])
