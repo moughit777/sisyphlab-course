@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
@@ -36,6 +36,7 @@ export default function CoursePage() {
   const [currentLesson, setCurrentLesson]       = useState<Lesson | null>(null)
   const [completedLessons, setCompletedLessons] = useState<string[]>([])
   const [sidebarOpen, setSidebarOpen]           = useState(false)
+  const autoAdvancedRef = React.useRef<string | null>(null)
 
   useEffect(() => {
     async function verifyAccess() {
@@ -82,18 +83,30 @@ export default function CoursePage() {
 
   const handleProgress = useCallback((seconds: number) => {
     if (!currentLesson || !accessData?.token) return
-    if (seconds === 999999 || seconds > (currentLesson.duration_seconds || 999) * 0.9) {
+    const dur = currentLesson.duration_seconds || 600
+    const threshold = Math.min(dur * 0.85, 300) // max 5 minutes
+    if (seconds === 999999 || seconds >= threshold) {
       markCompleted(currentLesson.id)
+      if (autoAdvancedRef.current !== currentLesson.id) {
+        autoAdvancedRef.current = currentLesson.id
+        const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
+        const idx  = allL.findIndex(l => l.id === currentLesson.id)
+        const next = allL[idx + 1]
+        if (next) setTimeout(() => setCurrentLesson(next), 2000)
+      }
     }
   }, [currentLesson, accessData, markCompleted])
 
   const handleVideoEnd = useCallback(() => {
     if (!currentLesson) return
     markCompleted(currentLesson.id)
-    const allLessons = DEMO_COURSE.modules.flatMap(m => m.lessons)
-    const idx = allLessons.findIndex(l => l.id === currentLesson.id)
-    const next = allLessons[idx + 1]
-    if (next) setTimeout(() => setCurrentLesson(next), 1500)
+    const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
+    const idx  = allL.findIndex(l => l.id === currentLesson.id)
+    const next = allL[idx + 1]
+    if (next) {
+      autoAdvancedRef.current = currentLesson.id
+      setTimeout(() => setCurrentLesson(next), 1500)
+    }
   }, [currentLesson, markCompleted])
 
   /* ── Loading ── */
