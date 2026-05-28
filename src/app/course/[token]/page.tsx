@@ -53,9 +53,10 @@ export default function CoursePage() {
           if (data.session_key) localStorage.setItem(`sk_${tokenStr}`, data.session_key)
           const stored = localStorage.getItem(`done_${tokenStr}`)
           if (stored) setCompletedLessons(JSON.parse(stored))
-          if (DEMO_COURSE.modules?.[0]?.lessons?.[0]) {
-            setCurrentLesson(DEMO_COURSE.modules[0].lessons[0])
-          }
+          const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
+          const lastId = localStorage.getItem(`last_${tokenStr}`)
+          const lastLesson = lastId ? allL.find(l => l.id === lastId) : null
+          setCurrentLesson(lastLesson ?? allL[0])
         }
       } catch {
         setAccessData({ valid: false, error: 'خطأ في التحقق من الرابط' })
@@ -78,8 +79,9 @@ export default function CoursePage() {
   const handleSelectLesson = useCallback((lesson: Lesson) => {
     if (currentLesson) markCompleted(currentLesson.id)
     setCurrentLesson(lesson)
+    localStorage.setItem(`last_${tokenStr}`, lesson.id)
     setSidebarOpen(false)
-  }, [currentLesson, markCompleted])
+  }, [currentLesson, markCompleted, tokenStr])
 
   const handleProgress = useCallback((seconds: number) => {
     if (!currentLesson || !accessData?.token) return
@@ -92,10 +94,10 @@ export default function CoursePage() {
         const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
         const idx  = allL.findIndex(l => l.id === currentLesson.id)
         const next = allL[idx + 1]
-        if (next) setTimeout(() => setCurrentLesson(next), 2000)
+        if (next) setTimeout(() => { setCurrentLesson(next); localStorage.setItem(`last_${tokenStr}`, next.id) }, 2000)
       }
     }
-  }, [currentLesson, accessData, markCompleted])
+  }, [currentLesson, accessData, markCompleted, tokenStr])
 
   const handleVideoEnd = useCallback(() => {
     if (!currentLesson) return
@@ -105,9 +107,9 @@ export default function CoursePage() {
     const next = allL[idx + 1]
     if (next) {
       autoAdvancedRef.current = currentLesson.id
-      setTimeout(() => setCurrentLesson(next), 1500)
+      setTimeout(() => { setCurrentLesson(next); localStorage.setItem(`last_${tokenStr}`, next.id) }, 1500)
     }
-  }, [currentLesson, markCompleted])
+  }, [currentLesson, markCompleted, tokenStr])
 
   /* ── Loading ── */
   if (loading) {
