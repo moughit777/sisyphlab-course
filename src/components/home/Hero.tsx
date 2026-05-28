@@ -123,12 +123,11 @@ export default function Hero() {
             variants={item}
             className="text-base sm:text-lg text-brand-gray max-w-2xl mx-auto leading-relaxed mb-10"
           >
-            تعلم أساسيات المونتاج عن طريق{' '}
-            <span className="text-brand-white font-semibold">Premiere Pro</span>
-            {' '}و{' '}
-            <span className="text-brand-white font-semibold">After Effects</span>
-            {' '}وتواصل مع{' '}
-            <span className="text-brand-green font-semibold">أول عميل</span>
+            <span className="text-brand-white">تعلم أساسيات المونتاج عن طريق{' '}</span>
+            <span className="text-brand-green font-semibold">Premiere Pro</span>
+            <span className="text-brand-white">{' '}و{' '}</span>
+            <span className="text-brand-green font-semibold">After Effects</span>
+            <span className="text-brand-white">{' '}وتواصل مع أول عميل</span>
           </motion.p>
 
           {/* ── Buttons ── */}
