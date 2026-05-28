@@ -64,13 +64,31 @@ export default function CTASection() {
                 href={WA}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.04, y: -2 }}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+                whileHover={{ scale: 1.05, y: -8 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#25D366] text-black font-black text-lg shadow-[0_4px_24px_rgba(37,211,102,0.35)] hover:shadow-[0_6px_40px_rgba(37,211,102,0.5)] transition-all duration-300"
+                className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-[#25D366] text-black font-black text-lg relative overflow-hidden"
+                style={{ boxShadow: '0 8px 32px rgba(37,211,102,0.40), 0 2px 8px rgba(37,211,102,0.25)' }}
               >
+                {/* Shimmer sweep */}
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)',
+                    transform: 'skewX(-15deg)',
+                  }}
+                  animate={{ x: ['-150%', '250%'] }}
+                  transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+                />
                 <MessageCircle className="w-6 h-6 fill-black" />
                 اشترك عبر واتساب
-                <ArrowLeft className="w-5 h-5" />
+                <motion.div
+                  animate={{ x: [0, -5, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </motion.div>
               </motion.a>
             </div>
           </div>
