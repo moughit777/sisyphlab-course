@@ -6,12 +6,12 @@
 :root {
   --green:      #5DD62C;
   --green-dark: #337418;
-  --green-glow: rgba(93,214,44,0.40);
-  --black:      #050D05;
-  --card:       #0C1A0C;
-  --border:     rgba(93,214,44,0.15);
-  --white:      #F0F8F0;
-  --gray:       #9AB89A;
+  --green-glow: rgba(93,214,44,0.50);
+  --black:      #091507;
+  --card:       #0F2410;
+  --border:     rgba(93,214,44,0.20);
+  --white:      #EEF8EE;
+  --gray:       #8AB88A;
 }
 
 * { box-sizing: border-box; }
@@ -24,14 +24,14 @@ h1, h2, h3, h4, h5, h6 {
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #050D05;
+  background-color: #091507;
   background-image:
-    radial-gradient(ellipse 90% 60% at 50% -5%,   rgba(51,116,24,0.80)  0%, rgba(93,214,44,0.12) 45%, transparent 65%),
-    radial-gradient(ellipse 60% 65% at 100% 15%,  rgba(51,116,24,0.50)  0%, transparent 50%),
-    radial-gradient(ellipse 55% 60% at  0%  80%,  rgba(51,116,24,0.45)  0%, transparent 50%),
-    radial-gradient(ellipse 75% 45% at 50% 110%,  rgba(51,116,24,0.35)  0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 20% 40%,   rgba(93,214,44,0.06)  0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 80% 60%,   rgba(93,214,44,0.05)  0%, transparent 60%);
+    radial-gradient(ellipse 100% 70% at 50% -10%,  rgba(30,80,15,0.95)   0%, rgba(51,116,24,0.40) 40%, transparent 65%),
+    radial-gradient(ellipse 70%  70% at 100%  10%,  rgba(20,70,10,0.70)   0%, transparent 50%),
+    radial-gradient(ellipse 65%  65% at   0%  85%,  rgba(20,70,10,0.65)   0%, transparent 50%),
+    radial-gradient(ellipse 80%  50% at  50% 115%,  rgba(30,80,15,0.55)   0%, transparent 55%),
+    radial-gradient(ellipse 50%  50% at  25%  45%,  rgba(93,214,44,0.08)  0%, transparent 55%),
+    radial-gradient(ellipse 50%  50% at  75%  55%,  rgba(93,214,44,0.07)  0%, transparent 55%);
   color: var(--white);
   font-family: var(--font-tajawal), 'Tajawal', sans-serif;
   direction: rtl;
@@ -75,35 +75,35 @@ body {
 /* ── Glass card (Apple style) ─────────────────── */
 .glass {
   background: linear-gradient(135deg,
-    rgba(15, 32, 15, 0.65) 0%,
-    rgba(8,  18, 8,  0.80) 100%
+    rgba(20, 50, 15, 0.60) 0%,
+    rgba(10, 28, 8,  0.80) 100%
   );
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-top: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(40px) saturate(220%);
+  -webkit-backdrop-filter: blur(40px) saturate(220%);
+  border: 1px solid rgba(93,214,44,0.18);
+  border-top: 1px solid rgba(93,214,44,0.30);
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.07) inset,
-    0 24px 64px rgba(0,0,0,0.6),
-    0 0 0 0.5px rgba(93,214,44,0.12);
+    0 1px 0 rgba(93,214,44,0.10) inset,
+    0 24px 64px rgba(0,0,0,0.50),
+    0 0 0 0.5px rgba(93,214,44,0.10);
 }
 
 /* ── Premium glass card with green gradient ───── */
 .glass-green {
   background: linear-gradient(135deg,
-    rgba(51,116,24,0.30) 0%,
-    rgba(12, 28, 12, 0.75) 50%,
-    rgba(5,  12, 5,  0.90) 100%
+    rgba(30, 80, 18, 0.55) 0%,
+    rgba(15, 45, 10, 0.75) 50%,
+    rgba(8,  20, 5,  0.90) 100%
   );
-  backdrop-filter: blur(40px) saturate(220%);
-  -webkit-backdrop-filter: blur(40px) saturate(220%);
-  border: 1px solid rgba(93,214,44,0.22);
-  border-top: 1px solid rgba(93,214,44,0.35);
+  backdrop-filter: blur(40px) saturate(240%);
+  -webkit-backdrop-filter: blur(40px) saturate(240%);
+  border: 1px solid rgba(93,214,44,0.28);
+  border-top: 1px solid rgba(93,214,44,0.45);
   box-shadow:
-    0 1px 0 rgba(93,214,44,0.12) inset,
-    0 -1px 0 rgba(0,0,0,0.4) inset,
-    0 24px 64px rgba(0,0,0,0.55),
-    0 0 100px rgba(51,116,24,0.12);
+    0 1px 0 rgba(93,214,44,0.18) inset,
+    0 -1px 0 rgba(0,0,0,0.3) inset,
+    0 24px 64px rgba(0,0,0,0.45),
+    0 0 120px rgba(30,80,15,0.20);
 }
 
 /* ── Green gradient text ──────────────────────── */
