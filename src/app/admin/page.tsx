@@ -434,52 +434,93 @@ export default function AdminDashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}
             onClick={(e) => { if (e.target === e.currentTarget) { setShowCreateModal(false); setNewTokenUrl('') } }}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-md bg-brand-dark rounded-3xl border border-brand-border shadow-2xl overflow-hidden"
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="w-full max-w-md relative overflow-hidden rounded-3xl"
+              style={{
+                background: 'rgba(15,25,15,0.85)',
+                backdropFilter: 'blur(48px)',
+                WebkitBackdropFilter: 'blur(48px)',
+                border: '1px solid rgba(93,214,44,0.25)',
+                boxShadow: '0 0 0 0.5px rgba(93,214,44,0.08) inset, 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(93,214,44,0.06)',
+              }}
             >
-              <div className="p-6 border-b border-brand-border flex items-center justify-between">
-                <h3 className="font-bold text-brand-white">إنشاء رابط جديد</h3>
-                <button onClick={() => { setShowCreateModal(false); setNewTokenUrl('') }} className="text-brand-gray hover:text-brand-white transition-colors">
-                  <X className="w-5 h-5" />
+              {/* Light sweep */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none z-0"
+                style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(93,214,44,0.06) 50%, transparent 75%)' }}
+                animate={{ x: ['-120%', '220%'] }}
+                transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
+              />
+
+              {/* Top green line */}
+              <div className="absolute top-0 left-0 right-0 h-px z-10"
+                style={{ background: 'linear-gradient(90deg, transparent, rgba(93,214,44,0.6), transparent)' }} />
+
+              {/* Header */}
+              <div className="relative z-10 px-7 pt-7 pb-5 flex items-center justify-between"
+                style={{ borderBottom: '1px solid rgba(93,214,44,0.12)' }}>
+                <div>
+                  <h3 className="font-black text-white text-lg">إنشاء رابط جديد</h3>
+                  <p className="text-white/40 text-xs mt-0.5">أدخل بيانات الطالب</p>
+                </div>
+                <button
+                  onClick={() => { setShowCreateModal(false); setNewTokenUrl('') }}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+                >
+                  <X className="w-4 h-4 text-white/60" />
                 </button>
               </div>
 
               {newTokenUrl ? (
-                <div className="p-6 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-green/15 border border-brand-green/20 flex items-center justify-center mx-auto mb-4">
-                    <Check className="w-6 h-6 text-brand-green" />
-                  </div>
-                  <h4 className="font-bold text-brand-white mb-2">تم إنشاء الرابط بنجاح!</h4>
-                  <p className="text-brand-gray text-sm mb-4">انسخ الرابط وأرسله للطالب</p>
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-brand-black border border-brand-border mb-4">
-                    <span className="text-xs font-mono text-brand-white truncate flex-1 text-left">{newTokenUrl}</span>
+                <div className="relative z-10 p-7 text-center">
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
+                    style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.35)', boxShadow: '0 0 30px rgba(93,214,44,0.2)' }}
+                  >
+                    <Check className="w-8 h-8 text-brand-green" />
+                  </motion.div>
+                  <h4 className="font-black text-white text-xl mb-1">تم إنشاء الرابط!</h4>
+                  <p className="text-white/50 text-sm mb-5">انسخ الرابط وأرسله للطالب</p>
+                  <div className="flex items-center gap-2 p-3.5 rounded-2xl mb-5"
+                    style={{ background: 'rgba(93,214,44,0.06)', border: '1px solid rgba(93,214,44,0.2)' }}>
+                    <span className="text-xs font-mono text-white/80 truncate flex-1 text-left">{newTokenUrl}</span>
                     <button
-                      onClick={() => { navigator.clipboard.writeText(newTokenUrl) }}
-                      className="flex-shrink-0 p-1.5 rounded-lg bg-brand-green/20 text-brand-green hover:bg-brand-green/30 transition-colors"
+                      onClick={() => navigator.clipboard.writeText(newTokenUrl)}
+                      className="flex-shrink-0 p-1.5 rounded-lg transition-colors"
+                      style={{ background: 'rgba(93,214,44,0.15)', color: '#5DD62C' }}
                     >
                       <Copy className="w-4 h-4" />
                     </button>
                   </div>
                   <button
                     onClick={() => { setShowCreateModal(false); setNewTokenUrl('') }}
-                    className="px-6 py-2.5 rounded-xl bg-brand-green text-black font-bold text-sm hover:bg-brand-green-light transition-all"
+                    className="px-8 py-3 rounded-2xl font-bold text-black text-sm transition-all"
+                    style={{ background: 'linear-gradient(135deg, #5DD62C 0%, #337418 100%)', boxShadow: '0 4px 20px rgba(93,214,44,0.3)' }}
                   >
                     إغلاق
                   </button>
                 </div>
               ) : (
-                <div className="p-6 space-y-4">
+                <div className="relative z-10 p-7 space-y-4">
                   {createError && (
-                    <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                      <AlertCircle className="w-4 h-4" />
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2.5 p-3.5 rounded-2xl text-sm text-red-300"
+                      style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)' }}
+                    >
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
                       {createError}
-                    </div>
+                    </motion.div>
                   )}
 
                   {[
@@ -487,55 +528,64 @@ export default function AdminDashboard() {
                     { key: 'student_email', label: 'البريد الإلكتروني',          placeholder: 'student@email.com', type: 'email' },
                     { key: 'expires_at',    label: 'تاريخ الانتهاء (اختياري)', placeholder: '',                  type: 'datetime-local' },
                   ].map(f => (
-                    <div key={f.key}>
-                      <label className="block text-xs font-medium text-brand-gray mb-1.5">{f.label}</label>
+                    <div key={f.key} className="space-y-1.5">
+                      <label className="block text-sm font-semibold text-white/90">{f.label}</label>
                       <input
                         type={f.type}
                         value={(form as any)[f.key]}
                         onChange={(e) => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                         placeholder={f.placeholder}
-                        className="w-full px-3 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                        className="w-full px-4 py-3.5 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200"
+                        style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
+                        onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
+                        onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
                       />
                     </div>
                   ))}
 
-                  <div>
-                    <label className="block text-xs font-medium text-brand-gray mb-1.5">أقصى عدد جلسات متزامنة</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-semibold text-white/90">عدد الجلسات المتزامنة</label>
                     <select
                       value={form.max_sessions}
                       onChange={(e) => setForm(prev => ({ ...prev, max_sessions: e.target.value }))}
-                      className="w-full px-3 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white focus:outline-none focus:border-brand-green/50 text-sm"
+                      className="w-full px-4 py-3.5 rounded-2xl text-base text-white focus:outline-none transition-all duration-200"
+                      style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
                     >
-                      {[1,2,3].map(n => <option key={n} value={n}>{n} {n === 1 ? 'جلسة' : 'جلسات'}</option>)}
+                      {[1,2,3].map(n => <option key={n} value={n} style={{ background: '#0f190f' }}>{n} {n === 1 ? 'جلسة' : 'جلسات'}</option>)}
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-medium text-brand-gray mb-1.5">ملاحظات (اختياري)</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-semibold text-white/90">ملاحظات (اختياري)</label>
                     <textarea
                       value={form.notes}
                       onChange={(e) => setForm(prev => ({ ...prev, notes: e.target.value }))}
                       placeholder="ملاحظات إضافية..."
                       rows={2}
-                      className="w-full px-3 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 text-sm resize-none"
+                      className="w-full px-4 py-3.5 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200 resize-none"
+                      style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
+                      onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
+                      onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
                     />
                   </div>
 
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex gap-3 pt-1">
                     <button
                       onClick={() => { setShowCreateModal(false); setCreateError('') }}
-                      className="flex-1 py-2.5 rounded-xl border border-brand-border text-brand-gray hover:text-brand-white hover:bg-brand-card text-sm transition-colors"
+                      className="flex-1 py-3.5 rounded-2xl text-sm font-semibold text-white/60 hover:text-white transition-colors"
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)' }}
                     >
                       إلغاء
                     </button>
                     <button
                       onClick={handleCreateToken}
                       disabled={creating}
-                      className="flex-1 py-2.5 rounded-xl bg-brand-green text-black font-bold text-sm disabled:opacity-60 hover:bg-brand-green-light hover:shadow-green transition-all"
+                      className="flex-1 py-3.5 rounded-2xl font-bold text-black text-sm disabled:opacity-50 transition-all"
+                      style={{ background: 'linear-gradient(135deg, #5DD62C 0%, #337418 100%)', boxShadow: '0 4px 20px rgba(93,214,44,0.3)' }}
                     >
                       {creating ? (
                         <span className="flex items-center justify-center gap-2">
-                          <span className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                          <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                           إنشاء...
                         </span>
                       ) : 'إنشاء الرابط'}
