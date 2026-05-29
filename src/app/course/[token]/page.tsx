@@ -395,7 +395,7 @@ export default function CoursePage() {
                     : <Square className="w-5 h-5 text-brand-muted" />}
                 </div>
                 <span className="text-xs text-white/80 leading-relaxed">
-                  أتعهد بعدم مشاركة هذا الرابط مع أي شخص آخر. مشاركة الرابط ستؤدي إلى إلغاء الوصول نهائياً.
+                  مشاركة الرابط ستؤدي إلى إلغاء الوصول نهائياً.
                 </span>
               </button>
 
