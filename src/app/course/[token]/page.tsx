@@ -288,7 +288,7 @@ export default function CoursePage() {
             <div className="p-6 border-b border-brand-border text-center">
               <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-xl mx-auto mb-3" />
               <h1 className="text-xl font-black text-brand-white">أكمل تسجيلك للوصول للكورس</h1>
-              <p className="text-brand-gray text-sm mt-1">ستستخدم هذه البيانات في كل مرة تريد الدخول</p>
+              <p className="text-white/70 text-sm mt-1">ستستخدم هذه البيانات في كل مرة تريد الدخول</p>
             </div>
 
             <form onSubmit={handleRegister} className="p-6 space-y-4">
@@ -301,7 +301,7 @@ export default function CoursePage() {
 
               {/* Name */}
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">الاسم الكامل</label>
+                <label className="block text-xs font-medium text-white mb-1.5">الاسم الكامل</label>
                 <div className="relative">
                   <Shield className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -317,7 +317,7 @@ export default function CoursePage() {
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">البريد الإلكتروني</label>
+                <label className="block text-xs font-medium text-white mb-1.5">البريد الإلكتروني</label>
                 <div className="relative">
                   <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -333,7 +333,7 @@ export default function CoursePage() {
 
               {/* Phone */}
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">رقم الهاتف</label>
+                <label className="block text-xs font-medium text-white mb-1.5">رقم الهاتف</label>
                 <div className="relative">
                   <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -349,7 +349,7 @@ export default function CoursePage() {
 
               {/* Password */}
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">كلمة السر</label>
+                <label className="block text-xs font-medium text-white mb-1.5">كلمة السر</label>
                 <div className="relative">
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -369,7 +369,7 @@ export default function CoursePage() {
 
               {/* Confirm password */}
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">تأكيد كلمة السر</label>
+                <label className="block text-xs font-medium text-white mb-1.5">تأكيد كلمة السر</label>
                 <div className="relative">
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -394,7 +394,7 @@ export default function CoursePage() {
                     ? <CheckSquare className="w-5 h-5 text-brand-green" />
                     : <Square className="w-5 h-5 text-brand-muted" />}
                 </div>
-                <span className="text-xs text-brand-gray leading-relaxed">
+                <span className="text-xs text-white/80 leading-relaxed">
                   أتعهد بعدم مشاركة هذا الرابط مع أي شخص آخر. مشاركة الرابط ستؤدي إلى إلغاء الوصول نهائياً.
                 </span>
               </button>
@@ -437,7 +437,7 @@ export default function CoursePage() {
             <div className="p-6 border-b border-brand-border text-center">
               <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-xl mx-auto mb-3" />
               <h1 className="text-xl font-black text-brand-white">مرحباً بعودتك</h1>
-              <p className="text-brand-gray text-sm mt-1">ادخل كلمة السر للمتابعة</p>
+              <p className="text-white/70 text-sm mt-1">ادخل كلمة السر للمتابعة</p>
             </div>
 
             <form onSubmit={handleAuth} className="p-6 space-y-4">
@@ -449,7 +449,7 @@ export default function CoursePage() {
               )}
 
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">البريد الإلكتروني</label>
+                <label className="block text-xs font-medium text-white mb-1.5">البريد الإلكتروني</label>
                 <div className="relative">
                   <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -465,7 +465,7 @@ export default function CoursePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-brand-gray mb-1.5">كلمة السر</label>
+                <label className="block text-xs font-medium text-white mb-1.5">كلمة السر</label>
                 <div className="relative">
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
                   <input
@@ -496,7 +496,7 @@ export default function CoursePage() {
                   : 'دخول'}
               </button>
 
-              <p className="text-center text-xs text-brand-muted">
+              <p className="text-center text-xs text-white/50">
                 نسيت كلمة السر؟{' '}
                 <a href="https://wa.me/212624821600" target="_blank" rel="noopener noreferrer"
                   className="text-brand-green hover:underline">تواصل معنا</a>
