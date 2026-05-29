@@ -271,146 +271,188 @@ export default function CoursePage() {
 
   // ── Registration form ──────────────────────────────────────────────────────
   if (pageState === 'registration') {
+    const inputCls = 'w-full py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200'
+    const inputStyle = {
+      background: 'rgba(255,255,255,0.06)',
+      border: '1px solid rgba(255,255,255,0.12)',
+    }
+    const inputFocusStyle = {
+      border: '1px solid rgba(93,214,44,0.5)',
+      boxShadow: '0 0 0 3px rgba(93,214,44,0.08)',
+    }
     return (
-      <div className="min-h-screen bg-brand-black flex items-center justify-center p-4" dir="rtl">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full"
-            style={{ background: 'rgba(51,116,24,0.15)', filter: 'blur(100px)' }} />
+      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl"
+        style={{ background: 'linear-gradient(135deg, #0a0f0a 0%, #0d1a0d 50%, #080d08 100%)' }}>
+
+        {/* Background glows */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full"
+            style={{ background: 'radial-gradient(ellipse, rgba(51,116,24,0.22) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full"
+            style={{ background: 'rgba(93,214,44,0.06)', filter: 'blur(80px)' }} />
         </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="w-full max-w-md relative z-10"
         >
-          <div className="rounded-3xl border border-brand-border overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, rgba(28,28,28,0.95) 0%, rgba(18,18,18,0.98) 100%)', backdropFilter: 'blur(32px)' }}>
+          {/* Glass card */}
+          <div className="relative rounded-3xl overflow-hidden"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(48px)',
+              WebkitBackdropFilter: 'blur(48px)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 30px 80px rgba(0,0,0,0.6)',
+            }}>
 
-            <div className="p-6 border-b border-brand-border text-center">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-xl mx-auto mb-3" />
-              <h1 className="text-xl font-black text-brand-white">أكمل تسجيلك للوصول للكورس</h1>
-              <p className="text-white/70 text-sm mt-1">ستستخدم هذه البيانات في كل مرة تريد الدخول</p>
+            {/* Light sweep animation */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none z-0"
+              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.07) 50%, transparent 75%)' }}
+              animate={{ x: ['-120%', '220%'] }}
+              transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
+            />
+
+            {/* Top line highlight */}
+            <div className="absolute top-0 left-8 right-8 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)' }} />
+
+            {/* Header */}
+            <div className="relative z-10 pt-8 pb-6 px-8 text-center border-b border-white/8">
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                style={{ background: 'rgba(93,214,44,0.12)', border: '1px solid rgba(93,214,44,0.25)', backdropFilter: 'blur(12px)' }}>
+                <Image src="/logo.png" alt="Logo" width={32} height={32} className="rounded-lg" />
+              </div>
+              <h1 className="text-2xl font-black text-white tracking-tight">أكمل تسجيلك</h1>
+              <p className="text-white/50 text-sm mt-1.5">ستستخدم هذه البيانات في كل مرة تريد الدخول</p>
             </div>
 
-            <form onSubmit={handleRegister} className="p-6 space-y-4">
+            {/* Form */}
+            <form onSubmit={handleRegister} className="relative z-10 p-8 space-y-4">
               {regError && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2.5 p-3.5 rounded-2xl text-sm text-red-300"
+                  style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)' }}>
                   <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                   {regError}
-                </div>
+                </motion.div>
               )}
 
               {/* Name */}
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">الاسم الكامل</label>
-                <div className="relative">
-                  <Shield className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">الاسم الكامل</label>
+                <div className="relative group">
+                  <Shield className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type="text"
-                    value={regName}
-                    onChange={e => setRegName(e.target.value)}
-                    placeholder="أدخل اسمك الكامل"
-                    required
-                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type="text" value={regName} onChange={e => setRegName(e.target.value)}
+                    placeholder="أدخل اسمك الكامل" required
+                    className={`${inputCls} pr-12 pl-4`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                 </div>
               </div>
 
               {/* Email */}
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">البريد الإلكتروني</label>
-                <div className="relative">
-                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">البريد الإلكتروني</label>
+                <div className="relative group">
+                  <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type="email"
-                    value={regEmail}
-                    onChange={e => setRegEmail(e.target.value)}
-                    placeholder="example@email.com"
-                    required
-                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)}
+                    placeholder="example@email.com" required
+                    className={`${inputCls} pr-12 pl-4`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                 </div>
               </div>
 
               {/* Phone */}
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">رقم الهاتف</label>
-                <div className="relative">
-                  <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">رقم الهاتف</label>
+                <div className="relative group">
+                  <Phone className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type="tel"
-                    value={regPhone}
-                    onChange={e => setRegPhone(e.target.value)}
-                    placeholder="+212600000000"
-                    required
-                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type="tel" value={regPhone} onChange={e => setRegPhone(e.target.value)}
+                    placeholder="+212600000000" required
+                    className={`${inputCls} pr-12 pl-4`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                 </div>
               </div>
 
               {/* Password */}
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">كلمة السر</label>
-                <div className="relative">
-                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">كلمة السر</label>
+                <div className="relative group">
+                  <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type={showRegPass ? 'text' : 'password'}
-                    value={regPassword}
-                    onChange={e => setRegPassword(e.target.value)}
-                    placeholder="6 أحرف على الأقل"
-                    required
-                    className="w-full pr-10 pl-10 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type={showRegPass ? 'text' : 'password'} value={regPassword} onChange={e => setRegPassword(e.target.value)}
+                    placeholder="6 أحرف على الأقل" required
+                    className={`${inputCls} pr-12 pl-12`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                   <button type="button" onClick={() => setShowRegPass(!showRegPass)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-gray">
-                    {showRegPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                    {showRegPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
 
               {/* Confirm password */}
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">تأكيد كلمة السر</label>
-                <div className="relative">
-                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">تأكيد كلمة السر</label>
+                <div className="relative group">
+                  <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type={showRegPass ? 'text' : 'password'}
-                    value={regConfirm}
-                    onChange={e => setRegConfirm(e.target.value)}
-                    placeholder="أعد كتابة كلمة السر"
-                    required
-                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type={showRegPass ? 'text' : 'password'} value={regConfirm} onChange={e => setRegConfirm(e.target.value)}
+                    placeholder="أعد كتابة كلمة السر" required
+                    className={`${inputCls} pr-12 pl-4`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                 </div>
               </div>
 
               {/* Agreement */}
-              <button
-                type="button"
-                onClick={() => setRegAgreed(!regAgreed)}
-                className="flex items-start gap-3 w-full text-right"
-              >
-                <div className="flex-shrink-0 mt-0.5">
+              <button type="button" onClick={() => setRegAgreed(!regAgreed)}
+                className="flex items-center gap-3 w-full text-right py-1">
+                <div className="flex-shrink-0">
                   {regAgreed
                     ? <CheckSquare className="w-5 h-5 text-brand-green" />
-                    : <Square className="w-5 h-5 text-brand-muted" />}
+                    : <Square className="w-5 h-5 text-white/30" />}
                 </div>
-                <span className="text-xs text-white/80 leading-relaxed">
-                  مشاركة الرابط ستؤدي إلى إلغاء الوصول نهائياً.
+                <span className="text-sm text-white/60 leading-relaxed">
+                  مشاركة الرابط سيؤدي إلى إلغاء الوصول نهائياً.
                 </span>
               </button>
 
-              <button
-                type="submit"
-                disabled={regLoading}
-                className="w-full py-3 rounded-xl bg-brand-green text-black font-bold text-sm disabled:opacity-60 hover:bg-brand-green-light transition-all hover:shadow-green"
+              {/* Submit */}
+              <motion.button
+                type="submit" disabled={regLoading}
+                whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
+                className="w-full py-4 rounded-2xl font-bold text-base text-black disabled:opacity-50 transition-all relative overflow-hidden"
+                style={{ background: 'linear-gradient(135deg, #5DD62C 0%, #337418 100%)', boxShadow: '0 4px 24px rgba(93,214,44,0.3)' }}
               >
                 {regLoading
                   ? <span className="flex items-center justify-center gap-2">
-                      <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                       جارٍ التسجيل...
                     </span>
                   : 'تسجيل والدخول للكورس'}
-              </button>
+              </motion.button>
             </form>
           </div>
         </motion.div>
@@ -420,83 +462,127 @@ export default function CoursePage() {
 
   // ── Auth (login) form ──────────────────────────────────────────────────────
   if (pageState === 'auth') {
+    const inputCls = 'w-full py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200'
+    const inputStyle = {
+      background: 'rgba(255,255,255,0.06)',
+      border: '1px solid rgba(255,255,255,0.12)',
+    }
+    const inputFocusStyle = {
+      border: '1px solid rgba(93,214,44,0.5)',
+      boxShadow: '0 0 0 3px rgba(93,214,44,0.08)',
+    }
     return (
-      <div className="min-h-screen bg-brand-black flex items-center justify-center p-4" dir="rtl">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full"
-            style={{ background: 'rgba(51,116,24,0.15)', filter: 'blur(100px)' }} />
+      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl"
+        style={{ background: 'linear-gradient(135deg, #0a0f0a 0%, #0d1a0d 50%, #080d08 100%)' }}>
+
+        {/* Background glows */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full"
+            style={{ background: 'radial-gradient(ellipse, rgba(51,116,24,0.2) 0%, transparent 70%)', filter: 'blur(60px)' }} />
         </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="w-full max-w-sm relative z-10"
         >
-          <div className="rounded-3xl border border-brand-border overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, rgba(28,28,28,0.95) 0%, rgba(18,18,18,0.98) 100%)', backdropFilter: 'blur(32px)' }}>
+          {/* Glass card */}
+          <div className="relative rounded-3xl overflow-hidden"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(48px)',
+              WebkitBackdropFilter: 'blur(48px)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 30px 80px rgba(0,0,0,0.6)',
+            }}>
 
-            <div className="p-6 border-b border-brand-border text-center">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-xl mx-auto mb-3" />
-              <h1 className="text-xl font-black text-brand-white">مرحباً بعودتك</h1>
-              <p className="text-white/70 text-sm mt-1">ادخل كلمة السر للمتابعة</p>
+            {/* Light sweep animation */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none z-0"
+              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.07) 50%, transparent 75%)' }}
+              animate={{ x: ['-120%', '220%'] }}
+              transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
+            />
+
+            {/* Top line highlight */}
+            <div className="absolute top-0 left-8 right-8 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)' }} />
+
+            {/* Header */}
+            <div className="relative z-10 pt-8 pb-6 px-8 text-center border-b border-white/8">
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                style={{ background: 'rgba(93,214,44,0.12)', border: '1px solid rgba(93,214,44,0.25)', backdropFilter: 'blur(12px)' }}>
+                <Image src="/logo.png" alt="Logo" width={32} height={32} className="rounded-lg" />
+              </div>
+              <h1 className="text-2xl font-black text-white tracking-tight">مرحباً بعودتك</h1>
+              <p className="text-white/50 text-sm mt-1.5">ادخل بياناتك للمتابعة</p>
             </div>
 
-            <form onSubmit={handleAuth} className="p-6 space-y-4">
+            {/* Form */}
+            <form onSubmit={handleAuth} className="relative z-10 p-8 space-y-4">
               {authError && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2.5 p-3.5 rounded-2xl text-sm text-red-300"
+                  style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)' }}>
                   <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                   {authError}
-                </div>
+                </motion.div>
               )}
 
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">البريد الإلكتروني</label>
-                <div className="relative">
-                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">البريد الإلكتروني</label>
+                <div className="relative group">
+                  <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type="email"
-                    value={authEmail}
-                    onChange={e => setAuthEmail(e.target.value)}
-                    placeholder="example@email.com"
-                    autoFocus
-                    required
-                    className="w-full pr-10 pl-4 py-3 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type="email" value={authEmail} onChange={e => setAuthEmail(e.target.value)}
+                    placeholder="example@email.com" autoFocus required
+                    className={`${inputCls} pr-12 pl-4`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-white mb-1.5">كلمة السر</label>
-                <div className="relative">
-                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+              {/* Password */}
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-white/90">كلمة السر</label>
+                <div className="relative group">
+                  <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-brand-green transition-colors" />
                   <input
-                    type={showAuthPass ? 'text' : 'password'}
-                    value={authPassword}
-                    onChange={e => setAuthPassword(e.target.value)}
-                    placeholder="ادخل كلمة السر"
-                    required
-                    className="w-full pr-10 pl-10 py-3 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                    type={showAuthPass ? 'text' : 'password'} value={authPassword} onChange={e => setAuthPassword(e.target.value)}
+                    placeholder="ادخل كلمة السر" required
+                    className={`${inputCls} pr-12 pl-12`}
+                    style={inputStyle}
+                    onFocus={e => Object.assign(e.target.style, inputFocusStyle)}
+                    onBlur={e => Object.assign(e.target.style, inputStyle)}
                   />
                   <button type="button" onClick={() => setShowAuthPass(!showAuthPass)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-gray">
-                    {showAuthPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                    {showAuthPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full py-3 rounded-xl bg-brand-green text-black font-bold text-sm disabled:opacity-60 hover:bg-brand-green-light transition-all hover:shadow-green"
+              {/* Submit */}
+              <motion.button
+                type="submit" disabled={authLoading}
+                whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
+                className="w-full py-4 rounded-2xl font-bold text-base text-black disabled:opacity-50 transition-all mt-2"
+                style={{ background: 'linear-gradient(135deg, #5DD62C 0%, #337418 100%)', boxShadow: '0 4px 24px rgba(93,214,44,0.3)' }}
               >
                 {authLoading
                   ? <span className="flex items-center justify-center gap-2">
-                      <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                       جارٍ التحقق...
                     </span>
-                  : 'دخول'}
-              </button>
+                  : 'دخول للكورس'}
+              </motion.button>
 
-              <p className="text-center text-xs text-white/50">
+              <p className="text-center text-xs text-white/30 pt-1">
                 نسيت كلمة السر؟{' '}
                 <a href="https://wa.me/212624821600" target="_blank" rel="noopener noreferrer"
                   className="text-brand-green hover:underline">تواصل معنا</a>
