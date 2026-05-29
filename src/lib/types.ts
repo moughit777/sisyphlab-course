@@ -3,7 +3,9 @@ export interface Token {
   token: string
   student_name: string
   student_email?: string
+  student_whatsapp?: string
   is_active: boolean
+  is_registered: boolean
   max_sessions: number
   created_at: string
   expires_at?: string

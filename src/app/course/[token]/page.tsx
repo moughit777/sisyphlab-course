@@ -8,7 +8,12 @@ import LessonSidebar from '@/components/course/LessonSidebar'
 import { Lesson, Token } from '@/lib/types'
 import { DEMO_COURSE } from '@/lib/courseData'
 import { maskIP } from '@/lib/utils'
-import { Shield, AlertTriangle, Menu, X, Zap, BookOpen, ChevronLeft } from 'lucide-react'
+import {
+  Shield, AlertTriangle, Menu, X, Zap, BookOpen, ChevronLeft,
+  Eye, EyeOff, Lock, Mail, Phone, CheckSquare, Square,
+} from 'lucide-react'
+
+type PageState = 'loading' | 'registration' | 'auth' | 'course' | 'error'
 
 interface AccessData {
   valid: boolean
@@ -31,13 +36,33 @@ export default function CoursePage() {
   const params = useParams()
   const tokenStr = params.token as string
 
-  const [accessData, setAccessData]             = useState<AccessData | null>(null)
-  const [loading, setLoading]                   = useState(true)
-  const [currentLesson, setCurrentLesson]       = useState<Lesson | null>(null)
-  const [completedLessons, setCompletedLessons] = useState<string[]>([])
-  const [sidebarOpen, setSidebarOpen]           = useState(false)
-  const autoAdvancedRef = React.useRef<string | null>(null)
+  const [pageState, setPageState]                = useState<PageState>('loading')
+  const [errorMsg, setErrorMsg]                  = useState('')
+  const [accessData, setAccessData]              = useState<AccessData | null>(null)
+  const [currentLesson, setCurrentLesson]        = useState<Lesson | null>(null)
+  const [completedLessons, setCompletedLessons]  = useState<string[]>([])
+  const [sidebarOpen, setSidebarOpen]            = useState(false)
+  const autoAdvancedRef                          = React.useRef<string | null>(null)
 
+  // Registration form state
+  const [regName, setRegName]           = useState('')
+  const [regEmail, setRegEmail]         = useState('')
+  const [regPassword, setRegPassword]   = useState('')
+  const [regConfirm, setRegConfirm]     = useState('')
+  const [regPhone, setRegPhone]         = useState('')
+  const [regAgreed, setRegAgreed]       = useState(false)
+  const [regError, setRegError]         = useState('')
+  const [regLoading, setRegLoading]     = useState(false)
+  const [showRegPass, setShowRegPass]   = useState(false)
+
+  // Auth (login) form state
+  const [authEmail, setAuthEmail]       = useState('')
+  const [authPassword, setAuthPassword] = useState('')
+  const [authError, setAuthError]       = useState('')
+  const [authLoading, setAuthLoading]   = useState(false)
+  const [showAuthPass, setShowAuthPass] = useState(false)
+
+  // ── Initial check ──────────────────────────────────────────────────────────
   useEffect(() => {
     async function verifyAccess() {
       try {
@@ -48,25 +73,107 @@ export default function CoursePage() {
           body: JSON.stringify({ token: tokenStr, session_key: storedSessionKey }),
         })
         const data = await res.json()
-        setAccessData(data)
+
         if (data.valid) {
           if (data.session_key) localStorage.setItem(`sk_${tokenStr}`, data.session_key)
           const stored = localStorage.getItem(`done_${tokenStr}`)
           if (stored) setCompletedLessons(JSON.parse(stored))
-          const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
+          const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
           const lastId = localStorage.getItem(`last_${tokenStr}`)
           const lastLesson = lastId ? allL.find(l => l.id === lastId) : null
-          setCurrentLesson(lastLesson ?? allL[0])
+          setCurrentLesson(lastLesson ?? allL[0] ?? null)
+          setAccessData(data)
+          setPageState('course')
+        } else if (data.needs_registration) {
+          setPageState('registration')
+        } else if (data.needs_auth) {
+          setPageState('auth')
+        } else {
+          setErrorMsg(data.error || 'الرابط غير صالح')
+          setPageState('error')
         }
       } catch {
-        setAccessData({ valid: false, error: 'خطأ في التحقق من الرابط' })
-      } finally {
-        setLoading(false)
+        setErrorMsg('خطأ في التحقق من الرابط')
+        setPageState('error')
       }
     }
     verifyAccess()
   }, [tokenStr])
 
+  // ── After successful auth/register ────────────────────────────────────────
+  function enterCourse(data: { session_key: string; token: Token; ip: string }) {
+    localStorage.setItem(`sk_${tokenStr}`, data.session_key)
+    const stored = localStorage.getItem(`done_${tokenStr}`)
+    if (stored) setCompletedLessons(JSON.parse(stored))
+    const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
+    const lastId = localStorage.getItem(`last_${tokenStr}`)
+    const lastLesson = lastId ? allL.find(l => l.id === lastId) : null
+    setCurrentLesson(lastLesson ?? allL[0] ?? null)
+    setAccessData({ valid: true, token: data.token, session_key: data.session_key, ip: data.ip })
+    setPageState('course')
+  }
+
+  // ── Registration submit ────────────────────────────────────────────────────
+  async function handleRegister(e: React.FormEvent) {
+    e.preventDefault()
+    setRegError('')
+
+    if (!regName || !regEmail || !regPassword || !regPhone) {
+      setRegError('جميع الحقول مطلوبة'); return
+    }
+    if (regPassword.length < 6) {
+      setRegError('كلمة السر يجب أن تكون 6 أحرف على الأقل'); return
+    }
+    if (regPassword !== regConfirm) {
+      setRegError('كلمتا السر غير متطابقتين'); return
+    }
+    if (!regAgreed) {
+      setRegError('يجب الموافقة على شروط الاستخدام'); return
+    }
+
+    setRegLoading(true)
+    try {
+      const res = await fetch('/api/course/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: tokenStr, name: regName, email: regEmail, password: regPassword, phone: regPhone }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setRegError(data.error || 'حدث خطأ'); return }
+      enterCourse(data)
+    } catch {
+      setRegError('خطأ في الاتصال')
+    } finally {
+      setRegLoading(false)
+    }
+  }
+
+  // ── Auth (login) submit ───────────────────────────────────────────────────
+  async function handleAuth(e: React.FormEvent) {
+    e.preventDefault()
+    setAuthError('')
+    if (!authPassword) { setAuthError('ادخل كلمة السر'); return }
+
+    if (!authEmail) { setAuthError('ادخل البريد الإلكتروني'); return }
+
+    setAuthLoading(true)
+    try {
+      const res = await fetch('/api/course/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: tokenStr, email: authEmail, password: authPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setAuthError(data.error || 'حدث خطأ'); return }
+      enterCourse(data)
+    } catch {
+      setAuthError('خطأ في الاتصال')
+    } finally {
+      setAuthLoading(false)
+    }
+  }
+
+  // ── Course logic ───────────────────────────────────────────────────────────
   const markCompleted = useCallback((lessonId: string) => {
     setCompletedLessons(prev => {
       if (prev.includes(lessonId)) return prev
@@ -86,12 +193,12 @@ export default function CoursePage() {
   const handleProgress = useCallback((seconds: number) => {
     if (!currentLesson || !accessData?.token) return
     const dur = currentLesson.duration_seconds || 600
-    const threshold = Math.min(dur * 0.85, 300) // max 5 minutes
+    const threshold = Math.min(dur * 0.85, 300)
     if (seconds === 999999 || seconds >= threshold) {
       markCompleted(currentLesson.id)
       if (autoAdvancedRef.current !== currentLesson.id) {
         autoAdvancedRef.current = currentLesson.id
-        const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
+        const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
         const idx  = allL.findIndex(l => l.id === currentLesson.id)
         const next = allL[idx + 1]
         if (next) setTimeout(() => { setCurrentLesson(next); localStorage.setItem(`last_${tokenStr}`, next.id) }, 2000)
@@ -102,7 +209,7 @@ export default function CoursePage() {
   const handleVideoEnd = useCallback(() => {
     if (!currentLesson) return
     markCompleted(currentLesson.id)
-    const allL = DEMO_COURSE.modules.flatMap(m => m.lessons)
+    const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
     const idx  = allL.findIndex(l => l.id === currentLesson.id)
     const next = allL[idx + 1]
     if (next) {
@@ -111,8 +218,8 @@ export default function CoursePage() {
     }
   }, [currentLesson, markCompleted, tokenStr])
 
-  /* ── Loading ── */
-  if (loading) {
+  // ── Loading ────────────────────────────────────────────────────────────────
+  if (pageState === 'loading') {
     return (
       <div className="min-h-screen bg-brand-black flex items-center justify-center">
         <div className="absolute inset-0 pointer-events-none">
@@ -130,8 +237,8 @@ export default function CoursePage() {
     )
   }
 
-  /* ── Access Denied ── */
-  if (!accessData?.valid) {
+  // ── Error ──────────────────────────────────────────────────────────────────
+  if (pageState === 'error') {
     return (
       <div className="min-h-screen bg-brand-black flex items-center justify-center p-4">
         <div className="absolute inset-0 pointer-events-none">
@@ -148,9 +255,7 @@ export default function CoursePage() {
             <AlertTriangle className="w-8 h-8 text-red-400" />
           </div>
           <h1 className="text-2xl font-black text-brand-white mb-3">وصول مرفوض</h1>
-          <p className="text-brand-gray mb-6 leading-relaxed text-sm">
-            {accessData?.error || 'هذا الرابط غير صالح أو منتهي الصلاحية. يرجى التواصل معنا.'}
-          </p>
+          <p className="text-brand-gray mb-6 leading-relaxed text-sm">{errorMsg}</p>
           <a
             href="https://wa.me/212624821600"
             target="_blank"
@@ -164,17 +269,257 @@ export default function CoursePage() {
     )
   }
 
-  const student    = accessData.token!
-  const partialIp  = maskIP(accessData.ip || '0.0.0.0')
+  // ── Registration form ──────────────────────────────────────────────────────
+  if (pageState === 'registration') {
+    return (
+      <div className="min-h-screen bg-brand-black flex items-center justify-center p-4" dir="rtl">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full"
+            style={{ background: 'rgba(51,116,24,0.15)', filter: 'blur(100px)' }} />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md relative z-10"
+        >
+          <div className="rounded-3xl border border-brand-border overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(28,28,28,0.95) 0%, rgba(18,18,18,0.98) 100%)', backdropFilter: 'blur(32px)' }}>
+
+            <div className="p-6 border-b border-brand-border text-center">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-xl mx-auto mb-3" />
+              <h1 className="text-xl font-black text-brand-white">أكمل تسجيلك للوصول للكورس</h1>
+              <p className="text-brand-gray text-sm mt-1">ستستخدم هذه البيانات في كل مرة تريد الدخول</p>
+            </div>
+
+            <form onSubmit={handleRegister} className="p-6 space-y-4">
+              {regError && (
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  {regError}
+                </div>
+              )}
+
+              {/* Name */}
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">الاسم الكامل</label>
+                <div className="relative">
+                  <Shield className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type="text"
+                    value={regName}
+                    onChange={e => setRegName(e.target.value)}
+                    placeholder="أدخل اسمك الكامل"
+                    required
+                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">البريد الإلكتروني</label>
+                <div className="relative">
+                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type="email"
+                    value={regEmail}
+                    onChange={e => setRegEmail(e.target.value)}
+                    placeholder="example@email.com"
+                    required
+                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">رقم الهاتف</label>
+                <div className="relative">
+                  <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type="tel"
+                    value={regPhone}
+                    onChange={e => setRegPhone(e.target.value)}
+                    placeholder="+212600000000"
+                    required
+                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">كلمة السر</label>
+                <div className="relative">
+                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type={showRegPass ? 'text' : 'password'}
+                    value={regPassword}
+                    onChange={e => setRegPassword(e.target.value)}
+                    placeholder="6 أحرف على الأقل"
+                    required
+                    className="w-full pr-10 pl-10 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                  <button type="button" onClick={() => setShowRegPass(!showRegPass)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-gray">
+                    {showRegPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm password */}
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">تأكيد كلمة السر</label>
+                <div className="relative">
+                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type={showRegPass ? 'text' : 'password'}
+                    value={regConfirm}
+                    onChange={e => setRegConfirm(e.target.value)}
+                    placeholder="أعد كتابة كلمة السر"
+                    required
+                    className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Agreement */}
+              <button
+                type="button"
+                onClick={() => setRegAgreed(!regAgreed)}
+                className="flex items-start gap-3 w-full text-right"
+              >
+                <div className="flex-shrink-0 mt-0.5">
+                  {regAgreed
+                    ? <CheckSquare className="w-5 h-5 text-brand-green" />
+                    : <Square className="w-5 h-5 text-brand-muted" />}
+                </div>
+                <span className="text-xs text-brand-gray leading-relaxed">
+                  أتعهد بعدم مشاركة هذا الرابط مع أي شخص آخر. مشاركة الرابط ستؤدي إلى إلغاء الوصول نهائياً.
+                </span>
+              </button>
+
+              <button
+                type="submit"
+                disabled={regLoading}
+                className="w-full py-3 rounded-xl bg-brand-green text-black font-bold text-sm disabled:opacity-60 hover:bg-brand-green-light transition-all hover:shadow-green"
+              >
+                {regLoading
+                  ? <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      جارٍ التسجيل...
+                    </span>
+                  : 'تسجيل والدخول للكورس'}
+              </button>
+            </form>
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
+
+  // ── Auth (login) form ──────────────────────────────────────────────────────
+  if (pageState === 'auth') {
+    return (
+      <div className="min-h-screen bg-brand-black flex items-center justify-center p-4" dir="rtl">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full"
+            style={{ background: 'rgba(51,116,24,0.15)', filter: 'blur(100px)' }} />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-sm relative z-10"
+        >
+          <div className="rounded-3xl border border-brand-border overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(28,28,28,0.95) 0%, rgba(18,18,18,0.98) 100%)', backdropFilter: 'blur(32px)' }}>
+
+            <div className="p-6 border-b border-brand-border text-center">
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-xl mx-auto mb-3" />
+              <h1 className="text-xl font-black text-brand-white">مرحباً بعودتك</h1>
+              <p className="text-brand-gray text-sm mt-1">ادخل كلمة السر للمتابعة</p>
+            </div>
+
+            <form onSubmit={handleAuth} className="p-6 space-y-4">
+              {authError && (
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  {authError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">البريد الإلكتروني</label>
+                <div className="relative">
+                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type="email"
+                    value={authEmail}
+                    onChange={e => setAuthEmail(e.target.value)}
+                    placeholder="example@email.com"
+                    autoFocus
+                    required
+                    className="w-full pr-10 pl-4 py-3 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-brand-gray mb-1.5">كلمة السر</label>
+                <div className="relative">
+                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+                  <input
+                    type={showAuthPass ? 'text' : 'password'}
+                    value={authPassword}
+                    onChange={e => setAuthPassword(e.target.value)}
+                    placeholder="ادخل كلمة السر"
+                    required
+                    className="w-full pr-10 pl-10 py-3 rounded-xl bg-brand-black border border-brand-border text-brand-white placeholder-brand-muted focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/20 text-sm"
+                  />
+                  <button type="button" onClick={() => setShowAuthPass(!showAuthPass)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-gray">
+                    {showAuthPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full py-3 rounded-xl bg-brand-green text-black font-bold text-sm disabled:opacity-60 hover:bg-brand-green-light transition-all hover:shadow-green"
+              >
+                {authLoading
+                  ? <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      جارٍ التحقق...
+                    </span>
+                  : 'دخول'}
+              </button>
+
+              <p className="text-center text-xs text-brand-muted">
+                نسيت كلمة السر؟{' '}
+                <a href="https://wa.me/212624821600" target="_blank" rel="noopener noreferrer"
+                  className="text-brand-green hover:underline">تواصل معنا</a>
+              </p>
+            </form>
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
+
+  // ── Course ─────────────────────────────────────────────────────────────────
+  const student    = accessData!.token!
+  const partialIp  = maskIP(accessData!.ip || '0.0.0.0')
   const allModules = DEMO_COURSE.modules || []
-  const allLessons = allModules.flatMap(m => m.lessons)
+  const allLessons = allModules.flatMap(m => m.lessons ?? [])
   const currentIdx = allLessons.findIndex(l => l.id === currentLesson?.id)
   const nextLesson = allLessons[currentIdx + 1] ?? null
 
   return (
     <div className="min-h-screen select-none" dir="rtl" style={{ background: '#0F0F0F' }}>
 
-      {/* ── Background glow ── */}
+      {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full"
           style={{ background: 'radial-gradient(ellipse, rgba(51,116,24,0.35) 0%, rgba(93,214,44,0.06) 55%, transparent 75%)', filter: 'blur(60px)' }} />
@@ -184,7 +529,7 @@ export default function CoursePage() {
           style={{ background: 'rgba(51,116,24,0.10)', filter: 'blur(80px)' }} />
       </div>
 
-      {/* ── Animated dots ── */}
+      {/* Animated dots */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {DOTS.map(dot => (
           <motion.div
@@ -197,7 +542,7 @@ export default function CoursePage() {
         ))}
       </div>
 
-      {/* ── Top bar ── */}
+      {/* Top bar */}
       <header className="h-14 border-b border-brand-green/10 fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4"
         style={{ background: 'rgba(15,15,15,0.85)', backdropFilter: 'blur(24px)' }}>
         <div className="flex items-center gap-3">
@@ -222,7 +567,7 @@ export default function CoursePage() {
         </div>
       </header>
 
-      {/* ── Main layout ── */}
+      {/* Main layout */}
       <div className="flex pt-14 h-screen overflow-hidden relative z-10">
 
         {/* Mobile overlay */}
@@ -260,7 +605,6 @@ export default function CoursePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
               >
-                {/* Video player */}
                 <div className="mb-5 rounded-2xl overflow-hidden shadow-green-lg"
                   style={{ boxShadow: '0 0 60px rgba(51,116,24,0.15), 0 20px 60px rgba(0,0,0,0.6)' }}>
                   <ProtectedVideoPlayer
@@ -269,14 +613,13 @@ export default function CoursePage() {
                     studentName={student.student_name}
                     partialIp={partialIp}
                     tokenId={student.id}
-                    sessionKey={accessData.session_key!}
+                    sessionKey={accessData!.session_key!}
                     lessonId={currentLesson.id}
                     onProgress={handleProgress}
                     onEnd={handleVideoEnd}
                   />
                 </div>
 
-                {/* Next lesson button */}
                 {nextLesson && (
                   <div className="mb-4 flex justify-end">
                     <button
@@ -290,7 +633,6 @@ export default function CoursePage() {
                   </div>
                 )}
 
-                {/* Lesson info card — Apple glass */}
                 <div className="rounded-2xl border border-brand-green/15 p-5"
                   style={{
                     background: 'linear-gradient(135deg, rgba(32,32,32,0.80) 0%, rgba(20,20,20,0.90) 100%)',

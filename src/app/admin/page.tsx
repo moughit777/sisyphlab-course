@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Activity, Shield, Plus, Copy, Trash2, ToggleLeft, ToggleRight,
   LogOut, RefreshCw, Eye, X, Check, AlertCircle, Clock, Globe,
-  ChevronDown, ExternalLink,
+  ChevronDown, ExternalLink, RotateCcw,
 } from 'lucide-react'
 import { Token, AccessLog, AdminStats } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
@@ -24,6 +24,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [resettingId, setResettingId] = useState<string | null>(null)
   const [authorized, setAuthorized] = useState(false)
 
   const [form, setForm] = useState({ student_name: '', student_email: '', expires_at: '', max_sessions: '1', notes: '' })
@@ -103,6 +104,16 @@ export default function AdminDashboard() {
     if (!confirm('هل أنت متأكد من حذف هذا الرابط؟')) return
     await fetch(`/api/tokens/${id}`, { method: 'DELETE', headers: getAuthHeaders() as HeadersInit })
     setTokens(prev => prev.filter(t => t.id !== id))
+  }
+
+  async function resetToken(id: string) {
+    if (!confirm('إعادة تعيين الجلسة؟ سيتمكن الطالب من الدخول من جديد.')) return
+    setResettingId(id)
+    await fetch(`/api/tokens/${id}/reset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+    })
+    setResettingId(null)
   }
 
   function copyUrl(token: string) {
@@ -277,6 +288,14 @@ export default function AdminDashboard() {
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
+                      <button
+                        onClick={() => resetToken(token.id)}
+                        disabled={resettingId === token.id}
+                        className="p-1.5 rounded-lg text-brand-gray hover:text-yellow-400 hover:bg-yellow-500/10 transition-colors disabled:opacity-40"
+                        title="إعادة تعيين الجلسة"
+                      >
+                        <RotateCcw className={`w-4 h-4 ${resettingId === token.id ? 'animate-spin' : ''}`} />
+                      </button>
                       <button
                         onClick={() => toggleToken(token)}
                         className={`p-1.5 rounded-lg transition-colors ${token.is_active ? 'text-brand-green hover:bg-brand-green/10' : 'text-brand-muted hover:bg-brand-card'}`}

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServiceClient } from '@/lib/supabase'
 import { checkRateLimit } from '@/lib/rateLimit'
-import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const { data: tokenData, error } = await supabase
       .from('tokens')
-      .select('id, student_name, is_active, max_sessions, expires_at, token')
+      .select('id, student_name, is_active, max_sessions, expires_at, token, is_registered')
       .eq('token', token)
       .single()
 
@@ -43,6 +42,11 @@ export async function POST(req: NextRequest) {
 
     if (tokenData.expires_at && new Date(tokenData.expires_at) < new Date()) {
       return NextResponse.json({ valid: false, error: 'انتهت صلاحية هذا الرابط.' })
+    }
+
+    // First-time visitor — needs to register
+    if (!tokenData.is_registered) {
+      return NextResponse.json({ valid: false, needs_registration: true })
     }
 
     const tokenPayload = {
@@ -73,45 +77,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
-    const { data: activeSessions } = await supabase
-      .from('sessions')
-      .select('id')
-      .eq('token_id', tokenData.id)
-      .eq('is_active', true)
-      .gt('last_active', fiveMinutesAgo)
-
-    const sessionCount = activeSessions?.length || 0
-
-    if (sessionCount >= (tokenData.max_sessions || 1)) {
-      await supabase.from('access_logs').insert({
-        token_id: tokenData.id,
-        event_type: 'session_conflict',
-        ip_address: ip,
-        metadata: { active_sessions: sessionCount },
-      })
-      return NextResponse.json({
-        valid: false,
-        error: 'هذا الرابط مفتوح بالفعل في جهاز آخر. أغلق الجلسات الأخرى وحاول مرة أخرى.',
-      })
-    }
-
-    const sessionKey = uuidv4()
-    await supabase.from('sessions').insert({
-      token_id: tokenData.id,
-      session_key: sessionKey,
-      ip_address: ip,
-      user_agent: req.headers.get('user-agent'),
-    })
-
-    await supabase.from('access_logs').insert({
-      token_id: tokenData.id,
-      event_type: 'access',
-      ip_address: ip,
-      user_agent: req.headers.get('user-agent'),
-    })
-
-    return NextResponse.json({ valid: true, token: tokenPayload, session_key: sessionKey, ip })
+    // No valid session — must authenticate with password
+    return NextResponse.json({ valid: false, needs_auth: true })
   } catch (err) {
     console.error('verify-token error:', err)
     return NextResponse.json({ valid: false, error: 'خطأ داخلي في الخادم' }, { status: 500 })
