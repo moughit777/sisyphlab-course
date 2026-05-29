@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Activity, Shield, Plus, Copy, Trash2, ToggleLeft, ToggleRight,
   LogOut, RefreshCw, Eye, X, Check, AlertCircle, Clock, Globe,
-  ChevronDown, ExternalLink, RotateCcw, Download, Phone, UserCheck, UserX,
+  ChevronDown, ExternalLink, RotateCcw, Download, Phone, UserCheck, UserX, KeyRound,
 } from 'lucide-react'
 import { Token, AccessLog, AdminStats } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
@@ -25,6 +25,7 @@ export default function AdminDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [resettingId, setResettingId] = useState<string | null>(null)
+  const [resettingPassId, setResettingPassId] = useState<string | null>(null)
   const [authorized, setAuthorized] = useState(false)
 
   const [form, setForm] = useState({ student_name: '', student_email: '', expires_at: '', max_sessions: '1', notes: '' })
@@ -114,6 +115,17 @@ export default function AdminDashboard() {
       headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
     })
     setResettingId(null)
+  }
+
+  async function resetPassword(id: string) {
+    if (!confirm('إعادة تعيين كلمة السر؟ سيُطلب من الطالب التسجيل من جديد.')) return
+    setResettingPassId(id)
+    await fetch(`/api/tokens/${id}/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+    })
+    setTokens(prev => prev.map(t => t.id === id ? { ...t, is_registered: false } : t))
+    setResettingPassId(null)
   }
 
   function copyUrl(token: string) {
@@ -346,6 +358,14 @@ export default function AdminDashboard() {
                         title="إعادة تعيين الجلسة"
                       >
                         <RotateCcw className={`w-4 h-4 ${resettingId === token.id ? 'animate-spin' : ''}`} />
+                      </button>
+                      <button
+                        onClick={() => resetPassword(token.id)}
+                        disabled={resettingPassId === token.id}
+                        className="p-1.5 rounded-lg text-brand-gray hover:text-blue-400 hover:bg-blue-500/10 transition-colors disabled:opacity-40"
+                        title="إعادة تعيين كلمة السر"
+                      >
+                        <KeyRound className={`w-4 h-4 ${resettingPassId === token.id ? 'animate-spin' : ''}`} />
                       </button>
                       <button
                         onClick={() => toggleToken(token)}
