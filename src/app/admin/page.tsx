@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Activity, Shield, Plus, Copy, Trash2, ToggleLeft, ToggleRight,
   LogOut, RefreshCw, Eye, X, Check, AlertCircle, Clock, Globe,
-  ChevronDown, ExternalLink, RotateCcw,
+  ChevronDown, ExternalLink, RotateCcw, Download, Phone, UserCheck, UserX,
 } from 'lucide-react'
 import { Token, AccessLog, AdminStats } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
@@ -129,6 +129,25 @@ export default function AdminDashboard() {
     router.push('/admin/login')
   }
 
+  function exportCSV() {
+    const registered = tokens.filter(t => t.is_registered)
+    const rows = [
+      ['الاسم', 'الإيميل', 'الهاتف', 'تاريخ الإنشاء', 'الحالة'],
+      ...registered.map(t => [
+        t.student_name,
+        t.student_email || '',
+        t.student_whatsapp || '',
+        new Date(t.created_at).toLocaleDateString('ar-MA'),
+        t.is_active ? 'نشط' : 'معطل',
+      ]),
+    ]
+    const csv = '﻿' + rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n')
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+    a.download = `students_${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+  }
+
   function getEventBadge(type: string) {
     const map: Record<string, { label: string; cls: string }> = {
       access:           { label: 'دخول',       cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
@@ -227,14 +246,29 @@ export default function AdminDashboard() {
         {activeTab === 'tokens' && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-brand-white">روابط الوصول ({tokens.length})</h2>
-              <button
-                onClick={() => { setShowCreateModal(true); setNewTokenUrl('') }}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-green text-black text-sm font-bold hover:bg-brand-green-light hover:shadow-green transition-all hover:scale-105"
-              >
-                <Plus className="w-4 h-4" />
-                رابط جديد
-              </button>
+              <div>
+                <h2 className="font-bold text-brand-white">روابط الوصول ({tokens.length})</h2>
+                <p className="text-xs text-brand-gray mt-0.5">
+                  {tokens.filter(t => t.is_registered).length} طالب سجّل من أصل {tokens.length}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={exportCSV}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-brand-border text-brand-gray hover:text-brand-white hover:border-brand-green/40 text-sm transition-all"
+                  title="تحميل بيانات الطلاب CSV"
+                >
+                  <Download className="w-4 h-4" />
+                  تصدير CSV
+                </button>
+                <button
+                  onClick={() => { setShowCreateModal(true); setNewTokenUrl('') }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-green text-black text-sm font-bold hover:bg-brand-green-light hover:shadow-green transition-all hover:scale-105"
+                >
+                  <Plus className="w-4 h-4" />
+                  رابط جديد
+                </button>
+              </div>
             </div>
 
             <div className="space-y-3">
@@ -255,13 +289,30 @@ export default function AdminDashboard() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-semibold text-brand-white text-sm">{token.student_name}</span>
-                        {token.student_email && (
-                          <span className="text-xs text-brand-gray">{token.student_email}</span>
-                        )}
                         <span className={`px-2 py-0.5 rounded-full text-xs border ${token.is_active ? 'bg-brand-green/10 text-brand-green border-brand-green/20' : 'bg-brand-card text-brand-muted border-brand-border'}`}>
                           {token.is_active ? 'نشط' : 'معطل'}
                         </span>
+                        {token.is_registered
+                          ? <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                              <UserCheck className="w-3 h-3" /> سجّل
+                            </span>
+                          : <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-brand-card text-brand-muted border border-brand-border">
+                              <UserX className="w-3 h-3" /> لم يسجل
+                            </span>
+                        }
                       </div>
+                      {token.is_registered && (
+                        <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                          {token.student_email && (
+                            <span className="text-xs text-brand-gray">{token.student_email}</span>
+                          )}
+                          {token.student_whatsapp && (
+                            <span className="flex items-center gap-1 text-xs text-brand-gray">
+                              <Phone className="w-3 h-3" /> {token.student_whatsapp}
+                            </span>
+                          )}
+                        </div>
+                      )}
                       <div className="text-xs text-brand-muted mt-1 font-mono truncate">
                         /course/{token.token.substring(0, 20)}...
                       </div>
