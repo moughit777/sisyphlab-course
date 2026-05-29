@@ -273,12 +273,13 @@ export default function CoursePage() {
   if (pageState === 'registration') {
     const inputCls = 'w-full py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200'
     const inputStyle = {
-      background: 'rgba(255,255,255,0.06)',
-      border: '1px solid rgba(255,255,255,0.12)',
+      background: 'rgba(93,214,44,0.04)',
+      border: '1px solid rgba(93,214,44,0.18)',
     }
     const inputFocusStyle = {
-      border: '1px solid rgba(93,214,44,0.5)',
-      boxShadow: '0 0 0 3px rgba(93,214,44,0.08)',
+      background: 'rgba(93,214,44,0.07)',
+      border: '1px solid rgba(93,214,44,0.55)',
+      boxShadow: '0 0 0 3px rgba(93,214,44,0.10)',
     }
     return (
       <div className="min-h-screen flex items-center justify-center p-4" dir="rtl"
@@ -286,10 +287,12 @@ export default function CoursePage() {
 
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full"
-            style={{ background: 'radial-gradient(ellipse, rgba(51,116,24,0.22) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full"
+            style={{ background: 'radial-gradient(ellipse, rgba(93,214,44,0.18) 0%, rgba(51,116,24,0.12) 40%, transparent 70%)', filter: 'blur(60px)' }} />
           <div className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full"
-            style={{ background: 'rgba(93,214,44,0.06)', filter: 'blur(80px)' }} />
+            style={{ background: 'rgba(93,214,44,0.10)', filter: 'blur(80px)' }} />
+          <div className="absolute top-0 left-0 w-[400px] h-[300px] rounded-full"
+            style={{ background: 'rgba(51,116,24,0.08)', filter: 'blur(80px)' }} />
         </div>
 
         <motion.div
@@ -301,29 +304,30 @@ export default function CoursePage() {
           {/* Glass card */}
           <div className="relative rounded-3xl overflow-hidden"
             style={{
-              background: 'rgba(255,255,255,0.05)',
+              background: 'rgba(15,25,15,0.7)',
               backdropFilter: 'blur(48px)',
               WebkitBackdropFilter: 'blur(48px)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 30px 80px rgba(0,0,0,0.6)',
+              border: '1px solid rgba(93,214,44,0.25)',
+              boxShadow: '0 0 0 0.5px rgba(93,214,44,0.08) inset, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(93,214,44,0.06)',
             }}>
 
             {/* Light sweep animation */}
             <motion.div
               className="absolute inset-0 pointer-events-none z-0"
-              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.07) 50%, transparent 75%)' }}
+              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(93,214,44,0.06) 50%, transparent 75%)' }}
               animate={{ x: ['-120%', '220%'] }}
               transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
             />
 
-            {/* Top line highlight */}
-            <div className="absolute top-0 left-8 right-8 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)' }} />
+            {/* Top green line */}
+            <div className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(93,214,44,0.6), transparent)' }} />
 
             {/* Header */}
-            <div className="relative z-10 pt-8 pb-6 px-8 text-center border-b border-white/8">
+            <div className="relative z-10 pt-8 pb-6 px-8 text-center"
+              style={{ borderBottom: '1px solid rgba(93,214,44,0.12)' }}>
               <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                style={{ background: 'rgba(93,214,44,0.12)', border: '1px solid rgba(93,214,44,0.25)', backdropFilter: 'blur(12px)' }}>
+                style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.35)', boxShadow: '0 0 20px rgba(93,214,44,0.15)' }}>
                 <Image src="/logo.png" alt="Logo" width={32} height={32} className="rounded-lg" />
               </div>
               <h1 className="text-2xl font-black text-white tracking-tight">أكمل تسجيلك</h1>
@@ -464,12 +468,13 @@ export default function CoursePage() {
   if (pageState === 'auth') {
     const inputCls = 'w-full py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200'
     const inputStyle = {
-      background: 'rgba(255,255,255,0.06)',
-      border: '1px solid rgba(255,255,255,0.12)',
+      background: 'rgba(93,214,44,0.04)',
+      border: '1px solid rgba(93,214,44,0.18)',
     }
     const inputFocusStyle = {
-      border: '1px solid rgba(93,214,44,0.5)',
-      boxShadow: '0 0 0 3px rgba(93,214,44,0.08)',
+      background: 'rgba(93,214,44,0.07)',
+      border: '1px solid rgba(93,214,44,0.55)',
+      boxShadow: '0 0 0 3px rgba(93,214,44,0.10)',
     }
     return (
       <div className="min-h-screen flex items-center justify-center p-4" dir="rtl"
@@ -478,7 +483,7 @@ export default function CoursePage() {
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full"
-            style={{ background: 'radial-gradient(ellipse, rgba(51,116,24,0.2) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+            style={{ background: 'radial-gradient(ellipse, rgba(93,214,44,0.18) 0%, rgba(51,116,24,0.10) 50%, transparent 70%)', filter: 'blur(60px)' }} />
         </div>
 
         <motion.div
@@ -490,29 +495,30 @@ export default function CoursePage() {
           {/* Glass card */}
           <div className="relative rounded-3xl overflow-hidden"
             style={{
-              background: 'rgba(255,255,255,0.05)',
+              background: 'rgba(15,25,15,0.7)',
               backdropFilter: 'blur(48px)',
               WebkitBackdropFilter: 'blur(48px)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 30px 80px rgba(0,0,0,0.6)',
+              border: '1px solid rgba(93,214,44,0.25)',
+              boxShadow: '0 0 0 0.5px rgba(93,214,44,0.08) inset, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(93,214,44,0.06)',
             }}>
 
             {/* Light sweep animation */}
             <motion.div
               className="absolute inset-0 pointer-events-none z-0"
-              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.07) 50%, transparent 75%)' }}
+              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(93,214,44,0.06) 50%, transparent 75%)' }}
               animate={{ x: ['-120%', '220%'] }}
               transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
             />
 
-            {/* Top line highlight */}
-            <div className="absolute top-0 left-8 right-8 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)' }} />
+            {/* Top green line */}
+            <div className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(93,214,44,0.6), transparent)' }} />
 
             {/* Header */}
-            <div className="relative z-10 pt-8 pb-6 px-8 text-center border-b border-white/8">
+            <div className="relative z-10 pt-8 pb-6 px-8 text-center"
+              style={{ borderBottom: '1px solid rgba(93,214,44,0.12)' }}>
               <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                style={{ background: 'rgba(93,214,44,0.12)', border: '1px solid rgba(93,214,44,0.25)', backdropFilter: 'blur(12px)' }}>
+                style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.35)', boxShadow: '0 0 20px rgba(93,214,44,0.15)' }}>
                 <Image src="/logo.png" alt="Logo" width={32} height={32} className="rounded-lg" />
               </div>
               <h1 className="text-2xl font-black text-white tracking-tight">مرحباً بعودتك</h1>
