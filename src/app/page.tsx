@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import Navbar from '@/components/layout/Navbar'
 import Hero from '@/components/home/Hero'
 import PromoVideoSection from '@/components/home/PromoVideoSection'
+import { GlobalBackground } from '@/components/ui/global-background'
 
 const StatsSection       = dynamic(() => import('@/components/home/StatsSection'))
 const FeaturesSection    = dynamic(() => import('@/components/home/FeaturesSection'))
@@ -13,7 +14,8 @@ const WhatsAppButton     = dynamic(() => import('@/components/WhatsAppButton'))
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-dark-900 overflow-x-hidden">
+    <main className="min-h-screen overflow-x-hidden">
+      <GlobalBackground />
       <Navbar />
       <Hero />
       <PromoVideoSection />

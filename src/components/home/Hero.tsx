@@ -1,7 +1,6 @@
 'use client'
 import { motion } from 'framer-motion'
 import { Play, ArrowLeft, Users, Clock, Star, Zap } from 'lucide-react'
-import { ShaderAnimation } from '@/components/ui/shader-animation'
 
 const stats = [
   { icon: Users, value: '+400', label: 'طالب ناجح' },
@@ -25,11 +24,6 @@ export default function Hero() {
 
       {/* ── Background layers ── */}
       <div className="absolute inset-0" style={{ background: '#091507' }} />
-
-      {/* ── Shader animation background ── */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.35 }}>
-        <ShaderAnimation />
-      </div>
 
       {/* Strong top green glow */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -5%, rgba(51,116,24,0.65) 0%, rgba(93,214,44,0.08) 50%, transparent 68%)' }} />
