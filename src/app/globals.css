@@ -23,8 +23,12 @@ h1, h2, h3, h4, h5, h6 {
 
 html { scroll-behavior: smooth; }
 
+html { background-color: #091507; }
+
 body {
-  background-color: #091507;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
   color: var(--white);
   font-family: var(--font-tajawal), 'Tajawal', sans-serif;
   direction: rtl;

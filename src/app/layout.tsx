@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Tajawal } from 'next/font/google'
 import './globals.css'
+import { GlobalBackground } from '@/components/ui/global-background'
 
 const tajawal = Tajawal({
   subsets: ['arabic'],
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#080a08" />
       </head>
       <body className={`${tajawal.className} antialiased`}>
+        <GlobalBackground />
         {children}
       </body>
     </html>

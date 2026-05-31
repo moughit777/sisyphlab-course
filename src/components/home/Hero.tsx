@@ -22,9 +22,6 @@ export default function Hero() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
 
-      {/* ── Background layers ── */}
-      <div className="absolute inset-0" style={{ background: '#091507' }} />
-
       {/* Strong top green glow */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -5%, rgba(51,116,24,0.65) 0%, rgba(93,214,44,0.08) 50%, transparent 68%)' }} />
       {/* Side glows */}

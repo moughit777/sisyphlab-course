@@ -16,7 +16,6 @@ export default function CTASection() {
   return (
     <section id="cta" className="py-24 relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute inset-0 bg-brand-black" />
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(93,214,44,0.09) 0%, transparent 70%)' }} />
       <div className="absolute inset-0 grid-bg opacity-40" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-brand-green/4 blur-[150px] pointer-events-none" />
