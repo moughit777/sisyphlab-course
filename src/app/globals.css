@@ -7,9 +7,9 @@
   --green:      #5DD62C;
   --green-dark: #337418;
   --green-glow: rgba(93,214,44,0.50);
-  --black:      #091507;
-  --card:       #0F2410;
-  --border:     rgba(93,214,44,0.20);
+  --black:      #070B1A;
+  --card:       #0E1230;
+  --border:     rgba(59,130,246,0.18);
   --white:      #EEF8EE;
   --gray:       #8AB88A;
 }
@@ -23,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 
 html { scroll-behavior: smooth; }
 
-html { background-color: #091507; }
+html { background-color: #070B1A; }
 
 body {
   background-color: transparent;
@@ -48,59 +48,59 @@ body {
 
 /* ── Grid background (very subtle dots) ────────── */
 .grid-bg {
-  background-image: radial-gradient(circle, rgba(93,214,44,0.10) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(59,130,246,0.10) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 /* ── Section gradient backgrounds ─────────────── */
 .section-glow-left {
-  background: radial-gradient(ellipse 70% 60% at -5% 50%, rgba(93,214,44,0.10) 0%, transparent 65%);
+  background: radial-gradient(ellipse 70% 60% at -5% 50%, rgba(124,58,237,0.10) 0%, transparent 65%);
 }
 .section-glow-right {
-  background: radial-gradient(ellipse 70% 60% at 105% 50%, rgba(93,214,44,0.10) 0%, transparent 65%);
+  background: radial-gradient(ellipse 70% 60% at 105% 50%, rgba(59,130,246,0.10) 0%, transparent 65%);
 }
 .section-glow-top {
-  background: radial-gradient(ellipse 90% 50% at 50% 0%, rgba(93,214,44,0.12) 0%, transparent 65%);
+  background: radial-gradient(ellipse 90% 50% at 50% 0%, rgba(59,130,246,0.10) 0%, transparent 65%);
 }
 .section-glow-center {
-  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(93,214,44,0.09) 0%, transparent 70%);
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 70%);
 }
 .section-glow-bottom {
-  background: radial-gradient(ellipse 90% 50% at 50% 100%, rgba(93,214,44,0.10) 0%, transparent 65%);
+  background: radial-gradient(ellipse 90% 50% at 50% 100%, rgba(59,130,246,0.09) 0%, transparent 65%);
 }
 
 /* ── Glass card (Apple style) ─────────────────── */
 .glass {
   background: linear-gradient(135deg,
-    rgba(20, 50, 15, 0.60) 0%,
-    rgba(10, 28, 8,  0.80) 100%
+    rgba(14, 20, 50, 0.65) 0%,
+    rgba(8,  12, 35, 0.85) 100%
   );
-  backdrop-filter: blur(40px) saturate(220%);
-  -webkit-backdrop-filter: blur(40px) saturate(220%);
-  border: 1px solid rgba(93,214,44,0.18);
-  border-top: 1px solid rgba(93,214,44,0.30);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(59,130,246,0.18);
+  border-top: 1px solid rgba(59,130,246,0.28);
   box-shadow:
-    0 1px 0 rgba(93,214,44,0.10) inset,
-    0 24px 64px rgba(0,0,0,0.50),
-    0 0 0 0.5px rgba(93,214,44,0.10);
+    0 1px 0 rgba(59,130,246,0.08) inset,
+    0 24px 64px rgba(0,0,0,0.55),
+    0 0 0 0.5px rgba(59,130,246,0.08);
 }
 
-/* ── Premium glass card with green gradient ───── */
+/* ── Premium glass card with blue/purple gradient ───── */
 .glass-green {
   background: linear-gradient(135deg,
-    rgba(30, 80, 18, 0.55) 0%,
-    rgba(15, 45, 10, 0.75) 50%,
-    rgba(8,  20, 5,  0.90) 100%
+    rgba(20, 28, 70, 0.60) 0%,
+    rgba(14, 18, 52, 0.80) 50%,
+    rgba(7,  10, 30, 0.92) 100%
   );
-  backdrop-filter: blur(40px) saturate(240%);
-  -webkit-backdrop-filter: blur(40px) saturate(240%);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid rgba(93,214,44,0.28);
   border-top: 1px solid rgba(93,214,44,0.45);
   box-shadow:
-    0 1px 0 rgba(93,214,44,0.18) inset,
+    0 1px 0 rgba(93,214,44,0.15) inset,
     0 -1px 0 rgba(0,0,0,0.3) inset,
-    0 24px 64px rgba(0,0,0,0.45),
-    0 0 120px rgba(30,80,15,0.20);
+    0 24px 64px rgba(0,0,0,0.50),
+    0 0 120px rgba(59,130,246,0.08);
 }
 
 /* ── Green gradient text ──────────────────────── */

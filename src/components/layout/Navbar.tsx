@@ -57,7 +57,7 @@ export default function Navbar() {
               <a
                 key={l.href}
                 href={l.href}
-                className="px-4 py-2 text-base font-medium text-brand-gray hover:text-brand-white rounded-lg hover:bg-brand-card transition-all duration-200"
+                className="px-4 py-2 text-base font-bold text-white/90 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
               >
                 {l.label}
               </a>
@@ -102,7 +102,7 @@ export default function Navbar() {
                   key={l.href}
                   href={l.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block px-4 py-3 text-sm text-brand-gray hover:text-brand-white hover:bg-brand-card rounded-xl transition-colors"
+                  className="block px-4 py-3 text-sm font-bold text-white/90 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
                 >
                   {l.label}
                 </a>
