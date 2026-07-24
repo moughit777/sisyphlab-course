@@ -42,7 +42,10 @@ export default function CoursePage() {
   const [currentLesson, setCurrentLesson]        = useState<Lesson | null>(null)
   const [completedLessons, setCompletedLessons]  = useState<string[]>([])
   const [sidebarOpen, setSidebarOpen]            = useState(false)
+  const [nextCountdown, setNextCountdown]        = useState<number | null>(null)
   const autoAdvancedRef                          = React.useRef<string | null>(null)
+  const nearEndTriggeredRef                      = React.useRef<string | null>(null)
+  const handleVideoEndRef                        = React.useRef<() => void>(() => {})
 
   // Registration form state
   const [regName, setRegName]           = useState('')
@@ -185,6 +188,8 @@ export default function CoursePage() {
 
   const handleSelectLesson = useCallback((lesson: Lesson) => {
     if (currentLesson) markCompleted(currentLesson.id)
+    nearEndTriggeredRef.current = null
+    setNextCountdown(null)
     setCurrentLesson(lesson)
     localStorage.setItem(`last_${tokenStr}`, lesson.id)
     setSidebarOpen(false)
@@ -196,27 +201,44 @@ export default function CoursePage() {
     const threshold = Math.min(dur * 0.85, 300)
     if (seconds === 999999 || seconds >= threshold) {
       markCompleted(currentLesson.id)
-      if (autoAdvancedRef.current !== currentLesson.id) {
-        autoAdvancedRef.current = currentLesson.id
-        const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
-        const idx  = allL.findIndex(l => l.id === currentLesson.id)
-        const next = allL[idx + 1]
-        if (next) setTimeout(() => { setCurrentLesson(next); localStorage.setItem(`last_${tokenStr}`, next.id) }, 2000)
+    }
+    // Trigger 30s countdown before end
+    if (seconds !== 999999 && dur > 60 && dur - seconds <= 30 && nearEndTriggeredRef.current !== currentLesson.id) {
+      const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
+      const idx  = allL.findIndex(l => l.id === currentLesson.id)
+      if (allL[idx + 1]) {
+        nearEndTriggeredRef.current = currentLesson.id
+        setNextCountdown(30)
       }
     }
-  }, [currentLesson, accessData, markCompleted, tokenStr])
+  }, [currentLesson, accessData, markCompleted])
 
   const handleVideoEnd = useCallback(() => {
+    setNextCountdown(null)
     if (!currentLesson) return
     markCompleted(currentLesson.id)
+    if (autoAdvancedRef.current === currentLesson.id) return
+    autoAdvancedRef.current = currentLesson.id
     const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
     const idx  = allL.findIndex(l => l.id === currentLesson.id)
     const next = allL[idx + 1]
-    if (next) {
-      autoAdvancedRef.current = currentLesson.id
-      setTimeout(() => { setCurrentLesson(next); localStorage.setItem(`last_${tokenStr}`, next.id) }, 1500)
-    }
+    if (next) setTimeout(() => { setCurrentLesson(next); localStorage.setItem(`last_${tokenStr}`, next.id) }, 500)
   }, [currentLesson, markCompleted, tokenStr])
+
+  // Sync ref so countdown effect always has latest callback
+  useEffect(() => { handleVideoEndRef.current = handleVideoEnd }, [handleVideoEnd])
+
+  // Countdown tick — advances to next lesson at 0
+  useEffect(() => {
+    if (nextCountdown === null) return
+    if (nextCountdown === 0) {
+      handleVideoEndRef.current()
+      setNextCountdown(null)
+      return
+    }
+    const t = setTimeout(() => setNextCountdown(c => (c ?? 1) - 1), 1000)
+    return () => clearTimeout(t)
+  }, [nextCountdown])
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (pageState === 'loading') {
@@ -609,7 +631,7 @@ export default function CoursePage() {
   const nextLesson = allLessons[currentIdx + 1] ?? null
 
   return (
-    <div className="min-h-screen select-none" dir="rtl" style={{ background: 'transparent' }}>
+    <div className="min-h-screen select-none" dir="rtl" style={{ background: 'transparent', fontFamily: 'var(--font-cairo), "Cairo", "Tajawal", sans-serif' }}>
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -646,7 +668,7 @@ export default function CoursePage() {
           </button>
           <div className="flex items-center gap-2">
             <Image src="/logo.png" alt="Sisyph Lab" width={36} height={36} className="rounded-lg" />
-            <span className="font-black text-brand-white text-base hidden sm:block tracking-widest">Sisyph Lab</span>
+            <span className="font-black text-white text-base hidden sm:block" style={{ fontFamily: 'var(--font-cairo)', letterSpacing: '0.05em', textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>Sisyph Lab</span>
           </div>
         </div>
 
@@ -712,12 +734,42 @@ export default function CoursePage() {
                   />
                 </div>
 
-                {nextLesson && (
+                {/* Countdown auto-advance banner */}
+                <AnimatePresence>
+                  {nextCountdown !== null && nextLesson && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      className="mb-4 rounded-2xl px-5 py-4 flex items-center justify-between gap-4"
+                      style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.12)' }}
+                    >
+                      <div className="min-w-0">
+                        <p className="text-white/40 text-xs font-semibold mb-0.5">الدرس التالي</p>
+                        <p className="text-white font-black text-sm truncate">{nextLesson.title}</p>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <div className="w-11 h-11 rounded-full flex items-center justify-center"
+                          style={{ background: 'rgba(255,255,255,0.1)', border: '2px solid rgba(255,255,255,0.25)' }}>
+                          <span className="text-white font-black text-base">{nextCountdown}</span>
+                        </div>
+                        <button
+                          onClick={() => { setNextCountdown(null); nearEndTriggeredRef.current = 'cancelled' }}
+                          className="text-white/40 hover:text-white/70 text-xs font-semibold transition-colors px-2 py-1 rounded-lg hover:bg-white/5"
+                        >
+                          إلغاء
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {nextLesson && nextCountdown === null && (
                   <div className="mb-4 flex justify-end">
                     <button
                       onClick={handleVideoEnd}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-                      style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.3)', color: '#5DD62C' }}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:bg-white/10 active:scale-95"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}
                     >
                       {nextLesson.title}
                       <ChevronLeft className="w-4 h-4" />
@@ -725,18 +777,17 @@ export default function CoursePage() {
                   </div>
                 )}
 
-                <div className="rounded-2xl border border-blue-500/15 p-5"
+                <div className="rounded-2xl border border-white/10 p-5"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(14,18,50,0.80) 0%, rgba(8,10,30,0.90) 100%)',
+                    background: 'rgba(255,255,255,0.04)',
                     backdropFilter: 'blur(32px)',
-                    boxShadow: '0 1px 0 rgba(59,130,246,0.06) inset, 0 20px 60px rgba(0,0,0,0.4)',
                   }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-1.5 h-7 rounded-full bg-blue-500" />
-                    <h1 className="text-xl font-black text-white tracking-tight">{currentLesson.title}</h1>
+                    <div className="w-1 h-8 rounded-full bg-white" style={{ boxShadow: '0 0 12px rgba(255,255,255,0.6)' }} />
+                    <h1 className="text-xl font-black text-white" style={{ fontFamily: 'var(--font-cairo)', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{currentLesson.title}</h1>
                   </div>
                   {currentLesson.description && (
-                    <p className="text-white/60 text-base leading-relaxed pr-3">{currentLesson.description}</p>
+                    <p className="text-white/55 text-sm leading-relaxed pr-4" style={{ fontFamily: 'var(--font-cairo)' }}>{currentLesson.description}</p>
                   )}
                 </div>
               </motion.div>

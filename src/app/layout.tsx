@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Tajawal } from 'next/font/google'
+import { Tajawal, Cairo } from 'next/font/google'
 import './globals.css'
 import { GlobalBackground } from '@/components/ui/global-background'
 
@@ -8,6 +8,13 @@ const tajawal = Tajawal({
   weight: ['200', '300', '400', '500', '700', '800', '900'],
   display: 'swap',
   variable: '--font-tajawal',
+})
+
+const cairo = Cairo({
+  subsets: ['arabic'],
+  weight: ['400', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-cairo',
 })
 
 export const metadata: Metadata = {
@@ -59,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="theme-color" content="#070B1A" />
       </head>
-      <body className={`${tajawal.className} antialiased`}>
+      <body className={`${tajawal.className} ${cairo.variable} antialiased`}>
         <GlobalBackground />
         {children}
       </body>
