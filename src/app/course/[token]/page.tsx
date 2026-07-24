@@ -631,7 +631,7 @@ export default function CoursePage() {
   const nextLesson = allLessons[currentIdx + 1] ?? null
 
   return (
-    <div className="min-h-screen select-none" dir="rtl" style={{ background: 'transparent', fontFamily: 'var(--font-ibm), "IBM Plex Sans Arabic", sans-serif' }}>
+    <div className="course-font min-h-screen select-none" dir="rtl" style={{ background: 'transparent' }}>
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
