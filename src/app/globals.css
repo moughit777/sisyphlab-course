@@ -1,4 +1,4 @@
-@import url('https://cdn.jsdelivr.net/npm/arabic-webfonts@1.5.0/ge-ss-two/stylesheet.css');
+@import url('https://cdn.jsdelivr.net/npm/arabic-webfonts@1.5.0/din-next-lt/stylesheet.css');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 .course-font,
 .course-font * {
-  font-family: 'GE SS Two', sans-serif !important;
+  font-family: 'DIN Next LT Arabic', sans-serif !important;
 }
 
 
