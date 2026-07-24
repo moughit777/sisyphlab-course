@@ -631,7 +631,7 @@ export default function CoursePage() {
   const nextLesson = allLessons[currentIdx + 1] ?? null
 
   return (
-    <div className="min-h-screen select-none" dir="rtl" style={{ background: 'transparent', fontFamily: 'var(--font-almarai), "Almarai", sans-serif' }}>
+    <div className="min-h-screen select-none" dir="rtl" style={{ background: 'transparent', fontFamily: 'var(--font-ibm), "IBM Plex Sans Arabic", sans-serif' }}>
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -668,7 +668,7 @@ export default function CoursePage() {
           </button>
           <div className="flex items-center gap-2">
             <Image src="/logo.png" alt="Sisyph Lab" width={36} height={36} className="rounded-lg" />
-            <span className="font-black text-white text-base hidden sm:block" style={{ fontFamily: 'var(--font-almarai), "Almarai"', letterSpacing: '0.05em', textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>Sisyph Lab</span>
+            <span className="font-black text-white text-base hidden sm:block" style={{ fontFamily: 'var(--font-ibm), "IBM Plex Sans Arabic"', letterSpacing: '0.05em', textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}>Sisyph Lab</span>
           </div>
         </div>
 
@@ -784,10 +784,10 @@ export default function CoursePage() {
                   }}>
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-1 h-8 rounded-full bg-white" style={{ boxShadow: '0 0 12px rgba(255,255,255,0.6)' }} />
-                    <h1 className="text-xl font-black text-white" style={{ fontFamily: 'var(--font-almarai), "Almarai"', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{currentLesson.title}</h1>
+                    <h1 className="text-xl font-black text-white" style={{ fontFamily: 'var(--font-ibm), "IBM Plex Sans Arabic"', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{currentLesson.title}</h1>
                   </div>
                   {currentLesson.description && (
-                    <p className="text-white/55 text-sm leading-relaxed pr-4" style={{ fontFamily: 'var(--font-almarai), "Almarai"' }}>{currentLesson.description}</p>
+                    <p className="text-white/55 text-sm leading-relaxed pr-4" style={{ fontFamily: 'var(--font-ibm), "IBM Plex Sans Arabic"' }}>{currentLesson.description}</p>
                   )}
                 </div>
               </motion.div>

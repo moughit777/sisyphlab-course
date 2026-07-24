@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Tajawal, Almarai } from 'next/font/google'
+import { Tajawal, IBM_Plex_Sans_Arabic } from 'next/font/google'
 import './globals.css'
 import { GlobalBackground } from '@/components/ui/global-background'
 
@@ -10,11 +10,11 @@ const tajawal = Tajawal({
   variable: '--font-tajawal',
 })
 
-const almarai = Almarai({
+const ibmPlex = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
-  weight: ['300', '400', '700', '800'],
+  weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-almarai',
+  variable: '--font-ibm',
 })
 
 export const metadata: Metadata = {
@@ -60,13 +60,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={`${tajawal.variable} ${almarai.variable}`}>
+    <html lang="ar" dir="rtl" className={`${tajawal.variable} ${ibmPlex.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="theme-color" content="#070B1A" />
       </head>
-      <body className={`${tajawal.className} ${almarai.variable} antialiased`}>
+      <body className={`${tajawal.className} ${ibmPlex.variable} antialiased`}>
         <GlobalBackground />
         {children}
       </body>
