@@ -210,6 +210,81 @@ body {
   background: linear-gradient(90deg, transparent, rgba(93,214,44,0.3), transparent);
 }
 
+/* ── CC Light Sweep — video frame border ──────────────── */
+@keyframes border-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes light-pass {
+  0%   { transform: translateX(-180%) skewX(-15deg); }
+  100% { transform: translateX(400%)  skewX(-15deg); }
+}
+
+.video-glow-frame {
+  position: relative;
+  padding: 2px;
+  border-radius: 20px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.video-glow-frame::before {
+  content: '';
+  position: absolute;
+  width: 260%;
+  height: 260%;
+  top: -80%;
+  left: -80%;
+  background: conic-gradient(
+    transparent 0deg,
+    transparent 48deg,
+    rgba(96, 165, 250, 0.35) 76deg,
+    rgba(210, 232, 255, 0.95) 90deg,
+    rgba(255, 255, 255, 1)    93deg,
+    rgba(148, 198, 255, 0.4) 108deg,
+    transparent 135deg,
+    transparent 360deg
+  );
+  animation: border-spin 4s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.video-glow-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ── CC Light Sweep — sidebar thumbnail ───────────────── */
+.thumb-light {
+  position: relative;
+  overflow: hidden;
+}
+
+.thumb-light::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.07) 30%,
+    rgba(255,255,255,0.20) 50%,
+    rgba(255,255,255,0.07) 70%,
+    transparent 100%
+  );
+  animation: light-pass 3.5s ease-in-out infinite;
+  animation-delay: var(--sweep-delay, 0s);
+  pointer-events: none;
+}
+
 /* ── Loading spinner ──────────────────────────── */
 .spinner {
   width: 36px; height: 36px;

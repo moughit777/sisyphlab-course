@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { ChevronDown, Play, CheckCircle, Clock, Lock } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Module, Lesson } from '@/lib/types'
@@ -16,6 +16,8 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
   const [openModules, setOpenModules] = useState<string[]>([modules[0]?.id])
 
   const allLessons = modules.flatMap(m => m.lessons ?? [])
+
+  let flatIdx = 0
 
   function isUnlocked(lesson: Lesson): boolean {
     const idx = allLessons.findIndex(l => l.id === lesson.id)
@@ -75,6 +77,7 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                     const isActive    = lesson.id === currentLessonId
                     const isCompleted = completedLessons.includes(lesson.id)
                     const unlocked    = isUnlocked(lesson)
+                    const sweepDelay  = `${(flatIdx++ % 8) * 0.45}s`
 
                     return (
                       <button
@@ -91,7 +94,8 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                         }`}
                       >
                         {/* Thumbnail */}
-                        <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-brand-card">
+                        <div className="thumb-light relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-brand-card"
+                          style={{ '--sweep-delay': sweepDelay } as React.CSSProperties}>
                           <div className={`w-full h-full flex items-center justify-center ${
                             isCompleted ? 'bg-white/8' :
                             isActive    ? 'bg-white/12' :

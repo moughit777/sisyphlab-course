@@ -719,19 +719,21 @@ export default function CoursePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
               >
-                <div className="mb-5 rounded-2xl overflow-hidden shadow-green-lg"
-                  style={{ boxShadow: '0 0 60px rgba(51,116,24,0.15), 0 20px 60px rgba(0,0,0,0.6)' }}>
-                  <ProtectedVideoPlayer
-                    videoUrl={currentLesson.video_url}
-                    title={currentLesson.title}
-                    studentName={student.student_name}
-                    partialIp={partialIp}
-                    tokenId={student.id}
-                    sessionKey={accessData!.session_key!}
-                    lessonId={currentLesson.id}
-                    onProgress={handleProgress}
-                    onEnd={handleVideoEnd}
-                  />
+                <div className="video-glow-frame mb-5"
+                  style={{ boxShadow: '0 0 40px rgba(59,130,246,0.15), 0 20px 60px rgba(0,0,0,0.6)' }}>
+                  <div className="video-glow-inner">
+                    <ProtectedVideoPlayer
+                      videoUrl={currentLesson.video_url}
+                      title={currentLesson.title}
+                      studentName={student.student_name}
+                      partialIp={partialIp}
+                      tokenId={student.id}
+                      sessionKey={accessData!.session_key!}
+                      lessonId={currentLesson.id}
+                      onProgress={handleProgress}
+                      onEnd={handleVideoEnd}
+                    />
+                  </div>
                 </div>
 
                 {/* Countdown auto-advance banner */}
