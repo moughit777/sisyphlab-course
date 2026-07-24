@@ -221,10 +221,10 @@ export default function CoursePage() {
   // ── Loading ────────────────────────────────────────────────────────────────
   if (pageState === 'loading') {
     return (
-      <div className="min-h-screen bg-brand-black flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full"
-            style={{ background: 'rgba(51,116,24,0.18)', filter: 'blur(100px)' }} />
+            style={{ background: 'rgba(59,130,246,0.12)', filter: 'blur(100px)' }} />
         </div>
         <div className="text-center relative z-10">
           <div className="w-14 h-14 rounded-2xl bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mx-auto mb-5">
@@ -240,7 +240,7 @@ export default function CoursePage() {
   // ── Error ──────────────────────────────────────────────────────────────────
   if (pageState === 'error') {
     return (
-      <div className="min-h-screen bg-brand-black flex items-center justify-center p-4">
+      <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
             style={{ background: 'rgba(220,38,38,0.08)', filter: 'blur(80px)' }} />
@@ -283,16 +283,16 @@ export default function CoursePage() {
     }
     return (
       <div className="min-h-screen flex items-center justify-center p-4" dir="rtl"
-        style={{ background: 'linear-gradient(135deg, #0a0f0a 0%, #0d1a0d 50%, #080d08 100%)' }}>
+        style={{ background: 'transparent' }}>
 
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full"
-            style={{ background: 'radial-gradient(ellipse, rgba(93,214,44,0.18) 0%, rgba(51,116,24,0.12) 40%, transparent 70%)', filter: 'blur(60px)' }} />
+            style={{ background: 'radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, rgba(124,58,237,0.08) 40%, transparent 70%)', filter: 'blur(60px)' }} />
           <div className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full"
-            style={{ background: 'rgba(93,214,44,0.10)', filter: 'blur(80px)' }} />
+            style={{ background: 'rgba(59,130,246,0.08)', filter: 'blur(80px)' }} />
           <div className="absolute top-0 left-0 w-[400px] h-[300px] rounded-full"
-            style={{ background: 'rgba(51,116,24,0.08)', filter: 'blur(80px)' }} />
+            style={{ background: 'rgba(124,58,237,0.06)', filter: 'blur(80px)' }} />
         </div>
 
         <motion.div
@@ -304,30 +304,30 @@ export default function CoursePage() {
           {/* Glass card */}
           <div className="relative rounded-3xl overflow-hidden"
             style={{
-              background: 'rgba(15,25,15,0.7)',
+              background: 'rgba(14,18,48,0.70)',
               backdropFilter: 'blur(48px)',
               WebkitBackdropFilter: 'blur(48px)',
-              border: '1px solid rgba(93,214,44,0.25)',
-              boxShadow: '0 0 0 0.5px rgba(93,214,44,0.08) inset, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(93,214,44,0.06)',
+              border: '1px solid rgba(59,130,246,0.25)',
+              boxShadow: '0 0 0 0.5px rgba(59,130,246,0.08) inset, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(124,58,237,0.08)',
             }}>
 
             {/* Light sweep animation */}
             <motion.div
               className="absolute inset-0 pointer-events-none z-0"
-              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(93,214,44,0.06) 50%, transparent 75%)' }}
+              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(59,130,246,0.06) 50%, transparent 75%)' }}
               animate={{ x: ['-120%', '220%'] }}
               transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
             />
 
-            {/* Top green line */}
+            {/* Top blue line */}
             <div className="absolute top-0 left-0 right-0 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(93,214,44,0.6), transparent)' }} />
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), transparent)' }} />
 
             {/* Header */}
             <div className="relative z-10 pt-8 pb-6 px-8 text-center"
-              style={{ borderBottom: '1px solid rgba(93,214,44,0.12)' }}>
+              style={{ borderBottom: '1px solid rgba(59,130,246,0.12)' }}>
               <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.35)', boxShadow: '0 0 20px rgba(93,214,44,0.15)' }}>
+                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', boxShadow: '0 0 20px rgba(59,130,246,0.15)' }}>
                 <Image src="/logo.png" alt="Logo" width={32} height={32} className="rounded-lg" />
               </div>
               <h1 className="text-2xl font-black text-white tracking-tight">أكمل تسجيلك</h1>
@@ -495,30 +495,30 @@ export default function CoursePage() {
           {/* Glass card */}
           <div className="relative rounded-3xl overflow-hidden"
             style={{
-              background: 'rgba(15,25,15,0.7)',
+              background: 'rgba(14,18,48,0.70)',
               backdropFilter: 'blur(48px)',
               WebkitBackdropFilter: 'blur(48px)',
-              border: '1px solid rgba(93,214,44,0.25)',
-              boxShadow: '0 0 0 0.5px rgba(93,214,44,0.08) inset, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(93,214,44,0.06)',
+              border: '1px solid rgba(59,130,246,0.25)',
+              boxShadow: '0 0 0 0.5px rgba(59,130,246,0.08) inset, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(124,58,237,0.08)',
             }}>
 
             {/* Light sweep animation */}
             <motion.div
               className="absolute inset-0 pointer-events-none z-0"
-              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(93,214,44,0.06) 50%, transparent 75%)' }}
+              style={{ background: 'linear-gradient(110deg, transparent 25%, rgba(59,130,246,0.06) 50%, transparent 75%)' }}
               animate={{ x: ['-120%', '220%'] }}
               transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
             />
 
-            {/* Top green line */}
+            {/* Top blue line */}
             <div className="absolute top-0 left-0 right-0 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(93,214,44,0.6), transparent)' }} />
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), transparent)' }} />
 
             {/* Header */}
             <div className="relative z-10 pt-8 pb-6 px-8 text-center"
-              style={{ borderBottom: '1px solid rgba(93,214,44,0.12)' }}>
+              style={{ borderBottom: '1px solid rgba(59,130,246,0.12)' }}>
               <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                style={{ background: 'rgba(93,214,44,0.15)', border: '1px solid rgba(93,214,44,0.35)', boxShadow: '0 0 20px rgba(93,214,44,0.15)' }}>
+                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', boxShadow: '0 0 20px rgba(59,130,246,0.15)' }}>
                 <Image src="/logo.png" alt="Logo" width={32} height={32} className="rounded-lg" />
               </div>
               <h1 className="text-2xl font-black text-white tracking-tight">مرحباً بعودتك</h1>
@@ -609,16 +609,16 @@ export default function CoursePage() {
   const nextLesson = allLessons[currentIdx + 1] ?? null
 
   return (
-    <div className="min-h-screen select-none" dir="rtl" style={{ background: '#0F0F0F' }}>
+    <div className="min-h-screen select-none" dir="rtl" style={{ background: 'transparent' }}>
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full"
-          style={{ background: 'radial-gradient(ellipse, rgba(51,116,24,0.35) 0%, rgba(93,214,44,0.06) 55%, transparent 75%)', filter: 'blur(60px)' }} />
+          style={{ background: 'radial-gradient(ellipse, rgba(59,130,246,0.15) 0%, rgba(124,58,237,0.08) 55%, transparent 75%)', filter: 'blur(60px)' }} />
         <div className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full"
-          style={{ background: 'rgba(51,116,24,0.12)', filter: 'blur(80px)' }} />
+          style={{ background: 'rgba(59,130,246,0.08)', filter: 'blur(80px)' }} />
         <div className="absolute bottom-1/3 left-0 w-[400px] h-[300px] rounded-full"
-          style={{ background: 'rgba(51,116,24,0.10)', filter: 'blur(80px)' }} />
+          style={{ background: 'rgba(124,58,237,0.08)', filter: 'blur(80px)' }} />
       </div>
 
       {/* Animated dots */}
@@ -626,7 +626,7 @@ export default function CoursePage() {
         {DOTS.map(dot => (
           <motion.div
             key={dot.id}
-            className="absolute rounded-full bg-brand-green"
+            className="absolute rounded-full bg-blue-400"
             style={{ top: dot.top, left: dot.left, width: dot.size, height: dot.size }}
             animate={{ opacity: [0.15, 0.6, 0.15], scale: [1, 1.4, 1] }}
             transition={{ duration: dot.duration, repeat: Infinity, delay: dot.delay, ease: 'easeInOut' }}
@@ -636,7 +636,7 @@ export default function CoursePage() {
 
       {/* Top bar */}
       <header className="h-14 border-b border-brand-green/10 fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4"
-        style={{ background: 'rgba(15,15,15,0.85)', backdropFilter: 'blur(24px)' }}>
+        style={{ background: 'rgba(7,11,26,0.85)', backdropFilter: 'blur(24px)' }}>
         <div className="flex items-center gap-3">
           <button
             className="lg:hidden p-1.5 rounded-lg text-brand-gray hover:text-brand-white hover:bg-brand-card transition-colors"
@@ -725,11 +725,11 @@ export default function CoursePage() {
                   </div>
                 )}
 
-                <div className="rounded-2xl border border-brand-green/15 p-5"
+                <div className="rounded-2xl border border-blue-500/15 p-5"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(32,32,32,0.80) 0%, rgba(20,20,20,0.90) 100%)',
+                    background: 'linear-gradient(135deg, rgba(14,18,50,0.80) 0%, rgba(8,10,30,0.90) 100%)',
                     backdropFilter: 'blur(32px)',
-                    boxShadow: '0 1px 0 rgba(93,214,44,0.06) inset, 0 20px 60px rgba(0,0,0,0.4)',
+                    boxShadow: '0 1px 0 rgba(59,130,246,0.06) inset, 0 20px 60px rgba(0,0,0,0.4)',
                   }}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-1 h-5 rounded-full bg-brand-green" />

@@ -28,7 +28,7 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
   }
 
   return (
-    <div className="h-full flex flex-col border-r border-brand-green/10" style={{ background: 'rgba(15,15,15,0.85)', backdropFilter: 'blur(24px)' }}>
+    <div className="h-full flex flex-col border-r border-white/10" style={{ background: 'rgba(7,11,26,0.80)', backdropFilter: 'blur(24px)' }}>
       {/* Header */}
       <div className="p-4 border-b border-brand-green/10">
         <h3 className="font-bold text-brand-white text-sm">محتوى الكورس</h3>
