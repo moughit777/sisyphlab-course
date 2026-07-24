@@ -635,32 +635,32 @@ export default function CoursePage() {
       </div>
 
       {/* Top bar */}
-      <header className="h-14 border-b border-brand-green/10 fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4"
+      <header className="h-16 border-b border-white/10 fixed top-0 inset-x-0 z-40 flex items-center justify-between px-5"
         style={{ background: 'rgba(7,11,26,0.85)', backdropFilter: 'blur(24px)' }}>
         <div className="flex items-center gap-3">
           <button
             className="lg:hidden p-1.5 rounded-lg text-brand-gray hover:text-brand-white hover:bg-brand-card transition-colors"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Sisyph Lab" width={28} height={28} className="rounded-lg" />
-            <span className="font-black text-brand-white text-sm hidden sm:block tracking-wide">Sisyph Lab</span>
+            <Image src="/logo.png" alt="Sisyph Lab" width={36} height={36} className="rounded-lg" />
+            <span className="font-black text-brand-white text-base hidden sm:block tracking-widest">Sisyph Lab</span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-brand-green/25"
             style={{ background: 'rgba(93,214,44,0.08)', backdropFilter: 'blur(12px)' }}>
-            <Shield className="w-3.5 h-3.5 text-brand-green" />
-            <span className="text-brand-green text-xs font-semibold">{student.student_name}</span>
+            <Shield className="w-4 h-4 text-brand-green" />
+            <span className="text-brand-green text-sm font-bold">{student.student_name}</span>
           </div>
         </div>
       </header>
 
       {/* Main layout */}
-      <div className="flex pt-14 h-screen overflow-hidden relative z-10">
+      <div className="flex pt-16 h-screen overflow-hidden relative z-10">
 
         {/* Mobile overlay */}
         <AnimatePresence>
@@ -675,7 +675,7 @@ export default function CoursePage() {
 
         {/* Sidebar */}
         <aside className={`
-          fixed top-14 bottom-0 w-72 z-30 transition-transform duration-300
+          fixed top-16 bottom-0 w-72 z-30 transition-transform duration-300
           lg:relative lg:top-0 lg:translate-x-0
           ${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
         `}>
@@ -731,12 +731,12 @@ export default function CoursePage() {
                     backdropFilter: 'blur(32px)',
                     boxShadow: '0 1px 0 rgba(59,130,246,0.06) inset, 0 20px 60px rgba(0,0,0,0.4)',
                   }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-1 h-5 rounded-full bg-brand-green" />
-                    <h1 className="text-lg font-black text-brand-white">{currentLesson.title}</h1>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-1.5 h-7 rounded-full bg-blue-500" />
+                    <h1 className="text-xl font-black text-white tracking-tight">{currentLesson.title}</h1>
                   </div>
                   {currentLesson.description && (
-                    <p className="text-brand-gray text-sm leading-relaxed pr-3">{currentLesson.description}</p>
+                    <p className="text-white/60 text-base leading-relaxed pr-3">{currentLesson.description}</p>
                   )}
                 </div>
               </motion.div>

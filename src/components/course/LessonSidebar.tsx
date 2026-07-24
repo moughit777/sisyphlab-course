@@ -30,9 +30,9 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
   return (
     <div className="h-full flex flex-col border-r border-white/10" style={{ background: 'rgba(7,11,26,0.80)', backdropFilter: 'blur(24px)' }}>
       {/* Header */}
-      <div className="p-4 border-b border-brand-green/10">
-        <h3 className="font-bold text-brand-white text-sm">محتوى الكورس</h3>
-        <p className="text-xs text-brand-muted mt-0.5">
+      <div className="p-5 border-b border-white/10">
+        <h3 className="font-black text-brand-white text-base tracking-wide">محتوى الكورس</h3>
+        <p className="text-sm text-brand-muted mt-1">
           {modules.reduce((a, m) => a + (m.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').length || 0), 0)} درس
         </p>
       </div>
@@ -44,20 +44,20 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
             {/* Module header */}
             <button
               onClick={() => toggleModule(module.id)}
-              className="w-full flex items-center justify-between px-4 py-3 hover:bg-brand-card transition-colors text-right"
+              className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/5 transition-colors text-right"
             >
-              <div className="flex items-start gap-2 flex-1 min-w-0">
-                <div className="w-5 h-5 rounded bg-brand-green/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <span className="text-brand-green text-xs font-bold">{module.order_index}</span>
+              <div className="flex items-start gap-3 flex-1 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span className="text-blue-400 text-sm font-black">{module.order_index}</span>
                 </div>
-                <span className="text-sm font-semibold text-brand-white text-right leading-tight">{module.title}</span>
+                <span className="text-base font-black text-brand-white text-right leading-tight">{module.title}</span>
               </div>
               <motion.div
                 animate={{ rotate: openModules.includes(module.id) ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
                 className="flex-shrink-0 mr-2"
               >
-                <ChevronDown className="w-4 h-4 text-brand-muted" />
+                <ChevronDown className="w-5 h-5 text-brand-muted" />
               </motion.div>
             </button>
 
@@ -82,7 +82,7 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                         onClick={() => unlocked && onSelectLesson(lesson)}
                         disabled={!unlocked}
                         title={!unlocked ? 'أكمل الدرس السابق أولاً' : undefined}
-                        className={`w-full flex items-start gap-3 px-3 py-3 transition-all duration-200 text-right ${
+                        className={`w-full flex items-start gap-3 px-4 py-3.5 transition-all duration-200 text-right ${
                           !unlocked
                             ? 'cursor-not-allowed'
                             : isActive
@@ -91,20 +91,20 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                         }`}
                       >
                         {/* Thumbnail */}
-                        <div className="relative flex-shrink-0 w-16 h-10 rounded-lg overflow-hidden bg-brand-card">
+                        <div className="relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-brand-card">
                           <div className={`w-full h-full flex items-center justify-center ${
                             isCompleted ? 'bg-emerald-900/40' :
-                            isActive    ? 'bg-brand-green/20' :
+                            isActive    ? 'bg-blue-500/20' :
                             'bg-brand-card2'
                           }`}>
                             {isCompleted ? (
-                              <CheckCircle className="w-5 h-5 text-emerald-400" />
+                              <CheckCircle className="w-6 h-6 text-emerald-400" />
                             ) : isActive ? (
-                              <Play className="w-5 h-5 text-brand-green fill-brand-green" />
+                              <Play className="w-6 h-6 text-blue-400 fill-blue-400" />
                             ) : unlocked ? (
-                              <Play className="w-4 h-4 text-brand-muted" />
+                              <Play className="w-5 h-5 text-brand-muted" />
                             ) : (
-                              <Lock className="w-4 h-4 text-brand-muted" />
+                              <Lock className="w-5 h-5 text-brand-muted" />
                             )}
                           </div>
                           {!unlocked && (
@@ -124,16 +124,16 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                         </div>
 
                         <div className={`flex-1 min-w-0 ${!unlocked ? 'opacity-40' : ''}`}>
-                          <div className={`text-xs font-medium leading-tight ${
-                            isActive    ? 'text-brand-white' :
-                            isCompleted ? 'text-brand-gray'  :
-                            'text-brand-muted'
+                          <div className={`text-sm font-bold leading-tight ${
+                            isActive    ? 'text-white' :
+                            isCompleted ? 'text-white/70'  :
+                            'text-white/50'
                           }`}>
                             {lesson.order_index}. {lesson.title}
                           </div>
                           {lesson.duration_seconds && (
-                            <div className="flex items-center gap-1 mt-1 text-brand-muted text-xs">
-                              <Clock className="w-3 h-3" />
+                            <div className="flex items-center gap-1 mt-1.5 text-white/40 text-xs font-semibold">
+                              <Clock className="w-3.5 h-3.5" />
                               {formatDuration(lesson.duration_seconds)}
                             </div>
                           )}
