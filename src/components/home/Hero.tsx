@@ -164,14 +164,24 @@ export default function Hero() {
               href="#promo"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white/70 hover:text-white transition-colors"
+              className="relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white/70 hover:text-white transition-colors"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)' }}
             >
+              {/* Sweep */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(93,214,44,0.18) 50%, transparent 65%)', transform: 'skewX(-15deg)' }}
+                animate={{ x: ['-150%', '250%'] }}
+                transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 3.5, ease: 'easeInOut' }}
+              />
               <div className="relative w-7 h-7 flex items-center justify-center">
-                <motion.div className="absolute inset-0 rounded-full border border-white/30"
-                  animate={{ scale: [1, 1.8], opacity: [0.5, 0] }}
+                <motion.div className="absolute inset-0 rounded-full border"
+                  style={{ borderColor: 'rgba(93,214,44,0.5)' }}
+                  animate={{ scale: [1, 1.8], opacity: [0.6, 0] }}
                   transition={{ duration: 1.8, repeat: Infinity }} />
-                <Play className="w-3.5 h-3.5 text-white fill-white" />
+                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: '#5DD62C' }}>
+                  <Play className="w-3 h-3 text-black fill-black ml-0.5" />
+                </div>
               </div>
               شاهد الفيديو التعريفي
             </motion.a>
