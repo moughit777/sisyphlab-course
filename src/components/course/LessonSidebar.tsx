@@ -12,6 +12,24 @@ interface Props {
   completedLessons?: string[]
 }
 
+function getModuleBg(order: number): React.CSSProperties {
+  if (order === 2) return { background: 'linear-gradient(135deg, #1a0040 0%, #2d0070 50%, #1a0040 100%)' }
+  if (order === 3) return { background: 'linear-gradient(135deg, #00003a 0%, #00006e 50%, #00003a 100%)' }
+  return { background: 'linear-gradient(135deg, #0d1117 0%, #1c2333 50%, #0d1117 100%)' }
+}
+
+function getModuleLogo(order: number): React.CSSProperties {
+  if (order === 2) return { fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 900, color: '#bf7fff', letterSpacing: '-1px', textShadow: '0 0 20px rgba(155,77,255,0.8)' }
+  if (order === 3) return { fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 900, color: '#9df0fe', letterSpacing: '-1px', textShadow: '0 0 20px rgba(100,220,255,0.8)' }
+  return { fontFamily: 'sans-serif', fontSize: '18px', fontWeight: 900, color: 'rgba(255,255,255,0.5)', letterSpacing: '-0.5px' }
+}
+
+function getModuleLabel(order: number): string {
+  if (order === 2) return 'Pr'
+  if (order === 3) return 'Ae'
+  return 'CC'
+}
+
 export default function LessonSidebar({ modules, currentLessonId, onSelectLesson, completedLessons = [] }: Props) {
   const [openModules, setOpenModules] = useState<string[]>([modules[0]?.id])
 
@@ -94,32 +112,36 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                         }`}
                       >
                         {/* Thumbnail */}
-                        <div className="thumb-light relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden bg-brand-card"
+                        <div className="thumb-light relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden"
                           style={{ '--sweep-delay': sweepDelay } as React.CSSProperties}>
-                          <div className={`w-full h-full flex items-center justify-center ${
-                            isCompleted ? 'bg-white/8' :
-                            isActive    ? 'bg-white/12' :
-                            'bg-white/4'
-                          }`}>
-                            {isCompleted ? (
-                              <CheckCircle className="w-6 h-6 text-white/70" />
-                            ) : isActive ? (
-                              <Play className="w-6 h-6 text-white fill-white" />
-                            ) : unlocked ? (
-                              <Play className="w-5 h-5 text-white/30" />
-                            ) : (
-                              <Lock className="w-5 h-5 text-white/20" />
-                            )}
+                          {/* Branded background based on module */}
+                          <div className="absolute inset-0" style={getModuleBg(module.order_index)} />
+                          {/* App logo text */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span style={getModuleLogo(module.order_index)}>{getModuleLabel(module.order_index)}</span>
                           </div>
-                          {!unlocked && (
-                            <div className="absolute inset-0 flex items-center justify-center rounded-xl"
-                              style={{ background: 'rgba(0,0,0,0.5)' }}>
-                              <Lock className="w-4 h-4 text-white/30" />
+                          {/* Active overlay */}
+                          {isActive && (
+                            <div className="absolute inset-0 flex items-center justify-center"
+                              style={{ background: 'rgba(0,0,0,0.45)' }}>
+                              <div className="w-7 h-7 rounded-full flex items-center justify-center"
+                                style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 0 12px rgba(255,255,255,0.4)' }}>
+                                <Play className="w-3.5 h-3.5 fill-black text-black ml-0.5" />
+                              </div>
                             </div>
                           )}
-                          {isCompleted && (
-                            <div className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-white/20 flex items-center justify-center">
-                              <CheckCircle className="w-3 h-3 text-white" />
+                          {/* Completed overlay */}
+                          {isCompleted && !isActive && (
+                            <div className="absolute inset-0 flex items-center justify-center"
+                              style={{ background: 'rgba(0,0,0,0.55)' }}>
+                              <CheckCircle className="w-6 h-6 text-white/90" />
+                            </div>
+                          )}
+                          {/* Locked overlay */}
+                          {!unlocked && (
+                            <div className="absolute inset-0 flex items-center justify-center rounded-xl"
+                              style={{ background: 'rgba(0,0,0,0.65)' }}>
+                              <Lock className="w-4 h-4 text-white/40" />
                             </div>
                           )}
                         </div>
