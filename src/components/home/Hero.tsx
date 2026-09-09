@@ -74,18 +74,10 @@ export default function Hero() {
 
           {/* Social proof pill */}
           <motion.div variants={item} className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
-              style={{ background: 'rgba(93,214,44,0.08)', border: '1px solid rgba(93,214,44,0.20)', color: '#5DD62C' }}>
-              <div className="flex -space-x-1.5 space-x-reverse">
-                {['م','س','ي','ف','ع'].map((a, i) => (
-                  <div key={i} className="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-black"
-                    style={{ borderColor: '#070B1A', background: '#5DD62C', color: '#000' }}>
-                    {a}
-                  </div>
-                ))}
-              </div>
-              <span className="w-1 h-1 rounded-full bg-current opacity-50" />
-              +400 طالب نجحوا
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white"
+              style={{ background: 'rgba(93,214,44,0.08)', border: '1px solid rgba(93,214,44,0.20)' }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#5DD62C' }} />
+              +120 طالب نجحوا
             </div>
           </motion.div>
 
