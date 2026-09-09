@@ -151,12 +151,6 @@ export default function PromoVideoSection() {
               playsInline
             />
 
-            {/* Cover strip — hides the burned-in caption baked into the bottom of the source video */}
-            <div
-              className="absolute inset-x-0 bottom-0 pointer-events-none"
-              style={{ height: '15%', background: 'linear-gradient(to top, #000 55%, transparent 100%)' }}
-            />
-
             {/* Controls bar */}
             <div
               className={`absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent pt-16 pb-4 px-5 transition-opacity duration-300 z-20 ${showControls || !playing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
