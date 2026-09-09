@@ -104,7 +104,7 @@ export default function CTASection() {
               </span>
             </h2>
             <p className="text-white/40 text-center text-base mb-10 max-w-md mx-auto">
-              انضم لأكثر من 400 طالب نجحوا وبدأوا مسيرتهم المهنية في المونتاج
+              انضم لأكثر من 120 طالب نجحوا وبدأوا مسيرتهم المهنية في المونتاج
             </p>
 
             {/* What's included */}
@@ -127,7 +127,7 @@ export default function CTASection() {
             {/* Quick stats row */}
             <div className="flex items-center justify-center gap-6 mb-10 flex-wrap">
               {[
-                { icon: Users, val: '+400', lab: 'طالب' },
+                { icon: Users, val: '+120', lab: 'طالب' },
                 { icon: Star,  val: '4.9',  lab: 'تقييم' },
                 { icon: Zap,   val: '39',   lab: 'درس' },
                 { icon: Clock, val: '+40',  lab: 'ساعة' },

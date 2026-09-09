@@ -26,10 +26,10 @@ function Counter({ value, suffix = '', decimals = 0 }: { value: number; suffix?:
 }
 
 const STATS = [
-  { value: 400, suffix: '+', label: 'طالب نجح',    sub: 'من المغرب والعالم العربي', color: '#5DD62C' },
+  { value: 120, suffix: '+', label: 'طالب نجح',    sub: 'من المغرب والعالم العربي', color: '#5DD62C' },
   { value: 40,  suffix: '+', label: 'ساعة محتوى',  sub: 'فيديوهات عالية الجودة',    color: '#9B59FF' },
   { value: 39,  suffix: '',  label: 'درس احترافي', sub: 'Premiere Pro + After Effects', color: '#3366FF', decimals: 0 },
-  { value: 4.9, suffix: '/5', label: 'تقييم',      sub: 'من أكثر من 400 طالب',      color: '#5DD62C', decimals: 1 },
+  { value: 4.9, suffix: '/5', label: 'تقييم',      sub: 'من أكثر من 120 طالب',      color: '#5DD62C', decimals: 1 },
 ]
 
 export default function StatsSection() {

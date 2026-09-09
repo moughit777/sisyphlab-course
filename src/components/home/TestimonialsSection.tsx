@@ -140,7 +140,7 @@ export default function TestimonialsSection() {
               <Star key={i} className="w-5 h-5 fill-current" style={{ color: '#5DD62C' }} />
             ))}
             <span className="text-white font-black text-lg mr-2">4.9</span>
-            <span className="text-white/30 text-sm">من أكثر من 400 تقييم</span>
+            <span className="text-white/30 text-sm">من أكثر من 120 تقييم</span>
           </div>
         </motion.div>
       </div>
