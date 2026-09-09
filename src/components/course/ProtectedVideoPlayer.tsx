@@ -191,22 +191,25 @@ export default function ProtectedVideoPlayer({
   }, [isYouTube, playing, lessonId, onProgress])
 
   // ─── Bunny watch-time timer ───
-  const bunnyWatchedRef   = useRef(0)
-  const bunnyActualDurRef = useRef(0)
-  const nearEndFiredRef   = useRef(false)
+  const bunnyWatchedRef    = useRef(0)
+  const bunnyActualDurRef  = useRef(0)
+  const bunnyCurrentSecRef = useRef(0) // real position from Bunny timeupdate
+  const nearEndFiredRef    = useRef(false)
   useEffect(() => {
-    bunnyWatchedRef.current   = 0
-    bunnyActualDurRef.current = 0
-    nearEndFiredRef.current   = false
+    bunnyWatchedRef.current    = 0
+    bunnyActualDurRef.current  = 0
+    bunnyCurrentSecRef.current = 0
+    nearEndFiredRef.current    = false
   }, [lessonId])
   useEffect(() => {
     if (!isBunny || !playing) return
     const t = setInterval(() => {
       bunnyWatchedRef.current += 1
       onProgress?.(bunnyWatchedRef.current)
-      // Near-end: auto-advance using actual Bunny duration
-      const actualDur = bunnyActualDurRef.current
-      if (!nearEndFiredRef.current && actualDur > 30 && actualDur - bunnyWatchedRef.current <= 10) {
+      // Near-end fallback: use real position from Bunny timeupdate (not wall-clock elapsed)
+      const actualDur  = bunnyActualDurRef.current
+      const currentSec = bunnyCurrentSecRef.current
+      if (!nearEndFiredRef.current && actualDur > 30 && currentSec > 0 && actualDur - currentSec <= 10) {
         nearEndFiredRef.current = true
         onEnd?.()
       }
@@ -242,10 +245,11 @@ export default function ProtectedVideoPlayer({
           onEnd?.()
         }
         if (data?.event === 'timeupdate' && data?.seconds !== undefined && data?.duration) {
-          bunnyActualDurRef.current = data.duration
+          bunnyActualDurRef.current  = data.duration
+          bunnyCurrentSecRef.current = data.seconds
           onProgress?.(data.seconds)
           if (data.seconds / data.duration > 0.9) onProgress?.(999999)
-          // Near-end via actual Bunny timeupdate
+          // Near-end via real Bunny position
           if (!nearEndFiredRef.current && data.duration > 30 && data.duration - data.seconds <= 10) {
             nearEndFiredRef.current = true
             onEnd?.()
