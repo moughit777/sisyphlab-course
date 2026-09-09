@@ -202,15 +202,6 @@ export default function CoursePage() {
     if (seconds === 999999 || seconds >= threshold) {
       markCompleted(currentLesson.id)
     }
-    // Auto-advance at 10 seconds remaining
-    if (seconds !== 999999 && dur > 30 && dur - seconds <= 10 && nearEndTriggeredRef.current !== currentLesson.id) {
-      const allL = (DEMO_COURSE.modules ?? []).flatMap(m => m.lessons ?? [])
-      const idx  = allL.findIndex(l => l.id === currentLesson.id)
-      if (allL[idx + 1]) {
-        nearEndTriggeredRef.current = currentLesson.id
-        handleVideoEndRef.current()
-      }
-    }
   }, [currentLesson, accessData, markCompleted])
 
   const handleVideoEnd = useCallback(() => {

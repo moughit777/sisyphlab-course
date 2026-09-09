@@ -191,16 +191,28 @@ export default function ProtectedVideoPlayer({
   }, [isYouTube, playing, lessonId, onProgress])
 
   // ─── Bunny watch-time timer ───
-  const bunnyWatchedRef = useRef(0)
-  useEffect(() => { bunnyWatchedRef.current = 0 }, [lessonId])
+  const bunnyWatchedRef   = useRef(0)
+  const bunnyActualDurRef = useRef(0)
+  const nearEndFiredRef   = useRef(false)
+  useEffect(() => {
+    bunnyWatchedRef.current   = 0
+    bunnyActualDurRef.current = 0
+    nearEndFiredRef.current   = false
+  }, [lessonId])
   useEffect(() => {
     if (!isBunny || !playing) return
     const t = setInterval(() => {
       bunnyWatchedRef.current += 1
       onProgress?.(bunnyWatchedRef.current)
+      // Near-end: auto-advance using actual Bunny duration
+      const actualDur = bunnyActualDurRef.current
+      if (!nearEndFiredRef.current && actualDur > 30 && actualDur - bunnyWatchedRef.current <= 10) {
+        nearEndFiredRef.current = true
+        onEnd?.()
+      }
     }, 1000)
     return () => clearInterval(t)
-  }, [isBunny, playing, lessonId, onProgress])
+  }, [isBunny, playing, lessonId, onProgress, onEnd])
 
   // ─── Bunny: subscribe to events after iframe loads ───
   useEffect(() => {
@@ -229,9 +241,15 @@ export default function ProtectedVideoPlayer({
           onProgress?.(999999) // mark as completed
           onEnd?.()
         }
-        if (data?.event === 'timeupdate' && data?.seconds && data?.duration) {
+        if (data?.event === 'timeupdate' && data?.seconds !== undefined && data?.duration) {
+          bunnyActualDurRef.current = data.duration
           onProgress?.(data.seconds)
           if (data.seconds / data.duration > 0.9) onProgress?.(999999)
+          // Near-end via actual Bunny timeupdate
+          if (!nearEndFiredRef.current && data.duration > 30 && data.duration - data.seconds <= 10) {
+            nearEndFiredRef.current = true
+            onEnd?.()
+          }
         }
         if (data?.event === 'play' || data?.event === 'playing') setPlaying(true)
         if (data?.event === 'pause') setPlaying(false)
