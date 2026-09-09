@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import bcrypt from 'bcryptjs'
 import { getServiceClient } from '@/lib/supabase'
 import { generateToken } from '@/lib/utils'
 import { verifyAdminToken } from '@/lib/adminAuth'
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { student_name, student_email, expires_at, max_sessions, notes } = body
+    const { student_name, student_email, student_whatsapp, student_password } = body
 
     if (!student_name) {
       return NextResponse.json({ error: 'اسم الطالب مطلوب' }, { status: 400 })
@@ -32,15 +33,17 @@ export async function POST(req: NextRequest) {
     const token = generateToken()
     const supabase = getServiceClient()
 
+    const password_hash = student_password ? await bcrypt.hash(student_password, 10) : null
+
     const { data, error } = await supabase
       .from('tokens')
       .insert({
         token,
         student_name,
         student_email: student_email || null,
-        expires_at: expires_at || null,
-        max_sessions: max_sessions || 1,
-        notes: notes || null,
+        student_whatsapp: student_whatsapp || null,
+        password_hash: password_hash || null,
+        is_registered: !!password_hash,
         is_active: true,
       })
       .select()

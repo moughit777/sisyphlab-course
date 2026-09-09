@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Activity, Shield, Plus, Copy, Trash2, ToggleLeft, ToggleRight,
-  LogOut, RefreshCw, Eye, X, Check, AlertCircle, Clock, Globe,
+  LogOut, RefreshCw, Eye, EyeOff, X, Check, AlertCircle, Clock, Globe,
   ChevronDown, ExternalLink, RotateCcw, Download, Phone, UserCheck, UserX, KeyRound,
 } from 'lucide-react'
 import { Token, AccessLog, AdminStats } from '@/lib/types'
@@ -25,7 +25,8 @@ export default function AdminDashboard() {
   const [resettingPassId, setResettingPassId] = useState<string | null>(null)
   const [authorized, setAuthorized] = useState(false)
 
-  const [form, setForm] = useState({ student_name: '', student_whatsapp: '', student_email: '', agreed: false })
+  const [form, setForm] = useState({ student_name: '', student_whatsapp: '', student_email: '', student_password: '', agreed: false })
+  const [showPassword, setShowPassword] = useState(false)
   const [creating, setCreating] = useState(false)
   const [createError, setCreateError] = useState('')
   const [newTokenUrl, setNewTokenUrl] = useState('')
@@ -73,6 +74,7 @@ export default function AdminDashboard() {
           student_name: form.student_name,
           student_whatsapp: form.student_whatsapp || undefined,
           student_email: form.student_email || undefined,
+          student_password: form.student_password || undefined,
         }),
       })
       const data = await res.json()
@@ -80,7 +82,7 @@ export default function AdminDashboard() {
 
       setNewTokenUrl(data.access_url)
       setTokens(prev => [data.token, ...prev])
-      setForm({ student_name: '', student_whatsapp: '', student_email: '', agreed: false })
+      setForm({ student_name: '', student_whatsapp: '', student_email: '', student_password: '', agreed: false })
       fetchAll()
     } catch {
       setCreateError('خطأ في الاتصال')
@@ -581,6 +583,32 @@ export default function AdminDashboard() {
                       onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
                       onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
                     />
+                  </div>
+
+                  {/* كلمة المرور */}
+                  <div className="space-y-2">
+                    <label className="block text-base font-bold text-white">كلمة المرور</label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={form.student_password}
+                        onChange={(e) => setForm(prev => ({ ...prev, student_password: e.target.value }))}
+                        placeholder="اختر كلمة مرور للطالب"
+                        dir="ltr"
+                        className="w-full px-4 py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200 pr-12"
+                        style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
+                        onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
+                        onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(p => !p)}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/80 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    <p className="text-xs text-white/30 font-semibold pr-1">أرسل كلمة المرور للطالب مع الرابط</p>
                   </div>
 
                   {/* Checkbox موافقة */}
