@@ -52,9 +52,21 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
       {/* Header */}
       <div className="px-5 py-5 border-b border-white/8">
         <h3 className="font-black text-white text-base tracking-wide" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>محتوى الكورس</h3>
-        <p className="text-sm text-white/35 mt-1 font-semibold">
-          {modules.reduce((a, m) => a + (m.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').length || 0), 0)} درس
-        </p>
+        {(() => {
+          const total = modules.reduce((a, m) => a + (m.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').length || 0), 0)
+          const remaining = total - allLessons.filter(l => completedLessons.includes(l.id)).length
+          return (
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-xs text-white/40 font-semibold">{total} درس</span>
+              {remaining > 0 && (
+                <span className="px-2 py-0.5 rounded-full text-xs font-bold"
+                  style={{ background: 'rgba(93,214,44,0.15)', color: '#5DD62C', border: '1px solid rgba(93,214,44,0.25)' }}>
+                  {remaining} متبقي
+                </span>
+              )}
+            </div>
+          )
+        })()}
       </div>
 
       {/* Module list */}
@@ -103,17 +115,18 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                         onClick={() => unlocked && onSelectLesson(lesson)}
                         disabled={!unlocked}
                         title={!unlocked ? 'أكمل الدرس السابق أولاً' : undefined}
-                        className={`w-full flex items-start gap-3 px-4 py-3.5 transition-all duration-200 text-right ${
+                        className={`w-full flex items-start gap-3 px-4 py-4 transition-all duration-200 text-right ${
                           !unlocked
-                            ? 'cursor-not-allowed opacity-50'
+                            ? 'cursor-not-allowed opacity-40'
                             : isActive
-                            ? 'bg-white/8 border-r-2 border-white'
+                            ? 'border-r-2 border-brand-green'
                             : 'hover:bg-white/5'
                         }`}
+                        style={isActive ? { background: 'rgba(93,214,44,0.07)' } : {}}
                       >
                         {/* Thumbnail */}
-                        <div className="thumb-light relative flex-shrink-0 w-20 h-12 rounded-xl overflow-hidden"
-                          style={{ '--sweep-delay': sweepDelay } as React.CSSProperties}>
+                        <div className="thumb-light relative flex-shrink-0 rounded-xl overflow-hidden"
+                          style={{ width: '72px', height: '46px', '--sweep-delay': sweepDelay } as React.CSSProperties}>
                           {/* Branded background based on module */}
                           <div className="absolute inset-0" style={getModuleBg(module.order_index)} />
                           {/* App logo text */}
@@ -123,9 +136,9 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                           {/* Active overlay */}
                           {isActive && (
                             <div className="absolute inset-0 flex items-center justify-center"
-                              style={{ background: 'rgba(0,0,0,0.45)' }}>
+                              style={{ background: 'rgba(0,0,0,0.40)' }}>
                               <div className="w-7 h-7 rounded-full flex items-center justify-center"
-                                style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 0 12px rgba(255,255,255,0.4)' }}>
+                                style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 0 14px rgba(255,255,255,0.5)' }}>
                                 <Play className="w-3.5 h-3.5 fill-black text-black ml-0.5" />
                               </div>
                             </div>
@@ -133,29 +146,37 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
                           {/* Completed overlay */}
                           {isCompleted && !isActive && (
                             <div className="absolute inset-0 flex items-center justify-center"
-                              style={{ background: 'rgba(0,0,0,0.55)' }}>
-                              <CheckCircle className="w-6 h-6 text-white/90" />
+                              style={{ background: 'rgba(0,0,0,0.50)' }}>
+                              <CheckCircle className="w-5 h-5 text-brand-green" />
                             </div>
                           )}
                           {/* Locked overlay */}
                           {!unlocked && (
                             <div className="absolute inset-0 flex items-center justify-center rounded-xl"
                               style={{ background: 'rgba(0,0,0,0.65)' }}>
-                              <Lock className="w-4 h-4 text-white/40" />
+                              <Lock className="w-4 h-4 text-white/30" />
+                            </div>
+                          )}
+                          {/* Lesson number badge */}
+                          {!isCompleted && !isActive && unlocked && (
+                            <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded-md text-white/70"
+                              style={{ background: 'rgba(0,0,0,0.6)', fontSize: '9px', fontWeight: 700 }}>
+                              {lesson.order_index}
                             </div>
                           )}
                         </div>
 
-                        <div className="flex-1 min-w-0">
-                          <div className={`text-sm font-bold leading-snug ${
+                        <div className="flex-1 min-w-0 pt-0.5">
+                          <div className={`text-sm font-bold leading-snug mb-1 ${
                             isActive    ? 'text-white' :
-                            isCompleted ? 'text-white/50' :
-                            'text-white/40'
+                            isCompleted ? 'text-white/45' :
+                            unlocked    ? 'text-white/75' :
+                            'text-white/30'
                           }`}>
-                            {lesson.order_index}. {lesson.title}
+                            {lesson.title}
                           </div>
                           {lesson.duration_seconds && (
-                            <div className="flex items-center gap-1 mt-1.5 text-white/25 text-xs font-semibold">
+                            <div className="flex items-center gap-1 text-white/30 text-xs font-semibold">
                               <Clock className="w-3 h-3" />
                               {formatDuration(lesson.duration_seconds)}
                             </div>
