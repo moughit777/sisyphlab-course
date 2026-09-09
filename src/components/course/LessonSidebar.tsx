@@ -19,9 +19,9 @@ function getModuleBg(order: number): React.CSSProperties {
 }
 
 function getModuleLogo(order: number): React.CSSProperties {
-  if (order === 2) return { fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 900, color: '#bf7fff', letterSpacing: '-1px', textShadow: '0 0 20px rgba(155,77,255,0.8)' }
-  if (order === 3) return { fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 900, color: '#9df0fe', letterSpacing: '-1px', textShadow: '0 0 20px rgba(100,220,255,0.8)' }
-  return { fontFamily: 'sans-serif', fontSize: '18px', fontWeight: 900, color: 'rgba(255,255,255,0.5)', letterSpacing: '-0.5px' }
+  if (order === 2) return { fontFamily: 'sans-serif', fontSize: '26px', fontWeight: 900, color: '#bf7fff', letterSpacing: '-1px', textShadow: '0 0 24px rgba(155,77,255,0.9)' }
+  if (order === 3) return { fontFamily: 'sans-serif', fontSize: '26px', fontWeight: 900, color: '#9df0fe', letterSpacing: '-1px', textShadow: '0 0 24px rgba(100,220,255,0.9)' }
+  return { fontFamily: 'sans-serif', fontSize: '20px', fontWeight: 900, color: 'rgba(255,255,255,0.45)', letterSpacing: '-0.5px' }
 }
 
 function getModuleLabel(order: number): string {
@@ -33,7 +33,16 @@ function getModuleLabel(order: number): string {
 export default function LessonSidebar({ modules, currentLessonId, onSelectLesson, completedLessons = [] }: Props) {
   const [openModules, setOpenModules] = useState<string[]>([modules[0]?.id])
 
-  const allLessons = modules.flatMap(m => m.lessons ?? [])
+  const allLessons = modules.flatMap(m => m.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL') ?? [])
+  const totalDone = allLessons.filter(l => completedLessons.includes(l.id)).length
+  const remaining = allLessons.length - totalDone
+
+  // find the next lesson to watch (first unlocked and not completed)
+  const nextLessonId = allLessons.find(l => {
+    const idx = allLessons.findIndex(x => x.id === l.id)
+    const prevDone = idx === 0 || completedLessons.includes(allLessons[idx - 1].id)
+    return prevDone && !completedLessons.includes(l.id)
+  })?.id
 
   let flatIdx = 0
 
@@ -48,148 +57,187 @@ export default function LessonSidebar({ modules, currentLessonId, onSelectLesson
   }
 
   return (
-    <div className="course-font h-full flex flex-col border-r border-white/8" style={{ background: 'rgba(5,8,20,0.82)', backdropFilter: 'blur(28px)' }}>
+    <div className="course-font h-full flex flex-col" style={{ background: 'rgba(5,8,20,0.90)', backdropFilter: 'blur(28px)', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+
       {/* Header */}
-      <div className="px-5 py-5 border-b border-white/8">
-        <h3 className="font-black text-white text-base tracking-wide" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>محتوى الكورس</h3>
-        {(() => {
-          const total = modules.reduce((a, m) => a + (m.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').length || 0), 0)
-          const remaining = total - allLessons.filter(l => completedLessons.includes(l.id)).length
-          return (
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-xs text-white/40 font-semibold">{total} درس</span>
-              {remaining > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-bold"
-                  style={{ background: 'rgba(93,214,44,0.15)', color: '#5DD62C', border: '1px solid rgba(93,214,44,0.25)' }}>
-                  {remaining} متبقي
-                </span>
-              )}
-            </div>
-          )
-        })()}
+      <div className="px-5 pt-5 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <h3 className="font-black text-white text-lg">محتوى الكورس</h3>
+        <div className="flex items-center gap-3 mt-3">
+          {/* Progress bar */}
+          <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+            <div className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${allLessons.length ? (totalDone / allLessons.length) * 100 : 0}%`, background: 'linear-gradient(90deg, #5DD62C, #7EE84E)' }} />
+          </div>
+          <span className="text-xs font-bold flex-shrink-0" style={{ color: '#5DD62C' }}>
+            {totalDone}/{allLessons.length}
+          </span>
+        </div>
+        {remaining > 0 && (
+          <p className="text-xs mt-2 font-semibold" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            {remaining} درس متبقي — واصل!
+          </p>
+        )}
       </div>
 
       {/* Module list */}
       <div className="flex-1 overflow-y-auto">
-        {modules.map((module) => (
-          <div key={module.id} className="border-b border-brand-border/50">
-            {/* Module header */}
-            <button
-              onClick={() => toggleModule(module.id)}
-              className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/5 transition-colors text-right"
-            >
-              <div className="flex items-start gap-3 flex-1 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center mt-0.5 flex-shrink-0 border border-white/12">
-                  <span className="text-white/60 text-sm font-black">{module.order_index}</span>
-                </div>
-                <span className="text-base font-black text-white text-right leading-snug">{module.title}</span>
-              </div>
-              <motion.div
-                animate={{ rotate: openModules.includes(module.id) ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex-shrink-0 mr-2"
+        {modules.map((module) => {
+          const moduleLessons = module.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL') ?? []
+          const moduleDone = moduleLessons.filter(l => completedLessons.includes(l.id)).length
+
+          return (
+            <div key={module.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              {/* Module header */}
+              <button
+                onClick={() => toggleModule(module.id)}
+                className="w-full flex items-center justify-between px-4 py-3.5 transition-colors text-right hover:bg-white/4"
               >
-                <ChevronDown className="w-5 h-5 text-white/30" />
-              </motion.div>
-            </button>
-
-            {/* Lessons */}
-            <AnimatePresence initial={false}>
-              {openModules.includes(module.id) && (
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  {/* Module app badge */}
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={module.order_index === 2
+                      ? { background: 'linear-gradient(135deg,#1a0040,#3d0090)', border: '1px solid rgba(155,77,255,0.3)' }
+                      : module.order_index === 3
+                      ? { background: 'linear-gradient(135deg,#00003a,#00008f)', border: '1px solid rgba(100,200,255,0.3)' }
+                      : { background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }
+                    }>
+                    <span style={{
+                      fontFamily: 'sans-serif',
+                      fontSize: '13px',
+                      fontWeight: 900,
+                      color: module.order_index === 2 ? '#bf7fff' : module.order_index === 3 ? '#9df0fe' : 'rgba(255,255,255,0.5)',
+                    }}>
+                      {getModuleLabel(module.order_index)}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0 text-right">
+                    <div className="text-sm font-black text-white leading-snug">{module.title}</div>
+                    <div className="text-xs mt-0.5 font-semibold" style={{ color: 'rgba(255,255,255,0.30)' }}>
+                      {moduleDone}/{moduleLessons.length} درس
+                    </div>
+                  </div>
+                </div>
                 <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: 'auto' }}
-                  exit={{ height: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="overflow-hidden"
+                  animate={{ rotate: openModules.includes(module.id) ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex-shrink-0 mr-2"
                 >
-                  {module.lessons?.filter(l => l.video_url !== 'YOUR_VIDEO_URL').map((lesson) => {
-                    const isActive    = lesson.id === currentLessonId
-                    const isCompleted = completedLessons.includes(lesson.id)
-                    const unlocked    = isUnlocked(lesson)
-                    const sweepDelay  = `${(flatIdx++ % 8) * 0.45}s`
-
-                    return (
-                      <button
-                        key={lesson.id}
-                        onClick={() => unlocked && onSelectLesson(lesson)}
-                        disabled={!unlocked}
-                        title={!unlocked ? 'أكمل الدرس السابق أولاً' : undefined}
-                        className={`w-full flex items-start gap-3 px-4 py-4 transition-all duration-200 text-right ${
-                          !unlocked
-                            ? 'cursor-not-allowed opacity-40'
-                            : isActive
-                            ? 'border-r-2 border-brand-green'
-                            : 'hover:bg-white/5'
-                        }`}
-                        style={isActive ? { background: 'rgba(93,214,44,0.07)' } : {}}
-                      >
-                        {/* Thumbnail */}
-                        <div className="thumb-light relative flex-shrink-0 rounded-xl overflow-hidden"
-                          style={{ width: '72px', height: '46px', '--sweep-delay': sweepDelay } as React.CSSProperties}>
-                          {/* Branded background based on module */}
-                          <div className="absolute inset-0" style={getModuleBg(module.order_index)} />
-                          {/* App logo text */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span style={getModuleLogo(module.order_index)}>{getModuleLabel(module.order_index)}</span>
-                          </div>
-                          {/* Active overlay */}
-                          {isActive && (
-                            <div className="absolute inset-0 flex items-center justify-center"
-                              style={{ background: 'rgba(0,0,0,0.40)' }}>
-                              <div className="w-7 h-7 rounded-full flex items-center justify-center"
-                                style={{ background: 'rgba(255,255,255,0.95)', boxShadow: '0 0 14px rgba(255,255,255,0.5)' }}>
-                                <Play className="w-3.5 h-3.5 fill-black text-black ml-0.5" />
-                              </div>
-                            </div>
-                          )}
-                          {/* Completed overlay */}
-                          {isCompleted && !isActive && (
-                            <div className="absolute inset-0 flex items-center justify-center"
-                              style={{ background: 'rgba(0,0,0,0.50)' }}>
-                              <CheckCircle className="w-5 h-5 text-brand-green" />
-                            </div>
-                          )}
-                          {/* Locked overlay */}
-                          {!unlocked && (
-                            <div className="absolute inset-0 flex items-center justify-center rounded-xl"
-                              style={{ background: 'rgba(0,0,0,0.65)' }}>
-                              <Lock className="w-4 h-4 text-white/30" />
-                            </div>
-                          )}
-                          {/* Lesson number badge */}
-                          {!isCompleted && !isActive && unlocked && (
-                            <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded-md text-white/70"
-                              style={{ background: 'rgba(0,0,0,0.6)', fontSize: '9px', fontWeight: 700 }}>
-                              {lesson.order_index}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex-1 min-w-0 pt-0.5">
-                          <div className={`text-sm font-bold leading-snug mb-1 ${
-                            isActive    ? 'text-white' :
-                            isCompleted ? 'text-white/45' :
-                            unlocked    ? 'text-white/75' :
-                            'text-white/30'
-                          }`}>
-                            {lesson.title}
-                          </div>
-                          {lesson.duration_seconds && (
-                            <div className="flex items-center gap-1 text-white/30 text-xs font-semibold">
-                              <Clock className="w-3 h-3" />
-                              {formatDuration(lesson.duration_seconds)}
-                            </div>
-                          )}
-                        </div>
-                      </button>
-                    )
-                  })}
+                  <ChevronDown className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.25)' }} />
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
+              </button>
+
+              {/* Lessons */}
+              <AnimatePresence initial={false}>
+                {openModules.includes(module.id) && (
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: 'auto' }}
+                    exit={{ height: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="py-2 px-3 space-y-1.5">
+                      {moduleLessons.map((lesson) => {
+                        const isActive    = lesson.id === currentLessonId
+                        const isCompleted = completedLessons.includes(lesson.id)
+                        const unlocked    = isUnlocked(lesson)
+                        const isNext      = lesson.id === nextLessonId && !isActive
+                        const sweepDelay  = `${(flatIdx++ % 8) * 0.45}s`
+
+                        return (
+                          <button
+                            key={lesson.id}
+                            onClick={() => unlocked && onSelectLesson(lesson)}
+                            disabled={!unlocked}
+                            title={!unlocked ? 'أكمل الدرس السابق أولاً' : lesson.title}
+                            className="w-full flex items-center gap-3 p-2.5 rounded-2xl transition-all duration-200 text-right"
+                            style={
+                              isActive
+                                ? { background: 'rgba(93,214,44,0.12)', border: '1px solid rgba(93,214,44,0.35)', boxShadow: '0 0 20px rgba(93,214,44,0.08)' }
+                                : isNext
+                                ? { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer' }
+                                : isCompleted
+                                ? { background: 'transparent', border: '1px solid transparent', opacity: 0.55, cursor: 'pointer' }
+                                : !unlocked
+                                ? { background: 'transparent', border: '1px solid transparent', opacity: 0.3, cursor: 'not-allowed' }
+                                : { background: 'transparent', border: '1px solid transparent', cursor: 'pointer' }
+                            }
+                          >
+                            {/* Thumbnail */}
+                            <div className="thumb-light relative flex-shrink-0 rounded-xl overflow-hidden"
+                              style={{ width: '80px', height: '52px', '--sweep-delay': sweepDelay } as React.CSSProperties}>
+                              <div className="absolute inset-0" style={getModuleBg(module.order_index)} />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <span style={getModuleLogo(module.order_index)}>{getModuleLabel(module.order_index)}</span>
+                              </div>
+                              {isActive && (
+                                <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.45)' }}>
+                                  <div className="w-8 h-8 rounded-full flex items-center justify-center"
+                                    style={{ background: '#fff', boxShadow: '0 0 16px rgba(255,255,255,0.5)' }}>
+                                    <Play className="w-4 h-4 fill-black text-black ml-0.5" />
+                                  </div>
+                                </div>
+                              )}
+                              {isCompleted && !isActive && (
+                                <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.55)' }}>
+                                  <CheckCircle className="w-6 h-6" style={{ color: '#5DD62C' }} />
+                                </div>
+                              )}
+                              {!unlocked && (
+                                <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.65)' }}>
+                                  <Lock className="w-4 h-4 text-white/30" />
+                                </div>
+                              )}
+                              {isNext && !isCompleted && (
+                                <div className="absolute bottom-0 inset-x-0 flex justify-center py-1"
+                                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)' }}>
+                                  <Play className="w-3 h-3 fill-white/60 text-white/60" />
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Info */}
+                            <div className="flex-1 min-w-0 text-right">
+                              {/* Next badge */}
+                              {isNext && (
+                                <div className="mb-1">
+                                  <span className="text-xs font-black px-2 py-0.5 rounded-full"
+                                    style={{ background: 'rgba(93,214,44,0.2)', color: '#5DD62C', border: '1px solid rgba(93,214,44,0.35)' }}>
+                                    ← التالي
+                                  </span>
+                                </div>
+                              )}
+                              {isActive && (
+                                <div className="mb-1">
+                                  <span className="text-xs font-black px-2 py-0.5 rounded-full"
+                                    style={{ background: 'rgba(93,214,44,0.25)', color: '#5DD62C' }}>
+                                    ▶ يتشغل الآن
+                                  </span>
+                                </div>
+                              )}
+                              <div className="text-sm font-bold leading-snug"
+                                style={{ color: isActive ? '#fff' : isCompleted ? 'rgba(255,255,255,0.5)' : isNext ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.65)' }}>
+                                {lesson.title}
+                              </div>
+                              {lesson.duration_seconds && (
+                                <div className="flex items-center justify-end gap-1 mt-1">
+                                  <Clock className="w-3 h-3" style={{ color: 'rgba(255,255,255,0.25)' }} />
+                                  <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                                    {formatDuration(lesson.duration_seconds)}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
