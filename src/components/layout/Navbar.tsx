@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 
 
@@ -70,9 +70,15 @@ export default function Navbar() {
               href="#cta"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-green px-5 py-2.5 rounded-xl text-sm font-bold"
+              className="btn-green flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold"
             >
-              ابدأ الآن ←
+              ابدأ الآن
+              <motion.div
+                animate={{ x: [0, -4, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity }}
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </motion.div>
             </motion.a>
           </div>
 
