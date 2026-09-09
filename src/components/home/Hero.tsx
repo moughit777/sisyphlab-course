@@ -1,209 +1,186 @@
 'use client'
 import { motion } from 'framer-motion'
-import { Play, ArrowLeft, Users, Clock, Star, Zap } from 'lucide-react'
+import { ArrowLeft, Play, Shield, Users, Star, Zap } from 'lucide-react'
 
-const stats = [
-  { icon: Users, value: '+400', label: 'طالب ناجح' },
-  { icon: Clock,  value: '+40',   label: 'ساعة محتوى' },
-  { icon: Star,   value: '4.9',   label: 'تقييم الطلاب' },
-  { icon: Zap,    value: '29',    label: 'درس احترافي' },
-]
+/* ─── Scrolling marquee ──────────────────────────────────────── */
+const TOOLS = ['Premiere Pro', 'After Effects', 'Color Grading', 'Motion Graphics', 'Reels', 'TikTok', 'Freelance', 'VFX', 'YouTube', 'Instagram']
+
+function Marquee() {
+  const repeated = [...TOOLS, ...TOOLS, ...TOOLS]
+  return (
+    <div className="overflow-hidden py-3 select-none" style={{ maskImage: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)' }}>
+      <motion.div
+        className="flex gap-8 w-max"
+        animate={{ x: ['0%', '-33.33%'] }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+      >
+        {repeated.map((tool, i) => (
+          <span key={i} className="flex items-center gap-3 text-sm font-bold whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.25)' }}>
+            <span className="w-1 h-1 rounded-full" style={{ background: '#5DD62C', opacity: 0.6 }} />
+            {tool}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  )
+}
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show: { transition: { staggerChildren: 0.10 } },
 }
 const item = {
-  hidden: { opacity: 0, y: 28 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22,1,0.36,1] } },
+  hidden: { opacity: 0, y: 24 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 }
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden">
 
-      {/* Strong top green glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -5%, rgba(51,116,24,0.65) 0%, rgba(93,214,44,0.08) 50%, transparent 68%)' }} />
-      {/* Side glows */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 55% 70% at -5% 35%, rgba(51,116,24,0.35) 0%, transparent 58%)' }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 55% 70% at 105% 55%, rgba(51,116,24,0.30) 0%, transparent 58%)' }} />
-      {/* Dot grid overlay */}
-      <div className="absolute inset-0 grid-bg opacity-40" />
-      {/* Bottom fade */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(15,15,15,0.99) 100%)' }} />
+      {/* Background — subtle, not overwhelming */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 80% 55% at 50% -10%, rgba(51,116,24,0.55) 0%, rgba(93,214,44,0.06) 45%, transparent 65%)' }} />
+      <div className="absolute inset-0 grid-bg opacity-25" />
+      <div className="absolute bottom-0 inset-x-0 h-48 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, rgba(7,11,26,1))' }} />
 
-      {/* Large center glow orb */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none hidden sm:block" style={{ background: 'rgba(51,116,24,0.20)', filter: 'blur(120px)' }} />
-
-      {/* ── Adobe icons ── */}
+      {/* Floating Adobe badges — more visible */}
       <motion.div
-        className="absolute pointer-events-none select-none hidden sm:block"
-        style={{ top: '15%', left: '3%', opacity: 0.09 }}
-        animate={{ y: [-12, 12, -12], rotate: [-5, 5, -5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute pointer-events-none select-none hidden lg:flex items-center justify-center"
+        style={{ top: '18%', left: '5%' }}
+        animate={{ y: [-10, 10, -10], rotate: [-3, 3, -3] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="flex items-center justify-center" style={{ width: 120, height: 120, background: '#9B59FF', borderRadius: 22, boxShadow: '0 0 60px #9B59FF66, 0 0 120px #9B59FF22' }}>
-          <span className="font-black text-white" style={{ fontSize: 44 }}>Pr</span>
+        <div style={{ width: 80, height: 80, background: 'linear-gradient(135deg,#2d0060,#6b00cc)', borderRadius: 18, border: '1px solid rgba(155,89,255,0.25)', boxShadow: '0 0 40px rgba(155,89,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontFamily: 'sans-serif', fontWeight: 900, fontSize: 28, color: '#bf7fff' }}>Pr</span>
         </div>
       </motion.div>
 
       <motion.div
-        className="absolute pointer-events-none select-none hidden sm:block"
-        style={{ top: '20%', right: '3%', opacity: 0.09 }}
-        animate={{ y: [12, -12, 12], rotate: [5, -5, 5] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+        className="absolute pointer-events-none select-none hidden lg:flex items-center justify-center"
+        style={{ top: '22%', right: '5%' }}
+        animate={{ y: [10, -10, 10], rotate: [3, -3, 3] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
       >
-        <div className="flex items-center justify-center" style={{ width: 110, height: 110, background: '#3366FF', borderRadius: 20, boxShadow: '0 0 60px #3366FF66, 0 0 120px #3366FF22' }}>
-          <span className="font-black text-white" style={{ fontSize: 40 }}>Ae</span>
+        <div style={{ width: 72, height: 72, background: 'linear-gradient(135deg,#00003a,#0000cc)', borderRadius: 16, border: '1px solid rgba(51,102,255,0.25)', boxShadow: '0 0 40px rgba(51,102,255,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontFamily: 'sans-serif', fontWeight: 900, fontSize: 26, color: '#9df0fe' }}>Ae</span>
         </div>
       </motion.div>
 
-      <motion.div
-        className="absolute pointer-events-none select-none hidden sm:block"
-        style={{ top: '60%', right: '4%', opacity: 0.06 }}
-        animate={{ y: [-8, 8, -8], rotate: [-3, 3, -3] }}
-        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-      >
-        <div className="flex items-center justify-center" style={{ width: 80, height: 80, background: '#9B59FF', borderRadius: 15, boxShadow: '0 0 40px #9B59FF55' }}>
-          <span className="font-black text-white" style={{ fontSize: 30 }}>Pr</span>
-        </div>
-      </motion.div>
-
-      {/* ── CC Light Sweep ── desktop only */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hidden sm:block">
-        <motion.div
-          className="absolute"
-          style={{
-            top: '-100%', width: '18%', height: '300%',
-            background: 'linear-gradient(90deg, transparent 0%, rgba(204,255,0,0.03) 30%, rgba(255,255,255,0.07) 50%, rgba(204,255,0,0.03) 70%, transparent 100%)',
-            transform: 'skewX(-18deg)',
-            filter: 'blur(2px)',
-          }}
-          animate={{ left: ['-25%', '125%'] }}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 7, ease: [0.4, 0, 0.2, 1] }}
-        />
-        <motion.div
-          className="absolute"
-          style={{
-            top: '-100%', width: '8%', height: '300%',
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
-            transform: 'skewX(-18deg)',
-            filter: 'blur(1px)',
-          }}
-          animate={{ left: ['-15%', '115%'] }}
-          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 7, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-        />
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* ── Main content ── */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 text-center">
         <motion.div variants={container} initial="hidden" animate="show">
 
-          {/* ── Badge ── */}
-          <motion.div variants={item} className="flex justify-center mb-7">
-            <div className="tag-green">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-              دورة مونتاج احترافية — المستوى الكامل
+          {/* Social proof pill */}
+          <motion.div variants={item} className="flex justify-center mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
+              style={{ background: 'rgba(93,214,44,0.08)', border: '1px solid rgba(93,214,44,0.20)', color: '#5DD62C' }}>
+              <div className="flex -space-x-1.5 space-x-reverse">
+                {['م','س','ي','ف','ع'].map((a, i) => (
+                  <div key={i} className="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-black"
+                    style={{ borderColor: '#070B1A', background: '#5DD62C', color: '#000' }}>
+                    {a}
+                  </div>
+                ))}
+              </div>
+              <span className="w-1 h-1 rounded-full bg-current opacity-50" />
+              +400 طالب نجحوا
             </div>
           </motion.div>
 
-          {/* ── Heading ── */}
+          {/* Main headline */}
           <motion.h1
             variants={item}
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[1.2] tracking-tight mb-6"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight mb-6"
           >
-            <span className="text-brand-white">كيفاش تربح</span>
+            <span className="text-white">كيفاش تربح</span>
             <br />
-            <span className="text-green-gradient">1,000$ من المونتاج</span>
+            <span style={{ background: 'linear-gradient(90deg, #5DD62C 0%, #7EE84E 50%, #5DD62C 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              1,000$ من المونتاج
+            </span>
           </motion.h1>
 
-          {/* ── Sub ── */}
+          {/* Sub */}
           <motion.p
             variants={item}
-            className="text-base sm:text-lg text-brand-gray max-w-2xl mx-auto leading-relaxed mb-10"
+            className="text-lg sm:text-xl text-white/50 max-w-xl mx-auto leading-relaxed mb-4"
           >
-            <span className="text-brand-white">تعلم أساسيات المونتاج عن طريق{' '}</span>
-            <span className="text-brand-green font-semibold">Premiere Pro</span>
-            <span className="text-brand-white">{' '}و{' '}</span>
-            <span className="text-brand-green font-semibold">After Effects</span>
-            <span className="text-brand-white">{' '}وتواصل مع أول عميل</span>
+            من الصفر حتى أول عميل — كورس مغربي متكامل بـ
+            {' '}<span className="text-white/80 font-semibold">Premiere Pro</span>{' '}
+            و<span className="text-white/80 font-semibold">After Effects</span>
           </motion.p>
 
-          {/* ── Buttons ── */}
-          <motion.div variants={item} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          {/* Trust signals row */}
+          <motion.div variants={item} className="flex items-center justify-center gap-4 flex-wrap text-sm mb-10">
+            <span className="flex items-center gap-1.5 text-white/40 font-semibold">
+              <Shield className="w-4 h-4" style={{ color: '#5DD62C' }} />
+              دعم مستمر
+            </span>
+            <span className="w-px h-4 bg-white/10" />
+            <span className="flex items-center gap-1.5 text-white/40 font-semibold">
+              <Zap className="w-4 h-4" style={{ color: '#5DD62C' }} />
+              وصول فوري
+            </span>
+            <span className="w-px h-4 bg-white/10" />
+            <span className="flex items-center gap-1.5 text-white/40 font-semibold">
+              <Star className="w-4 h-4 fill-current" style={{ color: '#5DD62C' }} />
+              4.9 / 5.0
+            </span>
+            <span className="w-px h-4 bg-white/10" />
+            <span className="flex items-center gap-1.5 text-white/40 font-semibold">
+              <Users className="w-4 h-4" style={{ color: '#5DD62C' }} />
+              +40 ساعة محتوى
+            </span>
+          </motion.div>
 
-            {/* CTA — float + shimmer + arrow bounce */}
+          {/* CTA buttons */}
+          <motion.div variants={item} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14">
+
             <motion.a
               href="#cta"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-              whileHover={{ scale: 1.05, y: -8 }}
+              whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-green flex items-center gap-2.5 px-10 py-5 rounded-2xl text-lg font-bold relative overflow-hidden"
-              style={{ boxShadow: '0 8px 32px rgba(93,214,44,0.35), 0 2px 8px rgba(93,214,44,0.2)' }}
+              className="relative overflow-hidden flex items-center gap-2.5 px-10 py-4 rounded-2xl font-black text-base text-black"
+              style={{ background: 'linear-gradient(135deg, #5DD62C, #7EE84E)', boxShadow: '0 6px 28px rgba(93,214,44,0.40)' }}
             >
-              {/* Shimmer sweep */}
+              {/* Sweep */}
               <motion.div
                 className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%)',
-                  transform: 'skewX(-15deg)',
-                }}
+                style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.25) 50%, transparent 65%)', transform: 'skewX(-15deg)' }}
                 animate={{ x: ['-150%', '250%'] }}
-                transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+                transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 3.5, ease: 'easeInOut' }}
               />
-              اشترك في الكورس الآن
+              اشترك الآن
               <motion.div
-                animate={{ x: [0, -5, 0] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                animate={{ x: [0, -4, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity }}
               >
                 <ArrowLeft className="w-5 h-5" />
               </motion.div>
             </motion.a>
 
-            {/* Video — ping rings around play icon */}
             <motion.a
               href="#promo"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-outline-green flex items-center gap-3 px-10 py-5 rounded-2xl text-lg font-semibold"
+              className="flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white/70 hover:text-white transition-colors"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)' }}
             >
-              <div className="relative w-8 h-8 flex items-center justify-center">
-                {/* Ring 1 */}
-                <motion.div
-                  className="absolute inset-0 rounded-full border border-brand-green/50"
-                  animate={{ scale: [1, 2], opacity: [0.6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
-                />
-                {/* Ring 2 */}
-                <motion.div
-                  className="absolute inset-0 rounded-full border border-brand-green/30"
-                  animate={{ scale: [1, 2.6], opacity: [0.4, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut', delay: 0.4 }}
-                />
-                <div className="w-8 h-8 rounded-full bg-brand-green/15 flex items-center justify-center relative z-10">
-                  <Play className="w-3.5 h-3.5 text-brand-green fill-brand-green" />
-                </div>
+              <div className="relative w-7 h-7 flex items-center justify-center">
+                <motion.div className="absolute inset-0 rounded-full border border-white/30"
+                  animate={{ scale: [1, 1.8], opacity: [0.5, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity }} />
+                <Play className="w-3.5 h-3.5 text-white fill-white" />
               </div>
               شاهد الفيديو التعريفي
             </motion.a>
 
           </motion.div>
 
-          {/* ── Stats ── */}
-          <motion.div
-            variants={item}
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto"
-          >
-            {stats.map(({ icon: Icon, value, label }) => (
-              <div
-                key={label}
-                className="p-4 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-green/20 transition-all duration-300 flex flex-col items-center gap-1"
-              >
-                <Icon className="w-4 h-4 text-brand-green mb-1" />
-                <span className="text-2xl font-black text-brand-white stat-number">{value}</span>
-                <span className="text-xs text-brand-gray">{label}</span>
-              </div>
-            ))}
+          {/* Marquee */}
+          <motion.div variants={item}>
+            <Marquee />
           </motion.div>
 
         </motion.div>
@@ -211,14 +188,16 @@ export default function Hero() {
 
       {/* Scroll hint */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
-        animate={{ y: [0, 6, 0] }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <div className="w-5 h-8 rounded-full border border-brand-border flex items-start justify-center pt-1.5">
+        <div className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5"
+          style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
           <motion.div
-            className="w-1 h-1.5 rounded-full bg-brand-green"
-            animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
+            className="w-1 h-1.5 rounded-full"
+            style={{ background: '#5DD62C' }}
+            animate={{ y: [0, 12, 0], opacity: [1, 0, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
         </div>

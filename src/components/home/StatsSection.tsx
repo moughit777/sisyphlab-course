@@ -3,60 +3,82 @@ import { motion } from 'framer-motion'
 import { useEffect, useState, useRef } from 'react'
 import { useInView } from 'framer-motion'
 
-function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
+function Counter({ value, suffix = '', decimals = 0 }: { value: number; suffix?: string; decimals?: number }) {
   const [count, setCount] = useState(0)
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true })
 
   useEffect(() => {
     if (!inView) return
-    const duration = 2000
+    const duration = 1800
     const start = Date.now()
     const timer = setInterval(() => {
       const elapsed = Date.now() - start
       const progress = Math.min(elapsed / duration, 1)
       const ease = 1 - Math.pow(1 - progress, 3)
-      setCount(Math.round(ease * value))
+      setCount(ease * value)
       if (progress >= 1) clearInterval(timer)
     }, 16)
     return () => clearInterval(timer)
   }, [inView, value])
 
-  return <span ref={ref}>{count.toLocaleString('ar')}{suffix}</span>
+  return <span ref={ref}>{count.toFixed(decimals)}{suffix}</span>
 }
 
-const stats = [
-  { value: 400, suffix: '+', label: 'طالب مسجل',    sub: 'من المغرب والعالم العربي' },
-  { value: 40,   suffix: '+', label: 'ساعة محتوى',   sub: 'فيديوهات عالية الجودة' },
-  { value: 13,   suffix: '',  label: 'درس متخصص',    sub: 'في 4 وحدات متكاملة' },
-  { value: 98,   suffix: '%', label: 'معدل الرضا',   sub: 'من تقييمات الطلاب' },
+const STATS = [
+  { value: 400, suffix: '+', label: 'طالب نجح',    sub: 'من المغرب والعالم العربي', color: '#5DD62C' },
+  { value: 40,  suffix: '+', label: 'ساعة محتوى',  sub: 'فيديوهات عالية الجودة',    color: '#9B59FF' },
+  { value: 39,  suffix: '',  label: 'درس احترافي', sub: 'Premiere Pro + After Effects', color: '#3366FF', decimals: 0 },
+  { value: 4.9, suffix: '/5', label: 'تقييم',      sub: 'من أكثر من 400 طالب',      color: '#5DD62C', decimals: 1 },
 ]
 
 export default function StatsSection() {
   return (
-    <section className="py-8 relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, rgba(93,214,44,0.07) 0%, transparent 70%)' }} />
+    <section className="py-12 relative overflow-hidden">
+      {/* Background line */}
+      <div className="absolute inset-x-0 top-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(93,214,44,0.15), transparent)' }} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-px bg-brand-border rounded-2xl overflow-hidden border border-brand-border"
-        >
-          {stats.map((s) => (
-            <div
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {STATS.map((s, i) => (
+            <motion.div
               key={s.label}
-              className="bg-brand-black hover:bg-brand-card transition-colors duration-300 p-6 md:p-8 text-center group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative rounded-2xl p-6 text-center overflow-hidden"
+              style={{
+                background: 'rgba(14,18,36,0.70)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                backdropFilter: 'blur(12px)',
+              }}
             >
-              <div className="text-4xl md:text-5xl font-black text-brand-green stat-number mb-1 group-hover:text-brand-green-light transition-colors">
-                <Counter value={s.value} suffix={s.suffix} />
+              {/* Top hairline colored */}
+              <div className="absolute top-0 inset-x-0 h-px"
+                style={{ background: `linear-gradient(90deg, transparent, ${s.color}80, transparent)` }} />
+
+              {/* Hover glow */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+                style={{ boxShadow: `0 0 32px ${s.color}10 inset, 0 0 0 1px ${s.color}15` }} />
+
+              <div className="relative">
+                <div className="text-4xl md:text-5xl font-black mb-1.5 tabular-nums"
+                  style={{ color: s.color, textShadow: `0 0 20px ${s.color}40` }}>
+                  <Counter value={s.value} suffix={s.suffix} decimals={s.decimals} />
+                </div>
+                <div className="text-sm font-black text-white mb-1">{s.label}</div>
+                <div className="text-xs text-white/30 leading-snug">{s.sub}</div>
               </div>
-              <div className="text-sm font-semibold text-brand-white mb-0.5">{s.label}</div>
-              <div className="text-xs text-brand-muted">{s.sub}</div>
-            </div>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
+
+      {/* Bottom line */}
+      <div className="absolute inset-x-0 bottom-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)' }} />
     </section>
   )
 }
