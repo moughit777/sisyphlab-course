@@ -302,92 +302,92 @@ export default function AdminDashboard() {
                   <motion.div
                     key={token.id}
                     layout
-                    className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl glass border border-brand-border hover:border-brand-green/30 transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 rounded-2xl glass border border-brand-border hover:border-brand-green/30 transition-colors"
                   >
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1 sm:mt-0 ${token.is_active ? 'bg-brand-green' : 'bg-brand-muted'}`} />
+                    <div className={`w-3 h-3 rounded-full flex-shrink-0 mt-1 sm:mt-0 ${token.is_active ? 'bg-brand-green shadow-[0_0_8px_rgba(93,214,44,0.8)]' : 'bg-white/20'}`} />
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-brand-white text-sm">{token.student_name}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-xs border ${token.is_active ? 'bg-brand-green/10 text-brand-green border-brand-green/20' : 'bg-brand-card text-brand-muted border-brand-border'}`}>
+                        <span className="font-bold text-white text-base">{token.student_name}</span>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${token.is_active ? 'bg-brand-green/15 text-brand-green border-brand-green/30' : 'bg-white/5 text-white/40 border-white/10'}`}>
                           {token.is_active ? 'نشط' : 'معطل'}
                         </span>
                         {token.is_registered
-                          ? <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                              <UserCheck className="w-3 h-3" /> سجّل
+                          ? <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+                              <UserCheck className="w-3.5 h-3.5" /> سجّل
                             </span>
-                          : <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-brand-card text-brand-muted border border-brand-border">
-                              <UserX className="w-3 h-3" /> لم يسجل
+                          : <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/5 text-white/50 border border-white/10">
+                              <UserX className="w-3.5 h-3.5" /> لم يسجل
                             </span>
                         }
                       </div>
                       {token.is_registered && (
-                        <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                        <div className="flex items-center gap-3 mt-2 flex-wrap">
                           {token.student_email && (
-                            <span className="text-xs text-brand-gray">{token.student_email}</span>
+                            <span className="text-sm text-white/70">{token.student_email}</span>
                           )}
                           {token.student_whatsapp && (
-                            <span className="flex items-center gap-1 text-xs text-brand-gray">
-                              <Phone className="w-3 h-3" /> {token.student_whatsapp}
+                            <span className="flex items-center gap-1 text-sm text-white/70">
+                              <Phone className="w-3.5 h-3.5" /> {token.student_whatsapp}
                             </span>
                           )}
                         </div>
                       )}
-                      <div className="text-xs text-brand-muted mt-1 font-mono truncate">
+                      <div className="text-xs text-white/40 mt-1.5 font-mono truncate">
                         /course/{token.token.substring(0, 20)}...
                       </div>
-                      <div className="text-xs text-brand-muted mt-0.5">
+                      <div className="text-xs text-white/40 mt-0.5">
                         أُنشئ: {formatDate(token.created_at)}
                         {token.expires_at && ` · ينتهي: ${formatDate(token.expires_at)}`}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <button
                         onClick={() => copyUrl(token.token)}
-                        className="p-1.5 rounded-lg text-brand-gray hover:text-brand-white hover:bg-brand-card transition-colors"
+                        className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
                         title="نسخ الرابط"
                       >
-                        {copiedId === token.token ? <Check className="w-4 h-4 text-brand-green" /> : <Copy className="w-4 h-4" />}
+                        {copiedId === token.token ? <Check className="w-5 h-5 text-brand-green" /> : <Copy className="w-5 h-5" />}
                       </button>
                       <a
                         href={`/course/${token.token}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-1.5 rounded-lg text-brand-gray hover:text-brand-white hover:bg-brand-card transition-colors"
+                        className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
                         title="فتح الرابط"
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-5 h-5" />
                       </a>
                       <button
                         onClick={() => resetToken(token.id)}
                         disabled={resettingId === token.id}
-                        className="p-1.5 rounded-lg text-brand-gray hover:text-yellow-400 hover:bg-yellow-500/10 transition-colors disabled:opacity-40"
+                        className="p-2.5 rounded-xl text-white/60 hover:text-yellow-400 hover:bg-yellow-500/10 transition-colors disabled:opacity-40"
                         title="إعادة تعيين الجلسة"
                       >
-                        <RotateCcw className={`w-4 h-4 ${resettingId === token.id ? 'animate-spin' : ''}`} />
+                        <RotateCcw className={`w-5 h-5 ${resettingId === token.id ? 'animate-spin' : ''}`} />
                       </button>
                       <button
                         onClick={() => resetPassword(token.id)}
                         disabled={resettingPassId === token.id}
-                        className="p-1.5 rounded-lg text-brand-gray hover:text-blue-400 hover:bg-blue-500/10 transition-colors disabled:opacity-40"
+                        className="p-2.5 rounded-xl text-white/60 hover:text-blue-400 hover:bg-blue-500/10 transition-colors disabled:opacity-40"
                         title="إعادة تعيين كلمة السر"
                       >
-                        <KeyRound className={`w-4 h-4 ${resettingPassId === token.id ? 'animate-spin' : ''}`} />
+                        <KeyRound className={`w-5 h-5 ${resettingPassId === token.id ? 'animate-spin' : ''}`} />
                       </button>
                       <button
                         onClick={() => toggleToken(token)}
-                        className={`p-1.5 rounded-lg transition-colors ${token.is_active ? 'text-brand-green hover:bg-brand-green/10' : 'text-brand-muted hover:bg-brand-card'}`}
+                        className={`p-2.5 rounded-xl transition-colors ${token.is_active ? 'text-brand-green hover:bg-brand-green/10' : 'text-white/40 hover:bg-white/10'}`}
                         title={token.is_active ? 'تعطيل' : 'تفعيل'}
                       >
-                        {token.is_active ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+                        {token.is_active ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                       </button>
                       <button
                         onClick={() => deleteToken(token.id)}
-                        className="p-1.5 rounded-lg text-brand-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                        className="p-2.5 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                         title="حذف"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
                   </motion.div>
