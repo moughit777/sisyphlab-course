@@ -151,6 +151,22 @@ export default function PromoVideoSection() {
               playsInline
             />
 
+            {/* Cover strip — hides the burned-in caption baked into the bottom of the source video */}
+            <div
+              className="absolute inset-x-0 bottom-0 pointer-events-none"
+              style={{ height: '15%', background: 'linear-gradient(to top, #000 55%, transparent 100%)' }}
+            />
+
+            {/* Always-visible fullscreen button — doesn't hide with the rest of the controls, so people always find it and keep watching in a bigger view */}
+            <button
+              onClick={() => { const w = document.getElementById('promo-wrap'); w?.requestFullscreen?.() }}
+              className="absolute top-3 left-3 z-30 flex items-center gap-2 px-3 py-2 rounded-xl text-white text-xs font-bold transition-transform hover:scale-105"
+              style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(93,214,44,0.35)', backdropFilter: 'blur(6px)' }}
+            >
+              <Maximize className="w-4 h-4" style={{ color: '#5DD62C' }} />
+              <span className="hidden sm:inline">تكبير الشاشة</span>
+            </button>
+
             {/* Controls bar */}
             <div
               className={`absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent pt-16 pb-4 px-5 transition-opacity duration-300 z-20 ${showControls || !playing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
@@ -202,14 +218,6 @@ export default function PromoVideoSection() {
                     {fmt(currentTime)} / {fmt(duration)}
                   </span>
                 </div>
-
-                {/* Fullscreen */}
-                <button
-                  onClick={() => { const w = document.getElementById('promo-wrap'); w?.requestFullscreen?.() }}
-                  className="text-white/60 hover:text-brand-green transition-colors"
-                >
-                  <Maximize className="w-4 h-4" />
-                </button>
               </div>
             </div>
           </div>
