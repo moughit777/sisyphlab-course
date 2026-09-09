@@ -9,13 +9,14 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   try {
     const supabase = getServiceClient()
 
-    // deactivate all active sessions and clear IP lock
-    const [sessionRes] = await Promise.all([
-      supabase.from('sessions').update({ is_active: false }).eq('token_id', params.id).eq('is_active', true),
-      supabase.from('tokens').update({ locked_ip: null }).eq('id', params.id),
-    ])
+    // deactivate all active sessions for this token_id
+    const { error } = await supabase
+      .from('sessions')
+      .update({ is_active: false })
+      .eq('token_id', params.id)
+      .eq('is_active', true)
 
-    if (sessionRes.error) return NextResponse.json({ error: sessionRes.error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true })
   } catch {
