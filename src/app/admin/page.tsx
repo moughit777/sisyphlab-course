@@ -10,10 +10,7 @@ import {
 import { Token, AccessLog, AdminStats } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
 
-function getAuthHeaders(): Record<string, string> {
-  const token = localStorage.getItem('admin_token')
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
+const ADMIN_FETCH: RequestInit = { credentials: 'include' }
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -35,11 +32,11 @@ export default function AdminDashboard() {
 
   const fetchAll = useCallback(async () => {
     try {
-      const headers = { 'Content-Type': 'application/json', ...getAuthHeaders() }
+      const jsonHeaders = { 'Content-Type': 'application/json' }
       const [statsRes, tokensRes, logsRes] = await Promise.all([
-        fetch('/api/admin/stats', { headers }),
-        fetch('/api/tokens', { headers }),
-        fetch('/api/admin/logs', { headers }),
+        fetch('/api/admin/stats', { ...ADMIN_FETCH, headers: jsonHeaders }),
+        fetch('/api/tokens', { ...ADMIN_FETCH, headers: jsonHeaders }),
+        fetch('/api/admin/logs', { ...ADMIN_FETCH, headers: jsonHeaders }),
       ])
 
       if (statsRes.status === 401) { router.push('/admin/login'); return }
@@ -68,8 +65,9 @@ export default function AdminDashboard() {
 
     try {
       const res = await fetch('/api/tokens', {
+        ...ADMIN_FETCH,
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           student_name: form.student_name,
           student_email: form.student_email || undefined,
@@ -94,8 +92,9 @@ export default function AdminDashboard() {
 
   async function toggleToken(token: Token) {
     await fetch(`/api/tokens/${token.id}`, {
+      ...ADMIN_FETCH,
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ is_active: !token.is_active }),
     })
     setTokens(prev => prev.map(t => t.id === token.id ? { ...t, is_active: !t.is_active } : t))
@@ -103,7 +102,7 @@ export default function AdminDashboard() {
 
   async function deleteToken(id: string) {
     if (!confirm('هل أنت متأكد من حذف هذا الرابط؟')) return
-    await fetch(`/api/tokens/${id}`, { method: 'DELETE', headers: getAuthHeaders() as HeadersInit })
+    await fetch(`/api/tokens/${id}`, { ...ADMIN_FETCH, method: 'DELETE' })
     setTokens(prev => prev.filter(t => t.id !== id))
   }
 
@@ -111,8 +110,9 @@ export default function AdminDashboard() {
     if (!confirm('إعادة تعيين الجلسة؟ سيتمكن الطالب من الدخول من جديد.')) return
     setResettingId(id)
     await fetch(`/api/tokens/${id}/reset`, {
+      ...ADMIN_FETCH,
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      headers: { 'Content-Type': 'application/json' },
     })
     setResettingId(null)
   }
@@ -121,8 +121,9 @@ export default function AdminDashboard() {
     if (!confirm('إعادة تعيين كلمة السر؟ سيُطلب من الطالب التسجيل من جديد.')) return
     setResettingPassId(id)
     await fetch(`/api/tokens/${id}/reset-password`, {
+      ...ADMIN_FETCH,
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      headers: { 'Content-Type': 'application/json' },
     })
     setTokens(prev => prev.map(t => t.id === id ? { ...t, is_registered: false } : t))
     setResettingPassId(null)
@@ -136,8 +137,7 @@ export default function AdminDashboard() {
   }
 
   async function handleLogout() {
-    localStorage.removeItem('admin_token')
-    await fetch('/api/admin-auth', { method: 'DELETE' })
+    await fetch('/api/admin-auth', { ...ADMIN_FETCH, method: 'DELETE' })
     router.push('/admin/login')
   }
 
@@ -196,6 +196,14 @@ export default function AdminDashboard() {
             <span className="text-brand-gray text-xs hidden sm:block">/ لوحة التحكم</span>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setShowCreateModal(true); setNewTokenUrl('') }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all"
+              style={{ background: 'linear-gradient(135deg, #5DD62C 0%, #337418 100%)', color: '#000', boxShadow: '0 0 16px rgba(93,214,44,0.4)' }}
+            >
+              <Plus className="w-4 h-4" />
+              طالب جديد
+            </button>
             <button
               onClick={fetchAll}
               className="p-1.5 rounded-lg text-brand-gray hover:text-brand-white hover:bg-brand-card transition-colors"
