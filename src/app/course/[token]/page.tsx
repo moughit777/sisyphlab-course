@@ -672,13 +672,7 @@ export default function CoursePage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-brand-green/25"
-            style={{ background: 'rgba(93,214,44,0.08)', backdropFilter: 'blur(12px)' }}>
-            <Shield className="w-4 h-4 text-brand-green" />
-            <span className="text-brand-green text-sm font-bold">{student.student_name}</span>
-          </div>
-        </div>
+        <div />
       </header>
 
       {/* Main layout */}
