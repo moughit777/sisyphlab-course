@@ -164,7 +164,7 @@ export default function Hero() {
               href="#promo"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white/70 hover:text-white transition-colors"
+              className="relative overflow-hidden flex items-center gap-3.5 pl-8 pr-3 py-3 rounded-2xl font-semibold text-white/70 hover:text-white transition-colors"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)' }}
             >
               {/* Sweep */}
@@ -174,13 +174,13 @@ export default function Hero() {
                 animate={{ x: ['-150%', '250%'] }}
                 transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 3.5, ease: 'easeInOut' }}
               />
-              <div className="relative w-7 h-7 flex items-center justify-center">
-                <motion.div className="absolute inset-0 rounded-full border"
+              <div className="relative w-14 h-14 flex items-center justify-center flex-shrink-0">
+                <motion.div className="absolute inset-0 rounded-full border-2"
                   style={{ borderColor: 'rgba(93,214,44,0.5)' }}
-                  animate={{ scale: [1, 1.8], opacity: [0.6, 0] }}
+                  animate={{ scale: [1, 1.7], opacity: [0.7, 0] }}
                   transition={{ duration: 1.8, repeat: Infinity }} />
-                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: '#5DD62C' }}>
-                  <Play className="w-3 h-3 text-black fill-black ml-0.5" />
+                <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: '#5DD62C', boxShadow: '0 4px 18px rgba(93,214,44,0.45)' }}>
+                  <Play className="w-5 h-5 text-black fill-black ml-0.5" />
                 </div>
               </div>
               شاهد الفيديو التعريفي
