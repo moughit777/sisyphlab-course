@@ -1,21 +1,31 @@
 'use client'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Clock, BookOpen, Lock, Play, CheckCircle } from 'lucide-react'
+import { ChevronDown, Clock, BookOpen, Lock, Play } from 'lucide-react'
 import { DEMO_COURSE } from '@/lib/courseData'
 import { formatDuration } from '@/lib/utils'
 
-const MODULE_COLORS = [
-  'from-purple-900/60 to-purple-800/40',
-  'from-blue-900/60 to-blue-800/40',
-  'from-emerald-900/60 to-emerald-800/40',
-]
-
-const MODULE_ACCENT = [
-  'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-]
+/* Same app-branding logic as the student sidebar — Pr for module 2, Ae for module 3, CC otherwise */
+function getModuleBg(order: number): React.CSSProperties {
+  if (order === 2) return { background: 'linear-gradient(135deg, #1a0040 0%, #2d0070 50%, #1a0040 100%)' }
+  if (order === 3) return { background: 'linear-gradient(135deg, #00003a 0%, #00006e 50%, #00003a 100%)' }
+  return { background: 'linear-gradient(135deg, #0d1117 0%, #1c2333 50%, #0d1117 100%)' }
+}
+function getModuleLogo(order: number): React.CSSProperties {
+  if (order === 2) return { fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 900, color: '#bf7fff', letterSpacing: '-1px', textShadow: '0 0 20px rgba(155,77,255,0.9)' }
+  if (order === 3) return { fontFamily: 'sans-serif', fontSize: '22px', fontWeight: 900, color: '#9df0fe', letterSpacing: '-1px', textShadow: '0 0 20px rgba(100,220,255,0.9)' }
+  return { fontFamily: 'sans-serif', fontSize: '17px', fontWeight: 900, color: 'rgba(255,255,255,0.45)', letterSpacing: '-0.5px' }
+}
+function getModuleLabel(order: number): string {
+  if (order === 2) return 'Pr'
+  if (order === 3) return 'Ae'
+  return 'CC'
+}
+function getModuleAccent(order: number) {
+  if (order === 2) return { glow: '#bf7fff' }
+  if (order === 3) return { glow: '#9df0fe' }
+  return { glow: '#5DD62C' }
+}
 
 export default function CurriculumSection() {
   const [open, setOpen] = useState<string | null>('mod-1')
@@ -79,8 +89,11 @@ export default function CurriculumSection() {
                 className="w-full flex items-center justify-between p-5 hover:bg-brand-card2 transition-colors text-right"
               >
                 <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center font-black text-base ${MODULE_ACCENT[mi % 3]}`}>
-                    {mi + 1}
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={getModuleBg(module.order_index)}>
+                    <span style={{ ...getModuleLogo(module.order_index), fontSize: '15px' }}>
+                      {getModuleLabel(module.order_index)}
+                    </span>
                   </div>
                   <div className="text-right">
                     <div className="font-bold text-brand-white text-base">{module.title}</div>
@@ -107,24 +120,36 @@ export default function CurriculumSection() {
                     className="overflow-hidden"
                   >
                     <div className="border-t border-brand-border divide-y divide-brand-border/40 px-3 pb-3 pt-1">
-                      {module.lessons?.map((lesson, li) => (
+                      {module.lessons?.map((lesson, li) => {
+                        const accent = getModuleAccent(module.order_index)
+                        const sweepDelay = `${((mi * 7 + li) % 10) * 0.6}s`
+                        return (
                         <div
                           key={lesson.id}
                           className="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-brand-black/30 transition-colors"
                         >
-                          {/* Thumbnail with lock */}
-                          <div className="relative flex-shrink-0 w-44 h-[6.5rem] rounded-xl overflow-hidden hidden sm:block">
-                            <div className={`w-full h-full bg-gradient-to-br ${MODULE_COLORS[mi % 3]} flex items-center justify-center`}>
-                              <Play className="w-8 h-8 text-white/30" />
+                          {/* Thumbnail — branded app cover with CC light sweep */}
+                          <div className="thumb-light relative flex-shrink-0 w-44 h-[6.5rem] rounded-xl overflow-hidden hidden sm:block"
+                            style={{ '--sweep-delay': sweepDelay } as React.CSSProperties}>
+                            {/* Branded gradient cover */}
+                            <div className="absolute inset-0" style={getModuleBg(module.order_index)} />
+                            {/* Big translucent app logo, off-center like a poster */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-90">
+                              <span style={{ ...getModuleLogo(module.order_index), fontSize: '34px' }}>
+                                {getModuleLabel(module.order_index)}
+                              </span>
                             </div>
-                            {/* Dark lock overlay */}
-                            <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center gap-1">
-                              <div className="w-11 h-11 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
-                                <Lock className="w-5 h-5 text-brand-green" />
+                            {/* Vignette for depth */}
+                            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.45) 100%)' }} />
+                            {/* Lock overlay */}
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1" style={{ background: 'rgba(0,0,0,0.42)' }}>
+                              <div className="w-10 h-10 rounded-full flex items-center justify-center"
+                                style={{ background: 'rgba(0,0,0,0.55)', border: `1px solid ${accent.glow}55`, boxShadow: `0 0 18px ${accent.glow}30` }}>
+                                <Lock className="w-4 h-4" style={{ color: accent.glow }} />
                               </div>
                             </div>
                             {/* Lesson number badge */}
-                            <div className="absolute top-1 right-1 bg-black/60 text-white/70 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                            <div className="absolute top-1.5 right-1.5 bg-black/60 text-white/70 text-[10px] font-bold px-1.5 py-0.5 rounded-md backdrop-blur-sm">
                               {String(li + 1).padStart(2, '0')}
                             </div>
                           </div>
@@ -143,12 +168,14 @@ export default function CurriculumSection() {
                           </div>
 
                           {/* Lock badge */}
-                          <div className="flex-shrink-0 flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green text-xs">
+                          <div className="flex-shrink-0 flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold"
+                            style={{ background: `${accent.glow}18`, border: `1px solid ${accent.glow}35`, color: accent.glow }}>
                             <Lock className="w-3 h-3" />
                             <span className="hidden sm:inline">مقفول</span>
                           </div>
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </motion.div>
                 )}
