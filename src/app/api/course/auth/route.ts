@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
 import { getServiceClient } from '@/lib/supabase'
+import { checkRateLimit } from '@/lib/rateLimit'
 
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
       || req.headers.get('x-real-ip')
       || '0.0.0.0'
+
+    if (!checkRateLimit(`course-auth:${ip}`, 10, 5 * 60 * 1000)) {
+      return NextResponse.json({ error: 'محاولات كثيرة — حاول بعد 5 دقائق' }, { status: 429 })
+    }
 
     const body = await req.json()
     const { token, email, password } = body
@@ -20,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     const { data: tokenData, error } = await supabase
       .from('tokens')
-      .select('id, student_name, student_email, is_active, max_sessions, expires_at, is_registered, password_hash')
+      .select('id, student_name, student_email, is_active, max_sessions, expires_at, is_registered, password_hash, locked_ip')
       .eq('token', token)
       .single()
 
@@ -61,6 +66,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 })
     }
 
+    // check IP lock
+    if (tokenData.locked_ip && tokenData.locked_ip !== ip) {
+      await supabase.from('access_logs').insert({
+        token_id: tokenData.id,
+        event_type: 'denied',
+        ip_address: ip,
+        metadata: { reason: 'ip_mismatch', locked_ip: tokenData.locked_ip },
+      })
+      return NextResponse.json({
+        error: 'هذا الرابط مرتبط بجهاز آخر. تواصل مع الإدارة.',
+      }, { status: 403 })
+    }
+
     // check session limit
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
     const { data: activeSessions } = await supabase
@@ -89,6 +107,11 @@ export async function POST(req: NextRequest) {
       ip_address: ip,
       user_agent: req.headers.get('user-agent'),
     })
+
+    // lock IP on first login
+    if (!tokenData.locked_ip) {
+      await supabase.from('tokens').update({ locked_ip: ip }).eq('id', tokenData.id)
+    }
 
     await supabase.from('access_logs').insert({
       token_id: tokenData.id,
