@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   const [resettingPassId, setResettingPassId] = useState<string | null>(null)
   const [authorized, setAuthorized] = useState(false)
 
-  const [form, setForm] = useState({ student_name: '', student_email: '', expires_at: '', max_sessions: '1', notes: '' })
+  const [form, setForm] = useState({ student_name: '', student_whatsapp: '', student_email: '', agreed: false })
   const [creating, setCreating] = useState(false)
   const [createError, setCreateError] = useState('')
   const [newTokenUrl, setNewTokenUrl] = useState('')
@@ -60,6 +60,7 @@ export default function AdminDashboard() {
 
   async function handleCreateToken() {
     if (!form.student_name.trim()) { setCreateError('اسم الطالب مطلوب'); return }
+    if (!form.agreed) { setCreateError('يجب الموافقة على الشرط أولاً'); return }
     setCreating(true)
     setCreateError('')
 
@@ -70,10 +71,8 @@ export default function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           student_name: form.student_name,
+          student_whatsapp: form.student_whatsapp || undefined,
           student_email: form.student_email || undefined,
-          expires_at: form.expires_at || undefined,
-          max_sessions: parseInt(form.max_sessions),
-          notes: form.notes || undefined,
         }),
       })
       const data = await res.json()
@@ -81,7 +80,7 @@ export default function AdminDashboard() {
 
       setNewTokenUrl(data.access_url)
       setTokens(prev => [data.token, ...prev])
-      setForm({ student_name: '', student_email: '', expires_at: '', max_sessions: '1', notes: '' })
+      setForm({ student_name: '', student_whatsapp: '', student_email: '', agreed: false })
       fetchAll()
     } catch {
       setCreateError('خطأ في الاتصال')
@@ -342,19 +341,21 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
                       <button
                         onClick={() => copyUrl(token.token)}
-                        className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                        className="p-2.5 rounded-xl transition-colors"
+                        style={{ color: '#5DD62C', background: 'rgba(93,214,44,0.10)' }}
                         title="نسخ الرابط"
                       >
-                        {copiedId === token.token ? <Check className="w-5 h-5 text-brand-green" /> : <Copy className="w-5 h-5" />}
+                        {copiedId === token.token ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                       </button>
                       <a
                         href={`/course/${token.token}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                        className="p-2.5 rounded-xl transition-colors"
+                        style={{ color: '#5DD62C', background: 'rgba(93,214,44,0.10)' }}
                         title="فتح الرابط"
                       >
                         <ExternalLink className="w-5 h-5" />
@@ -362,7 +363,8 @@ export default function AdminDashboard() {
                       <button
                         onClick={() => resetToken(token.id)}
                         disabled={resettingId === token.id}
-                        className="p-2.5 rounded-xl text-white/60 hover:text-yellow-400 hover:bg-yellow-500/10 transition-colors disabled:opacity-40"
+                        className="p-2.5 rounded-xl transition-colors disabled:opacity-40"
+                        style={{ color: '#fff', background: 'rgba(255,255,255,0.08)' }}
                         title="إعادة تعيين الجلسة"
                       >
                         <RotateCcw className={`w-5 h-5 ${resettingId === token.id ? 'animate-spin' : ''}`} />
@@ -370,21 +372,24 @@ export default function AdminDashboard() {
                       <button
                         onClick={() => resetPassword(token.id)}
                         disabled={resettingPassId === token.id}
-                        className="p-2.5 rounded-xl text-white/60 hover:text-blue-400 hover:bg-blue-500/10 transition-colors disabled:opacity-40"
+                        className="p-2.5 rounded-xl transition-colors disabled:opacity-40"
+                        style={{ color: '#fff', background: 'rgba(255,255,255,0.08)' }}
                         title="إعادة تعيين كلمة السر"
                       >
                         <KeyRound className={`w-5 h-5 ${resettingPassId === token.id ? 'animate-spin' : ''}`} />
                       </button>
                       <button
                         onClick={() => toggleToken(token)}
-                        className={`p-2.5 rounded-xl transition-colors ${token.is_active ? 'text-brand-green hover:bg-brand-green/10' : 'text-white/40 hover:bg-white/10'}`}
+                        className="p-2.5 rounded-xl transition-colors"
+                        style={{ color: token.is_active ? '#5DD62C' : 'rgba(255,255,255,0.35)', background: token.is_active ? 'rgba(93,214,44,0.12)' : 'rgba(255,255,255,0.06)' }}
                         title={token.is_active ? 'تعطيل' : 'تفعيل'}
                       >
                         {token.is_active ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                       </button>
                       <button
                         onClick={() => deleteToken(token.id)}
-                        className="p-2.5 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                        className="p-2.5 rounded-xl transition-colors"
+                        style={{ color: 'rgba(255,80,80,0.8)', background: 'rgba(239,68,68,0.08)' }}
                         title="حذف"
                       >
                         <Trash2 className="w-5 h-5" />
@@ -519,68 +524,85 @@ export default function AdminDashboard() {
                   </button>
                 </div>
               ) : (
-                <div className="relative z-10 p-7 space-y-4">
+                <div className="relative z-10 p-7 space-y-5">
                   {createError && (
                     <motion.div
                       initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2.5 p-3.5 rounded-2xl text-sm text-red-300"
+                      className="flex items-center gap-2.5 p-3.5 rounded-2xl text-base text-red-300 font-semibold"
                       style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)' }}
                     >
-                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
                       {createError}
                     </motion.div>
                   )}
 
-                  {[
-                    { key: 'student_name',  label: 'اسم الطالب *',              placeholder: 'محمد أحمد',         type: 'text' },
-                    { key: 'student_email', label: 'البريد الإلكتروني',          placeholder: 'student@email.com', type: 'email' },
-                    { key: 'expires_at',    label: 'تاريخ الانتهاء (اختياري)', placeholder: '',                  type: 'datetime-local' },
-                  ].map(f => (
-                    <div key={f.key} className="space-y-1.5">
-                      <label className="block text-sm font-semibold text-white/90">{f.label}</label>
-                      <input
-                        type={f.type}
-                        value={(form as any)[f.key]}
-                        onChange={(e) => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                        placeholder={f.placeholder}
-                        className="w-full px-4 py-3.5 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200"
-                        style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
-                        onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
-                        onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
-                      />
-                    </div>
-                  ))}
-
-                  <div className="space-y-1.5">
-                    <label className="block text-sm font-semibold text-white/90">عدد الجلسات المتزامنة</label>
-                    <select
-                      value={form.max_sessions}
-                      onChange={(e) => setForm(prev => ({ ...prev, max_sessions: e.target.value }))}
-                      className="w-full px-4 py-3.5 rounded-2xl text-base text-white focus:outline-none transition-all duration-200"
-                      style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
-                    >
-                      {[1,2,3].map(n => <option key={n} value={n} style={{ background: '#0f190f' }}>{n} {n === 1 ? 'جلسة' : 'جلسات'}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="block text-sm font-semibold text-white/90">ملاحظات (اختياري)</label>
-                    <textarea
-                      value={form.notes}
-                      onChange={(e) => setForm(prev => ({ ...prev, notes: e.target.value }))}
-                      placeholder="ملاحظات إضافية..."
-                      rows={2}
-                      className="w-full px-4 py-3.5 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200 resize-none"
+                  {/* اسم الطالب */}
+                  <div className="space-y-2">
+                    <label className="block text-base font-bold text-white">اسم الطالب</label>
+                    <input
+                      type="text"
+                      value={form.student_name}
+                      onChange={(e) => setForm(prev => ({ ...prev, student_name: e.target.value }))}
+                      placeholder="محمد أحمد"
+                      className="w-full px-4 py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200"
                       style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
                       onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
                       onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
                     />
                   </div>
 
+                  {/* رقم واتساب */}
+                  <div className="space-y-2">
+                    <label className="block text-base font-bold text-white">رقم واتساب</label>
+                    <input
+                      type="tel"
+                      value={form.student_whatsapp}
+                      onChange={(e) => setForm(prev => ({ ...prev, student_whatsapp: e.target.value }))}
+                      placeholder="+212 6XX XXXXXX"
+                      dir="ltr"
+                      className="w-full px-4 py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200"
+                      style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
+                      onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
+                      onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
+                    />
+                  </div>
+
+                  {/* البريد الإلكتروني */}
+                  <div className="space-y-2">
+                    <label className="block text-base font-bold text-white">البريد الإلكتروني</label>
+                    <input
+                      type="email"
+                      value={form.student_email}
+                      onChange={(e) => setForm(prev => ({ ...prev, student_email: e.target.value }))}
+                      placeholder="student@email.com"
+                      dir="ltr"
+                      className="w-full px-4 py-4 rounded-2xl text-base text-white placeholder-white/30 focus:outline-none transition-all duration-200"
+                      style={{ background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)' }}
+                      onFocus={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.07)', border: '1px solid rgba(93,214,44,0.55)', boxShadow: '0 0 0 3px rgba(93,214,44,0.10)' })}
+                      onBlur={e => Object.assign(e.target.style, { background: 'rgba(93,214,44,0.04)', border: '1px solid rgba(93,214,44,0.18)', boxShadow: 'none' })}
+                    />
+                  </div>
+
+                  {/* Checkbox موافقة */}
+                  <label
+                    className="flex items-start gap-3 cursor-pointer p-4 rounded-2xl transition-all"
+                    style={{ background: form.agreed ? 'rgba(93,214,44,0.08)' : 'rgba(255,100,100,0.06)', border: `1px solid ${form.agreed ? 'rgba(93,214,44,0.30)' : 'rgba(255,100,100,0.25)'}` }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={form.agreed}
+                      onChange={(e) => setForm(prev => ({ ...prev, agreed: e.target.checked }))}
+                      className="mt-0.5 w-5 h-5 flex-shrink-0 accent-brand-green"
+                    />
+                    <span className="text-base font-semibold text-white leading-snug">
+                      أوافق — إذا شاركت الرابط مع شخص آخر سيفقد الطالب الوصول إلى الكورس <span className="text-red-400 font-bold">إلى الأبد</span>
+                    </span>
+                  </label>
+
                   <div className="flex gap-3 pt-1">
                     <button
                       onClick={() => { setShowCreateModal(false); setCreateError('') }}
-                      className="flex-1 py-3.5 rounded-2xl text-sm font-semibold text-white/60 hover:text-white transition-colors"
+                      className="flex-1 py-4 rounded-2xl text-base font-semibold text-white/70 hover:text-white transition-colors"
                       style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)' }}
                     >
                       إلغاء
@@ -588,7 +610,7 @@ export default function AdminDashboard() {
                     <button
                       onClick={handleCreateToken}
                       disabled={creating}
-                      className="flex-1 py-3.5 rounded-2xl font-bold text-black text-sm disabled:opacity-50 transition-all"
+                      className="flex-1 py-4 rounded-2xl font-bold text-black text-base disabled:opacity-50 transition-all"
                       style={{ background: 'linear-gradient(135deg, #5DD62C 0%, #337418 100%)', boxShadow: '0 4px 20px rgba(93,214,44,0.3)' }}
                     >
                       {creating ? (
