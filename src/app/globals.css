@@ -1,4 +1,4 @@
-@import url('https://cdn.jsdelivr.net/npm/arabic-webfonts@1.5.0/frutiger/stylesheet.css');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 .course-font,
 .course-font * {
-  font-family: 'Frutiger LT Arabic 55 Roman', sans-serif !important;
+  font-family: 'IBM Plex Sans Arabic', sans-serif !important;
 }
 
 
@@ -24,8 +24,8 @@
 * { box-sizing: border-box; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-tajawal), 'Tajawal', sans-serif;
-  font-weight: 900;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-weight: 700;
 }
 
 html { scroll-behavior: smooth; }
@@ -37,7 +37,7 @@ body {
   position: relative;
   z-index: 1;
   color: var(--white);
-  font-family: var(--font-tajawal), 'Tajawal', sans-serif;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
   direction: rtl;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
