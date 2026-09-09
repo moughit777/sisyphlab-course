@@ -585,18 +585,35 @@ export default function AdminDashboard() {
 
                   {/* Checkbox موافقة */}
                   <label
-                    className="flex items-start gap-3 cursor-pointer p-4 rounded-2xl transition-all"
-                    style={{ background: form.agreed ? 'rgba(93,214,44,0.08)' : 'rgba(255,100,100,0.06)', border: `1px solid ${form.agreed ? 'rgba(93,214,44,0.30)' : 'rgba(255,100,100,0.25)'}` }}
+                    className="flex items-start gap-3 cursor-pointer rounded-2xl transition-all overflow-hidden"
+                    style={{ border: `1px solid ${form.agreed ? 'rgba(93,214,44,0.30)' : 'rgba(239,68,68,0.40)'}` }}
                   >
-                    <input
-                      type="checkbox"
-                      checked={form.agreed}
-                      onChange={(e) => setForm(prev => ({ ...prev, agreed: e.target.checked }))}
-                      className="mt-0.5 w-5 h-5 flex-shrink-0 accent-brand-green"
-                    />
-                    <span className="text-base font-semibold text-white leading-snug">
-                      أوافق — إذا شاركت الرابط مع شخص آخر سيفقد الطالب الوصول إلى الكورس <span className="text-red-400 font-bold">إلى الأبد</span>
-                    </span>
+                    {/* Top warning bar */}
+                    <div className="w-full">
+                      <div className="flex items-center gap-2 px-4 py-2.5"
+                        style={{ background: form.agreed ? 'rgba(93,214,44,0.12)' : 'rgba(239,68,68,0.15)' }}>
+                        <span className="text-lg">⚠️</span>
+                        <span className="text-sm font-black tracking-wide"
+                          style={{ color: form.agreed ? '#5DD62C' : '#ff6b6b' }}>
+                          {form.agreed ? 'تم التأكيد' : 'تحذير مهم — اقرأ قبل الإرسال'}
+                        </span>
+                      </div>
+                      <div className="flex items-start gap-3 px-4 py-3"
+                        style={{ background: form.agreed ? 'rgba(93,214,44,0.05)' : 'rgba(239,68,68,0.06)' }}>
+                        <input
+                          type="checkbox"
+                          checked={form.agreed}
+                          onChange={(e) => setForm(prev => ({ ...prev, agreed: e.target.checked }))}
+                          className="mt-1 w-5 h-5 flex-shrink-0 accent-brand-green"
+                        />
+                        <span className="text-base font-bold text-white leading-relaxed">
+                          أفهم أن هذا الرابط{' '}
+                          <span style={{ color: '#ff6b6b' }}>شخصي ولا يُشارك</span>
+                          {' '}— إذا وصل لشخص آخر سيُحرم الطالب من الكورس{' '}
+                          <span style={{ color: '#ff6b6b', fontWeight: 900 }}>نهائياً بلا رجعة</span>
+                        </span>
+                      </div>
+                    </div>
                   </label>
 
                   <div className="flex gap-3 pt-1">
