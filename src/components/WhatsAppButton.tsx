@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion'
 
 export default function WhatsAppButton() {
-  const URL = 'https://wa.me/212624821600?text=السلام%20عليكم%2C%20أريد%20الاشتراك%20في%20كورس%20المونتاج'
+  const URL = 'https://wa.me/212771169875?text=السلام%20عليكم%2C%20أريد%20الاشتراك%20في%20كورس%20المونتاج'
 
   return (
     <motion.div

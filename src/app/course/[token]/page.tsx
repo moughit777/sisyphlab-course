@@ -270,7 +270,7 @@ export default function CoursePage() {
           <h1 className="text-2xl font-black text-brand-white mb-3">وصول مرفوض</h1>
           <p className="text-brand-gray mb-6 leading-relaxed text-sm">{errorMsg}</p>
           <a
-            href="https://wa.me/212624821600"
+            href="https://wa.me/212771169875"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#25D366] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
@@ -603,7 +603,7 @@ export default function CoursePage() {
 
               <p className="text-center text-xs text-white/30 pt-1">
                 نسيت كلمة السر؟{' '}
-                <a href="https://wa.me/212624821600" target="_blank" rel="noopener noreferrer"
+                <a href="https://wa.me/212771169875" target="_blank" rel="noopener noreferrer"
                   className="text-brand-green hover:underline">تواصل معنا</a>
               </p>
             </form>
