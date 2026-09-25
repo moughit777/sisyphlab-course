@@ -8,7 +8,10 @@ const TOOLS = ['Premiere Pro', 'After Effects', 'Color Grading', 'Motion Graphic
 function Marquee() {
   const repeated = [...TOOLS, ...TOOLS, ...TOOLS]
   return (
-    <div className="overflow-hidden py-3 select-none" style={{ maskImage: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)' }}>
+    <div className="overflow-hidden py-3 select-none" style={{
+      WebkitMaskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0))',
+      maskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0))',
+    }}>
       <motion.div
         className="flex gap-8 w-max"
         animate={{ x: ['0%', '-33.33%'] }}

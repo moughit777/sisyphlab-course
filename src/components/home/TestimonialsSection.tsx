@@ -95,7 +95,10 @@ function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
 function MarqueeRow({ items, reverse = false }: { items: typeof testimonials; reverse?: boolean }) {
   const tripled = [...items, ...items, ...items]
   return (
-    <div className="overflow-hidden" style={{ maskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)' }}>
+    <div className="overflow-hidden" style={{
+      WebkitMaskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0))',
+      maskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0))',
+    }}>
       <motion.div
         className="flex py-2"
         style={{ width: 'max-content' }}
