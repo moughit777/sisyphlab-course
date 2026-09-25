@@ -67,10 +67,11 @@ export function GlobalBackground() {
         mixBlendMode: "overlay",
       }} />
 
-      {/* Adobe Pr logo - bottom left */}
+      {/* Adobe Pr logo - bottom left (desktop only, crowds mobile content) */}
       <img
         src="/pr-logo.webp"
         alt=""
+        className="hidden lg:block"
         style={{
           position: "absolute",
           bottom: "5%", left: "4%",
@@ -80,10 +81,11 @@ export function GlobalBackground() {
         }}
       />
 
-      {/* Adobe Ae logo - bottom right */}
+      {/* Adobe Ae logo - bottom right (desktop only, crowds mobile content) */}
       <img
         src="/ae-logo.webp"
         alt=""
+        className="hidden lg:block"
         style={{
           position: "absolute",
           bottom: "5%", right: "4%",
