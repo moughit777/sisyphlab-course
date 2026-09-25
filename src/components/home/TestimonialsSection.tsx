@@ -100,7 +100,7 @@ function MarqueeRow({ items, reverse = false }: { items: typeof testimonials; re
         className="flex py-2"
         style={{ width: 'max-content' }}
         animate={{ x: reverse ? ['-33.33%', '0%'] : ['0%', '-33.33%'] }}
-        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+        transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
       >
         {tripled.map((t, i) => <TestimonialCard key={i} t={t} />)}
       </motion.div>
