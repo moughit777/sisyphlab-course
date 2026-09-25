@@ -95,10 +95,7 @@ function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
 function MarqueeRow({ items, reverse = false }: { items: typeof testimonials; reverse?: boolean }) {
   const tripled = [...items, ...items, ...items]
   return (
-    <div className="overflow-hidden" style={{
-      WebkitMaskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0))',
-      maskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0))',
-    }}>
+    <div className="relative overflow-hidden">
       <motion.div
         className="flex py-2"
         style={{ width: 'max-content' }}
@@ -107,6 +104,11 @@ function MarqueeRow({ items, reverse = false }: { items: typeof testimonials; re
       >
         {tripled.map((t, i) => <TestimonialCard key={i} t={t} />)}
       </motion.div>
+      {/* Edge fade — plain gradient overlays instead of mask-image, which behaves inconsistently on iOS Safari */}
+      <div className="absolute inset-y-0 left-0 w-16 sm:w-24 pointer-events-none"
+        style={{ background: 'linear-gradient(to right, #070B1A, transparent)' }} />
+      <div className="absolute inset-y-0 right-0 w-16 sm:w-24 pointer-events-none"
+        style={{ background: 'linear-gradient(to left, #070B1A, transparent)' }} />
     </div>
   )
 }

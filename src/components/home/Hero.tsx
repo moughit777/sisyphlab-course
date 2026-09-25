@@ -8,10 +8,7 @@ const TOOLS = ['Premiere Pro', 'After Effects', 'Color Grading', 'Motion Graphic
 function Marquee() {
   const repeated = [...TOOLS, ...TOOLS, ...TOOLS]
   return (
-    <div className="overflow-hidden py-3 select-none" style={{
-      WebkitMaskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0))',
-      maskImage: 'linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0))',
-    }}>
+    <div className="relative overflow-hidden py-3 select-none">
       <motion.div
         className="flex gap-8 w-max"
         animate={{ x: ['0%', '-33.33%'] }}
@@ -24,6 +21,11 @@ function Marquee() {
           </span>
         ))}
       </motion.div>
+      {/* Edge fade — plain gradient overlays instead of mask-image, which behaves inconsistently on iOS Safari */}
+      <div className="absolute inset-y-0 left-0 w-16 sm:w-24 pointer-events-none"
+        style={{ background: 'linear-gradient(to right, #070B1A, transparent)' }} />
+      <div className="absolute inset-y-0 right-0 w-16 sm:w-24 pointer-events-none"
+        style={{ background: 'linear-gradient(to left, #070B1A, transparent)' }} />
     </div>
   )
 }
