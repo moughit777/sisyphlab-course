@@ -45,18 +45,17 @@ const testimonials = [
   },
 ]
 
-/* Split into 2 rows for opposite-direction marquees */
-const row1 = testimonials.slice(0, 4)
-const row2 = testimonials.slice(4)
-
-function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
+function TestimonialCard({ t, delay }: { t: typeof testimonials[0]; delay: number }) {
   return (
-    <div
-      className="flex-shrink-0 w-72 rounded-2xl p-5 mx-2"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay }}
+      className="rounded-2xl p-5"
       style={{
         background: 'rgba(14,18,36,0.80)',
         border: '1px solid rgba(255,255,255,0.07)',
-        backdropFilter: 'blur(16px)',
       }}
     >
       {/* Stars */}
@@ -88,28 +87,7 @@ function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
           <div className="text-xs text-white/35">{t.role}</div>
         </div>
       </div>
-    </div>
-  )
-}
-
-function MarqueeRow({ items, reverse = false }: { items: typeof testimonials; reverse?: boolean }) {
-  const tripled = [...items, ...items, ...items]
-  return (
-    <div className="relative overflow-hidden">
-      <motion.div
-        className="flex py-2"
-        style={{ width: 'max-content' }}
-        animate={{ x: reverse ? ['-33.33%', '0%'] : ['0%', '-33.33%'] }}
-        transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
-      >
-        {tripled.map((t, i) => <TestimonialCard key={i} t={t} />)}
-      </motion.div>
-      {/* Edge fade — plain gradient overlays instead of mask-image, which behaves inconsistently on iOS Safari */}
-      <div className="absolute inset-y-0 left-0 w-16 sm:w-24 pointer-events-none"
-        style={{ background: 'linear-gradient(to right, #070B1A, transparent)' }} />
-      <div className="absolute inset-y-0 right-0 w-16 sm:w-24 pointer-events-none"
-        style={{ background: 'linear-gradient(to left, #070B1A, transparent)' }} />
-    </div>
+    </motion.div>
   )
 }
 
@@ -120,10 +98,10 @@ export default function TestimonialsSection() {
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(93,214,44,0.04) 0%, transparent 70%)' }} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          className="text-center"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -148,12 +126,13 @@ export default function TestimonialsSection() {
             <span className="text-white/30 text-sm">من أكثر من 120 تقييم</span>
           </div>
         </motion.div>
-      </div>
 
-      {/* Marquee rows */}
-      <div className="space-y-3">
-        <MarqueeRow items={row1} />
-        <MarqueeRow items={[...row2, ...row1.slice(0, 2)]} reverse />
+        {/* Static grid — no scroll animation, guaranteed to render on every device */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {testimonials.map((t, i) => (
+            <TestimonialCard key={t.name} t={t} delay={(i % 4) * 0.08} />
+          ))}
+        </div>
       </div>
     </section>
   )
