@@ -295,37 +295,6 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Landing page (redesign) ──────────────────────
-   Arabic: zero tracking, taller line-height, solid text colors */
-.landing {
-  background-color: #070B1A;
-  color: #B5B6BA;
-  font-size: 17px;
-  line-height: 1.8;
-  letter-spacing: 0;
-}
-.landing h1, .landing h2, .landing h3 {
-  letter-spacing: 0;
-  line-height: 1.3;
-  color: #EBECED;
-}
-.landing .num { font-variant-numeric: tabular-nums; }
-.landing a { text-decoration-skip-ink: auto; text-underline-offset: 0.35em; }
-.landing :focus-visible {
-  outline: 2px solid #5DD62C;
-  outline-offset: 3px;
-  border-radius: 6px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 /* ── Fade in up ───────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
