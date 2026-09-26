@@ -1,136 +1,87 @@
-'use client'
-import { motion } from 'framer-motion'
-import { Star } from 'lucide-react'
+const FEATURED = {
+  name: 'يوسف التازي', role: 'فريلانسر', city: 'فاس', initial: 'ي',
+  text: 'كنت خايف من برامج Adobe، ولكن الشرح كان مبسط بزاف. دابا عندي خدمة فريلانس وكنكسب من المونتاج.',
+  result: '1,200$ فأول شهر فريلانس',
+}
 
-const testimonials = [
+const OTHERS = [
   {
-    name: 'محمد العمراني', role: 'مصور فيديو — الدار البيضاء', avatar: 'م', avatarBg: '#2563eb',
+    name: 'محمد العمراني', role: 'مصور فيديو', city: 'الدار البيضاء', initial: 'م',
     text: 'هاد الكورس بدّل مساري المهني بالكامل. كنت كنقطع فيديوهات عادية ودابا كنخدم فبروجيات كبيرة ومدفوعة مزيان.',
-    result: 'أول عميل في 3 أسابيع',
+    result: 'أول كليان من بعد 3 سيمانات',
   },
   {
-    name: 'سارة بنسعيد', role: 'صانعة محتوى — أكادير', avatar: 'س', avatarBg: '#7c3aed',
+    name: 'ريم القادري', role: 'إعلامية', city: 'مراكش', initial: 'ر',
+    text: 'الـ Color Grading وحدها تستاهل ثمن الكورس.',
+  },
+  {
+    name: 'سارة بنسعيد', role: 'صانعة محتوى', city: 'أكادير', initial: 'س',
     text: 'من مجرد ما كملت الكورس، المشاهدات ديال الريلزات ديالي تلاتضعفات! تعلمت أسرار المونتاج السريع.',
-    result: '×3 مشاهدات في شهر',
+    result: 'المشاهدات ×3 فشهر',
   },
   {
-    name: 'يوسف التازي', role: 'Freelancer — فاس', avatar: 'ي', avatarBg: '#0891b2',
-    text: 'كنت خايف من برامج Adobe، ولكن الشرح كان مبسط بزاف. دابا عندي خدمة فريلانس وكنكسب من المونتاج.',
-    result: '1,200$ أول شهر فريلانس',
+    name: 'عمر بوعزيز', role: 'يوتيوبر', city: 'طنجة', initial: 'ع',
+    text: 'After Effects كانت حلم بعيد عليا. مع هاد الكورس فهمت كولشي خطوة بخطوة، والموشن ولا ساهل.',
+    result: '+15k مشترك ف4 شهور',
   },
   {
-    name: 'فاطمة الزهراء', role: 'مديرة تسويق — الرباط', avatar: 'ف', avatarBg: '#dc2626',
-    text: 'وفّر عليا الكورس ميات الدراهم كنت غادي نعطيهم للمصمم. دابا كنصور الفيديوهات بوحدي بجودة عالية.',
-    result: 'وفّرت +500 درهم/شهر',
+    name: 'فاطمة الزهراء', role: 'مسؤولة تسويق', city: 'الرباط', initial: 'ف',
+    text: 'وفّر عليا الكورس بزاف ديال الفلوس اللي كنت كنعطيها للمونطور. دابا كنصاوب الفيديوهات بوحدي.',
   },
   {
-    name: 'عمر بوعزيز', role: 'يوتيوبر — طنجة', avatar: 'ع', avatarBg: '#059669',
-    text: 'After Effects كانت حلم بعيد عليا. مع هاد الكورس فهمت كولشي خطوة بخطوة. Motion Graphics ولات سهلة.',
-    result: '+15k مشترك في 4 أشهر',
-  },
-  {
-    name: 'ريم القادري', role: 'إعلامية — مراكش', avatar: 'ر', avatarBg: '#d97706',
-    text: 'الـ Color Grading وحدها تستاهل ثمن الكورس. الفيديوهات ديالي بدات تبان سينمائية كيما نتمنى.',
-    result: 'عملاء مدفوعة من أول أسبوع',
-  },
-  {
-    name: 'خالد الإدريسي', role: 'مصمم جرافيك — تطوان', avatar: 'خ', avatarBg: '#0d9488',
-    text: 'الكورس زادني على مهاراتي في التصميم. دابا كنعرض خدمات مونتاج وتصميم معاً وكنكسب أكثر بكتير.',
-    result: 'دخل إضافي +800$/شهر',
-  },
-  {
-    name: 'نور الهدى', role: 'مدرّسة — وجدة', avatar: 'ن', avatarBg: '#9333ea',
-    text: 'بدأت كورسات أونلاين ديالي. لولا هاد الكورس ما كنتش نعرف كيف نصور فيديوهات احترافية للتعليم.',
-    result: 'أطلقت كورسها الخاص',
+    name: 'خالد الإدريسي', role: 'مصمم جرافيك', city: 'تطوان', initial: 'خ',
+    text: 'الكورس زاد على مهاراتي فالتصميم. دابا كنعرض خدمات مونتاج وتصميم بجوج، وكنكسب كثر بكثير.',
+    result: 'دخل إضافي كل شهر',
   },
 ]
 
-function TestimonialCard({ t, delay }: { t: typeof testimonials[0]; delay: number }) {
+function Person({ name, role, city, initial, size = 40 }: { name: string; role: string; city: string; initial: string; size?: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay }}
-      className="rounded-2xl p-5"
-      style={{
-        background: 'rgba(14,18,36,0.80)',
-        border: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
-      {/* Stars */}
-      <div className="flex gap-0.5 mb-3">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-3 h-3 fill-current" style={{ color: '#5DD62C' }} />
-        ))}
-      </div>
-
-      {/* Result badge */}
-      <div className="inline-flex mb-3">
-        <span className="text-xs font-black px-2.5 py-1 rounded-full"
-          style={{ background: 'rgba(93,214,44,0.12)', color: '#5DD62C', border: '1px solid rgba(93,214,44,0.20)' }}>
-          ✓ {t.result}
-        </span>
-      </div>
-
-      {/* Text */}
-      <p className="text-sm text-white/55 leading-relaxed mb-4">{t.text}</p>
-
-      {/* Author */}
-      <div className="flex items-center gap-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0"
-          style={{ background: t.avatarBg }}>
-          {t.avatar}
-        </div>
-        <div>
-          <div className="text-xs font-bold text-white">{t.name}</div>
-          <div className="text-xs text-white/35">{t.role}</div>
-        </div>
-      </div>
-    </motion.div>
+    <div className="flex items-center gap-3">
+      <span className="rounded-full bg-surface-3 border border-hair text-fg-2 font-medium flex items-center justify-center shrink-0"
+        style={{ width: size, height: size }}>
+        {initial}
+      </span>
+      <span>
+        <span className="block text-fg-1 font-medium text-[15px]">{name}</span>
+        <span className="block text-fg-3 text-sm">{role}، {city}</span>
+      </span>
+    </div>
   )
 }
 
 export default function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-28 relative overflow-hidden">
-      {/* Subtle ambient */}
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(93,214,44,0.04) 0%, transparent 70%)' }} />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <p className="text-sm font-bold tracking-widest uppercase mb-4"
-            style={{ color: '#5DD62C', letterSpacing: '0.18em' }}>
-            — شنو قالو الطلبة
+    <section id="testimonials" className="py-20 md:py-28 border-t border-hair">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <h2 className="text-[28px] md:text-[36px] font-bold">شنو قالو الطلبة</h2>
+          <p className="text-fg-3">
+            تقييم <bdi className="num text-fg-1 font-medium">4.9/5</bdi> من كثر من <bdi className="num">120</bdi> طالب
           </p>
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-            نتائج حقيقية،<br />
-            <span style={{ background: 'linear-gradient(90deg, #5DD62C, #7EE84E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              مش مجرد كلام
-            </span>
-          </h2>
-          {/* Rating row */}
-          <div className="flex items-center justify-center gap-2">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-5 h-5 fill-current" style={{ color: '#5DD62C' }} />
-            ))}
-            <span className="text-white font-black text-lg mr-2">4.9</span>
-            <span className="text-white/30 text-sm">من أكثر من 120 تقييم</span>
-          </div>
-        </motion.div>
+        </div>
 
-        {/* Static grid — no scroll animation, guaranteed to render on every device */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {testimonials.map((t, i) => (
-            <TestimonialCard key={t.name} t={t} delay={(i % 4) * 0.08} />
+        {/* Featured quote — breaks the grid on purpose */}
+        <figure className="mt-12 md:mt-16 py-10 md:py-12 border-y border-hair">
+          <blockquote className="text-2xl md:text-[28px] text-fg-1 leading-[1.6] max-w-[48rem]">
+            «{FEATURED.text}»
+          </blockquote>
+          <figcaption className="mt-8 flex flex-wrap items-center justify-between gap-4">
+            <Person {...FEATURED} size={48} />
+            <span className="text-fg-2"><bdi className="num">{FEATURED.result}</bdi></span>
+          </figcaption>
+        </figure>
+
+        {/* Varied-height cards (CSS columns, no equal-height grid) */}
+        <div className="mt-6 columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-6">
+          {OTHERS.map(t => (
+            <figure key={t.name} className="break-inside-avoid mb-4 md:mb-6 bg-surface-1 border border-hair rounded-card p-6">
+              <blockquote className="text-fg-2">{t.text}</blockquote>
+              {t.result && <p className="mt-4 text-sm text-fg-1 font-medium">{t.result}</p>}
+              <figcaption className="mt-6">
+                <Person {...t} size={36} />
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

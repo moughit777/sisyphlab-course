@@ -1,129 +1,85 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowLeft } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 
-
 const links = [
-  { label: 'الرئيسية',    href: '#hero' },
-  { label: 'عن الكورس',   href: '#promo' },
-  { label: 'المميزات',    href: '#features' },
-  { label: 'المحتوى',     href: '#curriculum' },
-  { label: 'آراء الطلاب', href: '#testimonials' },
+  { label: 'المنهاج',     href: '#curriculum' },
+  { label: 'شنو غتتعلم', href: '#features' },
+  { label: 'آراء الطلبة', href: '#testimonials' },
+  { label: 'أسئلة',       href: '#faq' },
 ]
 
 export default function Navbar() {
-  const [scrolled,    setScrolled]    = useState(false)
-  const [mobileOpen,  setMobileOpen]  = useState(false)
+  const [pastHero,   setPastHero]   = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
+  // The nav CTA stays neutral while the hero (which has its own green button) is on screen,
+  // so there is only ever one green fill in view.
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 30)
-    window.addEventListener('scroll', fn)
-    return () => window.removeEventListener('scroll', fn)
+    const hero = document.getElementById('hero')
+    if (!hero) return
+    const io = new IntersectionObserver(([e]) => setPastHero(!e.isIntersecting), { rootMargin: '-64px 0px 0px 0px' })
+    io.observe(hero)
+    return () => io.disconnect()
   }, [])
 
   return (
-    <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0,   opacity: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-400 ${
-          scrolled
-            ? 'bg-brand-black/95 sm:backdrop-blur-xl border-b border-brand-border'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 lg:h-20">
+    <header className="sticky top-0 z-50 h-16 bg-ink/80 backdrop-blur-md border-b border-hair">
+      <div className="max-w-6xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-6">
 
-          {/* ── Logo ── */}
-          <a href="#hero" className="flex items-center group">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-              <Image
-                src="/logo.png"
-                alt="Sisyph Lab"
-                width={40}
-                height={40}
-                className="w-full h-full object-cover object-left"
-                priority
-              />
-            </div>
+        <a href="#hero" className="flex items-center gap-3 shrink-0" aria-label="Sisyph Lab">
+          <span className="w-9 h-9 rounded-full overflow-hidden">
+            <Image src="/logo.png" alt="" width={36} height={36} className="w-full h-full object-cover object-left" priority />
+          </span>
+          <bdi className="hidden sm:inline text-[15px] font-medium text-fg-1">Sisyph Lab</bdi>
+        </a>
+
+        <nav className="hidden md:flex items-center gap-1">
+          {links.map(l => (
+            <a key={l.href} href={l.href}
+              className="px-3 py-2 text-[15px] text-fg-2 hover:text-fg-1 transition-colors duration-fast">
+              {l.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <a href="#offer"
+            className={`hidden sm:inline-flex items-center h-9 px-4 rounded-btn text-[15px] font-medium transition-colors duration-fast ${
+              pastHero
+                ? 'bg-accent text-accent-on hover:bg-accent-hover'
+                : 'bg-surface-3 border border-hair text-fg-1 hover:border-hair-strong'
+            }`}>
+            اشترك
           </a>
-
-          {/* ── Desktop nav ── */}
-          <nav className="hidden lg:flex items-center gap-0.5">
-            {links.map(l => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="px-4 py-2 text-base font-bold text-white/90 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
-              >
-                {l.label}
-              </a>
-            ))}
-          </nav>
-
-          {/* ── CTA ── */}
-          <div className="hidden lg:block">
-            <motion.a
-              href="#cta"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              className="btn-green flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold"
-            >
-              ابدأ الآن
-              <motion.div
-                animate={{ x: [0, -4, 0] }}
-                transition={{ duration: 1.4, repeat: Infinity }}
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </motion.div>
-            </motion.a>
-          </div>
-
-          {/* ── Mobile toggle ── */}
           <button
-            className="lg:hidden p-2 text-brand-gray hover:text-brand-white transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden w-10 h-10 inline-flex items-center justify-center text-fg-2 hover:text-fg-1"
+            onClick={() => setMobileOpen(o => !o)}
+            aria-label={mobileOpen ? 'سد القائمة' : 'حل القائمة'}
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-      </motion.header>
+      </div>
 
-      {/* ── Mobile menu ── */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1,  y: 0 }}
-            exit={{   opacity: 0,  y: -12 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 z-40 bg-brand-dark border-b border-brand-border lg:hidden"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {links.map(l => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-4 py-3 text-sm font-bold text-white/90 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-                >
-                  {l.label}
-                </a>
-              ))}
-              <a
-                href="#cta"
-                onClick={() => setMobileOpen(false)}
-                className="block mt-2 px-4 py-3 text-center rounded-xl bg-brand-green text-black font-bold text-sm"
-              >
-                ابدأ الآن
+      {mobileOpen && (
+        <div className="md:hidden border-b border-hair bg-ink">
+          <nav className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
+            {links.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)}
+                className="py-3 text-base text-fg-2 hover:text-fg-1 border-b border-hair last:border-0">
+                {l.label}
               </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            ))}
+            <a href="#offer" onClick={() => setMobileOpen(false)}
+              className="mt-3 mb-1 h-11 inline-flex items-center justify-center rounded-btn bg-accent text-accent-on font-bold">
+              اشترك
+            </a>
+          </nav>
+        </div>
+      )}
+    </header>
   )
 }

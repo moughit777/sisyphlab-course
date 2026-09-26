@@ -1,26 +1,27 @@
-import dynamic from 'next/dynamic'
 import Navbar from '@/components/layout/Navbar'
 import Hero from '@/components/home/Hero'
-import PromoVideoSection from '@/components/home/PromoVideoSection'
-
-const StatsSection       = dynamic(() => import('@/components/home/StatsSection'))
-const FeaturesSection    = dynamic(() => import('@/components/home/FeaturesSection'))
-const CurriculumSection  = dynamic(() => import('@/components/home/CurriculumSection'))
-const TestimonialsSection = dynamic(() => import('@/components/home/TestimonialsSection'))
-const CTASection         = dynamic(() => import('@/components/home/CTASection'))
-const Footer             = dynamic(() => import('@/components/layout/Footer'))
-const WhatsAppButton     = dynamic(() => import('@/components/WhatsAppButton'))
+import AudienceSection from '@/components/home/AudienceSection'
+import FeaturesSection from '@/components/home/FeaturesSection'
+import CurriculumSection from '@/components/home/CurriculumSection'
+import TestimonialsSection from '@/components/home/TestimonialsSection'
+import OfferSection from '@/components/home/OfferSection'
+import FaqSection from '@/components/home/FaqSection'
+import CTASection from '@/components/home/CTASection'
+import Footer from '@/components/layout/Footer'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen overflow-x-hidden">
+    // Solid .landing background covers the global studio-photo backdrop on this page only
+    <main className="landing relative z-10 min-h-screen overflow-x-clip">
       <Navbar />
       <Hero />
-      <PromoVideoSection />
-      <StatsSection />
+      <AudienceSection />
       <FeaturesSection />
       <CurriculumSection />
       <TestimonialsSection />
+      <OfferSection />
+      <FaqSection />
       <CTASection />
       <Footer />
       <WhatsAppButton />

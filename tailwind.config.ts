@@ -34,7 +34,24 @@ const config: Config = {
           800: '#0A0D28',
           900: '#070B1A',
         },
+        /* ── Landing redesign tokens (solid hex — no alpha on Arabic text) ── */
+        ink:     { DEFAULT: '#070B1A' },
+        surface: { 1: '#0E1221', 2: '#131725', 3: '#1B1F2C', 4: '#202331' },
+        fg: {
+          1: '#EBECED',
+          2: '#B5B6BA',
+          3: '#83858C',
+          4: '#5E606A',
+        },
+        hair: {
+          DEFAULT: 'rgba(255,255,255,0.08)',
+          strong:  'rgba(255,255,255,0.14)',
+        },
         accent: {
+          DEFAULT: '#5DD62C',
+          hover:   '#6FE042',
+          tint:    '#101F1C',
+          on:      '#070B1A',
           purple:       '#8b5cf6',
           'purple-light': '#a78bfa',
           blue:         '#3b82f6',
@@ -54,6 +71,9 @@ const config: Config = {
         'green-glow': 'radial-gradient(circle, rgba(93,214,44,0.2) 0%, transparent 60%)',
         'card-shine': 'linear-gradient(135deg, rgba(93,214,44,0.05) 0%, transparent 60%)',
       },
+      borderRadius: { btn: '8px', card: '12px', media: '16px' },
+      transitionTimingFunction: { out: 'cubic-bezier(0.165,0.84,0.44,1)' },
+      transitionDuration: { fast: '150ms', base: '200ms' },
       backgroundSize: {
         'grid': '50px 50px',
       },

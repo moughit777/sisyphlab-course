@@ -1,28 +1,26 @@
-import Image from 'next/image'
+const LINKS = [
+  { label: 'المنهاج',     href: '#curriculum' },
+  { label: 'آراء الطلبة', href: '#testimonials' },
+  { label: 'أسئلة',       href: '#faq' },
+  { label: 'واتساب',      href: 'https://wa.me/212771169875' },
+]
 
 export default function Footer() {
   return (
-    <footer className="border-t border-brand-border bg-brand-black py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-
-          {/* Logo */}
-          <a href="#hero" className="flex items-center">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-              <Image src="/logo.png" alt="Sisyph Lab" width={40} height={40} className="w-full h-full object-cover object-left" />
-            </div>
-          </a>
-
-          <p className="text-xs text-brand-muted">
-            © {new Date().getFullYear()} Sisyph Lab — جميع الحقوق محفوظة
-          </p>
-
-          <div className="flex items-center gap-4 text-xs text-brand-muted">
-            <a href="#" className="hover:text-brand-gray transition-colors">سياسة الخصوصية</a>
-            <span>·</span>
-            <a href="#" className="hover:text-brand-gray transition-colors">الشروط والأحكام</a>
-          </div>
-        </div>
+    <footer className="border-t border-hair py-12 text-fg-3 text-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <nav className="flex flex-wrap gap-x-6 gap-y-2">
+          {LINKS.map(l => (
+            <a key={l.label} href={l.href}
+              {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              className="hover:text-fg-2 transition-colors duration-fast">
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <p>
+          © <bdi className="num">{new Date().getFullYear()}</bdi> <bdi>Sisyph Lab</bdi>. جميع الحقوق محفوظة.
+        </p>
       </div>
     </footer>
   )
